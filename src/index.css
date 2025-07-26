@@ -2,87 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Hammond Properties Design System - Luxury Vacation Rental Aesthetic */
 
 @layer base {
   :root {
+    /* Core Brand Colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --foreground: 215 25% 15%;
+    
+    /* Brand Identity */
+    --primary: 215 25% 15%;  /* Deep navy for premium feel */
+    --primary-foreground: 0 0% 98%;
+    --accent-red: 0 65% 55%;  /* Hammond Properties red accent */
+    --accent-red-foreground: 0 0% 98%;
+    
+    /* Sophisticated Neutrals */
+    --secondary: 210 15% 95%;  /* Soft warm gray */
+    --secondary-foreground: 215 25% 15%;
+    --muted: 210 10% 90%;
+    --muted-foreground: 215 15% 45%;
+    
+    /* Luxury Accent Colors */
+    --luxury-gold: 45 80% 70%;
+    --luxury-cream: 45 30% 95%;
+    --ocean-blue: 200 50% 45%;
+    
+    /* Card and Surface Colors */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --card-foreground: 215 25% 15%;
+    --card-hover: 210 20% 98%;
+    
+    /* Interactive Elements */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 15%;
+    --border: 210 15% 88%;
+    --input: 210 15% 92%;
+    --ring: 0 65% 55%;
+    
+    /* Utility Colors */
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 120 45% 50%;
+    --warning: 40 80% 60%;
+    
+    /* Design System Variables */
+    --radius: 0.75rem;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Typography Scale */
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Inter', sans-serif;
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(215 25% 15% / 0.1);
+    --shadow-medium: 0 4px 16px -4px hsl(215 25% 15% / 0.15);
+    --shadow-strong: 0 8px 32px -8px hsl(215 25% 15% / 0.2);
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(215 30% 25%));
+    --gradient-hero: linear-gradient(135deg, hsl(215 25% 15% / 0.7), hsl(215 30% 25% / 0.5));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent-red)), hsl(0 70% 65%));
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
+    /* Sidebar */
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* Dark mode for luxury vacation rental theme */
+    --background: 215 25% 8%;
+    --foreground: 210 15% 92%;
+    --primary: 210 15% 92%;
+    --primary-foreground: 215 25% 8%;
+    --accent-red: 0 70% 60%;
+    --secondary: 215 20% 15%;
+    --secondary-foreground: 210 15% 92%;
+    --muted: 215 15% 20%;
+    --muted-foreground: 210 15% 70%;
+    --card: 215 20% 10%;
+    --card-foreground: 210 15% 92%;
+    --card-hover: 215 20% 12%;
+    --border: 215 15% 20%;
+    --input: 215 15% 18%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +107,84 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-family: var(--font-sans);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+  }
+}
+
+@layer components {
+  /* Brand Logo Styles */
+  .logo-hammond {
+    font-family: var(--font-serif);
+    @apply text-primary font-bold tracking-tight;
+  }
+  
+  .logo-properties {
+    font-family: var(--font-sans);
+    @apply text-accent-red font-semibold tracking-wider uppercase;
+  }
+  
+  /* Button Variants */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-medium hover:shadow-strong;
+  }
+  
+  .btn-accent {
+    background: var(--gradient-accent);
+    @apply text-accent-red-foreground hover:scale-105 transition-all duration-300 shadow-medium hover:shadow-strong;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300;
+  }
+  
+  /* Card Styles */
+  .card-luxury {
+    @apply bg-card border-border rounded-xl p-6 transition-all duration-300 hover:shadow-strong hover:bg-card-hover;
+    box-shadow: var(--shadow-soft);
+  }
+  
+  /* Text Animation */
+  .rotating-text {
+    @apply inline-block transition-all duration-500 ease-in-out;
+  }
+  
+  /* Hero Overlay */
+  .hero-overlay {
+    background: var(--gradient-hero);
+    @apply absolute inset-0;
+  }
+  
+  /* Property Card Hover Effects */
+  .property-card {
+    @apply group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-strong;
+  }
+  
+  .property-card img {
+    @apply transition-transform duration-500 group-hover:scale-110;
+  }
+}
+
+@layer utilities {
+  /* Custom shadows using design system */
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .shadow-strong {
+    box-shadow: var(--shadow-strong);
+  }
+  
+  /* Transition utilities */
+  .transition-smooth {
+    transition: var(--transition);
   }
 }
