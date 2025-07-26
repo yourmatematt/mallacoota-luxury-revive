@@ -52,6 +52,9 @@ const HeroSection = () => {
             >
               {rotatingTexts[currentTextIndex]}
             </div>
+            <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
+              with Hammond Properties
+            </div>
           </div>
           
           {/* CTA Button */}
