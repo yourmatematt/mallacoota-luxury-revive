@@ -33,7 +33,7 @@ const HeroSection = () => {
           {/* Main Logo */}
           <div className="mb-6">
             <img 
-              src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
+              src="/lovable-uploads/84582fc3-db49-43eb-8ce3-96b77e7c977c.png" 
               alt="Hammond Properties" 
               className="h-24 md:h-32 lg:h-40 w-auto mx-auto"
             />
