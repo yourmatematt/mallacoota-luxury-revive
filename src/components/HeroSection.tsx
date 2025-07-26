@@ -35,7 +35,7 @@ const HeroSection = () => {
             <img 
               src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
               alt="Hammond Properties" 
-              className="h-24 md:h-32 lg:h-40 w-auto mx-auto filter invert brightness-0 contrast-100"
+              className="h-24 md:h-32 lg:h-40 w-auto mx-auto"
             />
           </div>
           
