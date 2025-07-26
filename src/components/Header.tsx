@@ -21,7 +21,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center">
             <img 
-              src="/lovable-uploads/64ebe16e-1162-4428-8190-82216c4b94b9.png" 
+              src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
               alt="Hammond Properties" 
               className="h-12 lg:h-14 w-auto"
             />
