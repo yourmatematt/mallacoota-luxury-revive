@@ -30,11 +30,14 @@ const HeroSection = () => {
       {/* Content */}
       <div className="relative z-10 text-center text-white px-4 max-w-6xl mx-auto">
         <div className="animate-fade-in">
-          {/* Main Headline */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold mb-6">
-            <span className="block">Hammond</span>
-            <span className="text-accent-red">PROPERTIES</span>
-          </h1>
+          {/* Main Logo */}
+          <div className="mb-6">
+            <img 
+              src="/lovable-uploads/62750973-e01a-4071-8e96-69d3cab27419.png" 
+              alt="Hammond Properties" 
+              className="h-24 md:h-32 lg:h-40 w-auto mx-auto"
+            />
+          </div>
           
           {/* Tagline */}
           <p className="text-xl md:text-2xl lg:text-3xl font-light mb-8 max-w-2xl mx-auto">
