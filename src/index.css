@@ -161,11 +161,11 @@
   
   /* Property Card Hover Effects */
   .property-card {
-    @apply group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-strong;
+    @apply cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-strong;
   }
   
   .property-card img {
-    @apply transition-transform duration-500 group-hover:scale-110;
+    @apply transition-transform duration-500;
   }
 }
 

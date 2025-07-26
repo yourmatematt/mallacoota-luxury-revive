@@ -126,12 +126,12 @@ const PropertyGrid = () => {
         {/* Property Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {properties.map((property) => (
-            <Card key={property.id} className="property-card card-luxury overflow-hidden">
+            <Card key={property.id} className="property-card card-luxury overflow-hidden group">
               <div className="relative h-64 overflow-hidden">
                 <img 
                   src={property.image} 
                   alt={property.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <Badge className="absolute top-4 right-4 bg-luxury-gold text-primary">
                   AVAILABLE
