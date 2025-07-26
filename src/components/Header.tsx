@@ -19,11 +19,12 @@ const Header = () => {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="flex flex-col leading-tight">
-              <span className="logo-hammond text-2xl lg:text-3xl">Hammond</span>
-              <span className="logo-properties text-sm lg:text-base">PROPERTIES</span>
-            </div>
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/64ebe16e-1162-4428-8190-82216c4b94b9.png" 
+              alt="Hammond Properties" 
+              className="h-12 lg:h-14 w-auto"
+            />
           </div>
 
           {/* Desktop Navigation */}
