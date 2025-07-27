@@ -2,102 +2,91 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, Car, PawPrint, Star } from "lucide-react";
+import { Users, Car, PawPrint, Star, Bed, Bath, Wifi } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Property } from "@/hooks/useProperties";
-import { usePropertyImages } from "@/hooks/usePropertyImages";
+import PropertyImageCarousel from "@/components/PropertyImageCarousel";
+import propertyInterior1 from "@/assets/property-interior-1.jpg";
+import propertyInterior2 from "@/assets/property-interior-2.jpg";
+import propertyInterior3 from "@/assets/property-interior-3.jpg";
 
-interface PropertyCardProps {
-  property: Property;
-  onMouseEnter: (propertyId: string, totalImages: number) => void;
-  onMouseLeave: (propertyId: string) => void;
-  currentImageIndex: { [key: string]: number };
-}
 
-const PropertyCard = ({ property, onMouseEnter, onMouseLeave, currentImageIndex }: PropertyCardProps) => {
-  const { data: images } = usePropertyImages(property.image_folder);
-  const currentImage = currentImageIndex[property.id] || 0;
-  const displayImages = images || [];
+const PropertyCard = ({ property }: { property: Property }) => {
+  // Stock images for carousel
+  const stockImages = [propertyInterior1, propertyInterior2, propertyInterior3];
 
   return (
-    <Card 
-      className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-      onMouseEnter={() => onMouseEnter(property.id, displayImages.length)}
-      onMouseLeave={() => onMouseLeave(property.id)}
-    >
-      <div className="relative h-64">
-        {displayImages.length > 0 ? (
-          <img
-            src={displayImages[currentImage]?.url}
-            alt={property.title}
-            className="w-full h-full object-cover transition-opacity duration-300"
-          />
-        ) : (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <span className="text-muted-foreground">No image available</span>
-          </div>
-        )}
-        
-        {property.airbnb_rating && (
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-medium">{property.airbnb_rating}</span>
-          </div>
-        )}
-        
-        {displayImages.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-            {displayImages.map((_, index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentImage ? 'bg-white' : 'bg-white/50'
-                }`}
-              />
-            ))}
-          </div>
-        )}
+    <Card className="card-boutique overflow-hidden group fade-in-up">
+      <div className="relative">
+        <PropertyImageCarousel
+          images={stockImages}
+          propertyId={property.property_id}
+          propertyTitle={property.title || 'Property'}
+        />
+        <div className="absolute top-4 right-4">
+          {property.airbnb_rating && (
+            <Badge className="bg-white/95 text-primary flex items-center gap-1 shadow-lg backdrop-blur-sm">
+              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+              {property.airbnb_rating}
+            </Badge>
+          )}
+        </div>
       </div>
       
       <CardContent className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{property.title}</h3>
-        {property.subtitle && (
-          <p className="text-sm text-muted-foreground mb-3">{property.subtitle}</p>
-        )}
+        <div className="mb-4">
+          <h3 className="text-xl font-serif font-semibold mb-2 text-primary leading-tight">
+            {property.title}
+          </h3>
+          {property.subtitle && (
+            <p className="text-sm text-muted-foreground leading-relaxed">{property.subtitle}</p>
+          )}
+        </div>
         
-        <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Users className="h-4 w-4" />
-            <span>{property.guests} guests</span>
+        {/* Property Details with enhanced spacing */}
+        <div className="grid grid-cols-3 gap-4 mb-4 py-3 border-t border-b border-border/50">
+          <div className="flex flex-col items-center space-y-1 text-center">
+            <Bed size={18} className="text-primary" />
+            <span className="text-base font-semibold text-primary">{property.bedrooms}</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-wide">Bedrooms</span>
           </div>
+          <div className="flex flex-col items-center space-y-1 text-center">
+            <Bath size={18} className="text-primary" />
+            <span className="text-base font-semibold text-primary">{property.bathrooms}</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-wide">Bathrooms</span>
+          </div>
+          <div className="flex flex-col items-center space-y-1 text-center">
+            <Users size={18} className="text-primary" />
+            <span className="text-base font-semibold text-primary">{property.guests}</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-wide">Guests</span>
+          </div>
+        </div>
+        
+        {/* Amenities with better spacing */}
+        <div className="flex flex-wrap gap-2 mb-6">
           {property.pet_friendly && (
-            <div className="flex items-center gap-1">
-              <PawPrint className="h-4 w-4" />
-              <span>Pet friendly</span>
+            <div className="flex items-center space-x-1 text-xs bg-success/10 text-success px-2 py-1 rounded-full">
+              <PawPrint size={12} />
+              <span>Pet Friendly</span>
             </div>
           )}
           {property.boat_parking && (
-            <div className="flex items-center gap-1">
-              <Car className="h-4 w-4" />
-              <span>Boat parking</span>
+            <div className="flex items-center space-x-1 text-xs bg-ocean-blue/10 text-ocean-blue px-2 py-1 rounded-full">
+              <Car size={12} />
+              <span>Boat Parking</span>
             </div>
           )}
+          <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+            <Wifi size={12} />
+            <span>WiFi</span>
+          </div>
         </div>
-
-        <div className="flex flex-wrap gap-2 mb-4">
-          <Badge variant="secondary" className="text-xs">
-            {property.bedrooms} bed{property.bedrooms !== 1 ? 's' : ''}
-          </Badge>
-          <Badge variant="secondary" className="text-xs">
-            {property.bathrooms} bath{property.bathrooms !== 1 ? 's' : ''}
-          </Badge>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <Link to={`/properties/${property.slug}`} className="flex-1">
-            <Button size="sm" className="w-full">View Details</Button>
+        
+        <Button asChild className="w-full py-3 text-sm rounded-full font-semibold tracking-wide hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+          <Link to={`/properties/${property.slug}`}>
+            View Details
           </Link>
-        </div>
+        </Button>
       </CardContent>
     </Card>
   );

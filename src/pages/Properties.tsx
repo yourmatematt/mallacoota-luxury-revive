@@ -13,34 +13,12 @@ const Properties = () => {
   const [guestCount, setGuestCount] = useState(2);
   const [petFriendly, setPetFriendly] = useState(false);
   const [boatParking, setBoatParking] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: string]: number }>({});
 
   const { data: properties, isLoading, error } = useProperties({
     guests: guestCount,
     petFriendly: petFriendly || undefined,
     boatParking: boatParking || undefined,
   });
-
-  const handleMouseEnter = (propertyId: string, totalImages: number) => {
-    if (totalImages <= 1) return;
-    
-    let currentIndex = 0;
-    setCurrentImageIndex(prev => ({ ...prev, [propertyId]: currentIndex }));
-    
-    const interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % totalImages;
-      setCurrentImageIndex(prev => ({ ...prev, [propertyId]: currentIndex }));
-    }, 1000);
-    
-    setTimeout(() => {
-      clearInterval(interval);
-      setCurrentImageIndex(prev => ({ ...prev, [propertyId]: 0 }));
-    }, 3000);
-  };
-
-  const handleMouseLeave = (propertyId: string) => {
-    setCurrentImageIndex(prev => ({ ...prev, [propertyId]: 0 }));
-  };
 
   if (error) {
     return (
@@ -162,9 +140,6 @@ const Properties = () => {
                   <PropertyCard
                     key={property.id}
                     property={property}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    currentImageIndex={currentImageIndex}
                   />
                 ))}
               </div>
