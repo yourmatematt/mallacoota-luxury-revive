@@ -1,18 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const navigationItems = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Properties", href: "#properties" },
-    { name: "Owner Resources", href: "#resources" },
-    { name: "For Rent", href: "#rent" },
-    { name: "Contact Us", href: "#contact" },
+    { name: "Home", href: "/" },
+    { name: "Properties", href: "/properties" },
+    { name: "Discover", href: "/discover-mallacoota" },
+    { name: "About", href: "/about" },
+    { name: "Testimonials", href: "/testimonials" },
+    { name: "Contact", href: "/contact" },
   ];
+
+  const isActiveRoute = (href: string) => {
+    if (href === "/" && location.pathname === "/") return true;
+    if (href !== "/" && location.pathname.startsWith(href)) return true;
+    return false;
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -30,13 +38,17 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
             {navigationItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
-                className="text-foreground hover:text-accent-red transition-colors duration-300 font-medium"
+                to={item.href}
+                className={`transition-colors duration-300 font-medium ${
+                  isActiveRoute(item.href) 
+                    ? "text-accent-red" 
+                    : "text-foreground hover:text-accent-red"
+                }`}
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -61,14 +73,18 @@ const Header = () => {
           <div className="lg:hidden absolute top-full left-0 right-0 bg-background border-b border-border shadow-strong">
             <nav className="flex flex-col space-y-4 p-6">
               {navigationItems.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
-                  className="text-foreground hover:text-accent-red transition-colors duration-300 font-medium"
+                  to={item.href}
+                  className={`transition-colors duration-300 font-medium ${
+                    isActiveRoute(item.href) 
+                      ? "text-accent-red" 
+                      : "text-foreground hover:text-accent-red"
+                  }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
               <Button className="btn-accent px-6 py-2 rounded-full mt-4">
                 Book Now

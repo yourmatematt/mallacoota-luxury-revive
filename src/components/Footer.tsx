@@ -1,11 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Mail, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const navigationItems = [
+    { name: "Home", href: "/" },
+    { name: "Properties", href: "/properties" },
+    { name: "Discover", href: "/discover-mallacoota" },
+    { name: "About", href: "/about" },
+    { name: "Testimonials", href: "/testimonials" },
+    { name: "Contact", href: "/contact" },
+  ];
+
   return (
     <footer className="bg-secondary border-t border-border">
       <div className="container mx-auto px-4 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo */}
           <div className="flex flex-col items-center md:items-start">
             <div className="flex flex-col leading-tight mb-4">
@@ -14,21 +24,49 @@ const Footer = () => {
             </div>
           </div>
 
+          {/* Navigation */}
+          <div className="text-center md:text-left">
+            <h4 className="font-semibold text-foreground mb-4">Navigation</h4>
+            <nav className="space-y-2">
+              {navigationItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="block text-muted-foreground hover:text-accent-red transition-colors duration-300"
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
           {/* Contact Info */}
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center space-x-2">
-              <Mail size={18} className="text-accent-red" />
+          <div className="text-center md:text-left space-y-3">
+            <h4 className="font-semibold text-foreground mb-4">Contact</h4>
+            
+            <div className="flex items-center justify-center md:justify-start space-x-2">
+              <Mail size={16} className="text-accent-red" />
               <a 
                 href="mailto:amelia@hammondproperties.com.au"
-                className="text-muted-foreground hover:text-primary transition-colors duration-300"
+                className="text-muted-foreground hover:text-accent-red transition-colors duration-300 text-sm"
               >
                 amelia@hammondproperties.com.au
               </a>
             </div>
             
+            <div className="flex items-center justify-center md:justify-start space-x-2">
+              <Phone size={16} className="text-accent-red" />
+              <a 
+                href="tel:0401825547"
+                className="text-muted-foreground hover:text-accent-red transition-colors duration-300 text-sm"
+              >
+                0401 825 547
+              </a>
+            </div>
+            
             <Button 
               variant="outline" 
-              className="rounded-full border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+              className="rounded-full border-accent-red text-accent-red hover:bg-accent-red hover:text-white mt-4"
             >
               Book a Call
             </Button>
