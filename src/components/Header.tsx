@@ -10,7 +10,7 @@ const Header = () => {
   const navigationItems = [
     { name: "Home", href: "/" },
     { name: "Properties", href: "/properties" },
-    { name: "Discover", href: "/discover-mallacoota" },
+    { name: "Discover Mallacoota", href: "/discover-mallacoota" },
     { name: "About", href: "/about" },
     { name: "Testimonials", href: "/testimonials" },
     { name: "Contact", href: "/contact" },
