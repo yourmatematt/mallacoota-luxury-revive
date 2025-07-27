@@ -2,91 +2,60 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Users, Car, Heart } from "lucide-react";
+import { Star, Users, Car, Heart, Bed, Bath } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
-interface Property {
-  id: string;
-  title: string;
-  subtitle: string;
-  guests: number;
-  petFriendly: boolean;
-  boatParking: boolean;
-  rating: number;
-  reviewCount: number;
-  images: string[];
-  amenities: string[];
-  price: number;
-}
+import { useProperties } from "@/hooks/useProperties";
+import PropertyCard from "@/components/PropertyCard";
 
 const Properties = () => {
   const [guestCount, setGuestCount] = useState(2);
   const [petFriendly, setPetFriendly] = useState(false);
   const [boatParking, setBoatParking] = useState(false);
-  const [hoveredProperty, setHoveredProperty] = useState<string | null>(null);
-  const [imageIndex, setImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: string]: number }>({});
 
-  // Mock properties data - will be replaced with CMS data
-  const properties: Property[] = [
-    {
-      id: "1",
-      title: "Oceanview Villa",
-      subtitle: "Luxury beachfront retreat",
-      guests: 8,
-      petFriendly: true,
-      boatParking: true,
-      rating: 4.9,
-      reviewCount: 24,
-      images: ["/api/placeholder/400/300", "/api/placeholder/400/300", "/api/placeholder/400/300"],
-      amenities: ["Ocean View", "Pool", "BBQ", "Parking", "WiFi", "Pet Friendly"],
-      price: 450
-    },
-    {
-      id: "2", 
-      title: "Coastal Cottage",
-      subtitle: "Charming family getaway",
-      guests: 6,
-      petFriendly: false,
-      boatParking: false,
-      rating: 4.8,
-      reviewCount: 18,
-      images: ["/api/placeholder/400/300", "/api/placeholder/400/300", "/api/placeholder/400/300"],
-      amenities: ["Garden View", "BBQ", "Parking", "WiFi"],
-      price: 320
-    },
-    {
-      id: "3",
-      title: "Waterfront Apartment", 
-      subtitle: "Modern lakeside living",
-      guests: 4,
-      petFriendly: true,
-      boatParking: true,
-      rating: 4.7,
-      reviewCount: 31,
-      images: ["/api/placeholder/400/300", "/api/placeholder/400/300", "/api/placeholder/400/300"],
-      amenities: ["Lake View", "Balcony", "Parking", "WiFi", "Pet Friendly"],
-      price: 280
-    }
-  ];
-
-  const filteredProperties = properties.filter(property => {
-    if (property.guests < guestCount) return false;
-    if (petFriendly && !property.petFriendly) return false;
-    if (boatParking && !property.boatParking) return false;
-    return true;
+  const { data: properties, isLoading, error } = useProperties({
+    guests: guestCount,
+    petFriendly: petFriendly || undefined,
+    boatParking: boatParking || undefined,
   });
 
-  const handleMouseEnter = (propertyId: string) => {
-    setHoveredProperty(propertyId);
-    setImageIndex(0);
+  const handleMouseEnter = (propertyId: string, totalImages: number) => {
+    if (totalImages <= 1) return;
+    
+    let currentIndex = 0;
+    setCurrentImageIndex(prev => ({ ...prev, [propertyId]: currentIndex }));
+    
     const interval = setInterval(() => {
-      setImageIndex(prev => (prev + 1) % 3);
+      currentIndex = (currentIndex + 1) % totalImages;
+      setCurrentImageIndex(prev => ({ ...prev, [propertyId]: currentIndex }));
     }, 1000);
     
-    setTimeout(() => clearInterval(interval), 3000);
+    setTimeout(() => {
+      clearInterval(interval);
+      setCurrentImageIndex(prev => ({ ...prev, [propertyId]: 0 }));
+    }, 3000);
   };
+
+  const handleMouseLeave = (propertyId: string) => {
+    setCurrentImageIndex(prev => ({ ...prev, [propertyId]: 0 }));
+  };
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-20">
+          <div className="container mx-auto px-4 py-16 text-center">
+            <h1 className="text-2xl font-bold mb-4">Error loading properties</h1>
+            <p className="text-muted-foreground">Please try again later.</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -161,7 +130,7 @@ const Properties = () => {
                 {/* Results Count */}
                 <div className="text-center md:text-right">
                   <p className="text-sm text-muted-foreground">
-                    {filteredProperties.length} propert{filteredProperties.length === 1 ? 'y' : 'ies'} found
+                    {isLoading ? "Loading..." : `${properties?.length || 0} propert${properties?.length === 1 ? 'y' : 'ies'} found`}
                   </p>
                 </div>
               </div>
@@ -172,85 +141,34 @@ const Properties = () => {
         {/* Properties Grid */}
         <section className="py-16">
           <div className="container mx-auto px-4 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProperties.map((property) => (
-                <Link key={property.id} to={`/properties/${property.id}`}>
-                  <Card 
-                    className="card-luxury h-full group cursor-pointer"
-                    onMouseEnter={() => handleMouseEnter(property.id)}
-                    onMouseLeave={() => setHoveredProperty(null)}
-                  >
-                    <div className="relative overflow-hidden rounded-t-xl">
-                      <img
-                        src={hoveredProperty === property.id ? property.images[imageIndex] : property.images[0]}
-                        alt={property.title}
-                        className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
-                      />
-                      <div className="absolute top-4 right-4">
-                        <Badge variant="secondary" className="bg-background/90 text-foreground">
-                          <Star className="w-3 h-3 mr-1 fill-luxury-gold text-luxury-gold" />
-                          {property.rating} ({property.reviewCount})
-                        </Badge>
-                      </div>
-                    </div>
-                    
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <Card key={i} className="overflow-hidden">
+                    <div className="h-64 bg-muted animate-pulse"></div>
                     <CardContent className="p-6">
-                      <div className="space-y-4">
-                        <div>
-                          <h3 className="text-xl font-serif font-semibold text-primary mb-1">
-                            {property.title}
-                          </h3>
-                          <p className="text-muted-foreground">{property.subtitle}</p>
-                        </div>
-
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                          <div className="flex items-center">
-                            <Users className="w-4 h-4 mr-1" />
-                            {property.guests} guests
-                          </div>
-                          {property.petFriendly && (
-                            <div className="flex items-center">
-                              <Heart className="w-4 h-4 mr-1" />
-                              Pet friendly
-                            </div>
-                          )}
-                          {property.boatParking && (
-                            <div className="flex items-center">
-                              <Car className="w-4 h-4 mr-1" />
-                              Boat parking
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                          {property.amenities.slice(0, 3).map((amenity, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {amenity}
-                            </Badge>
-                          ))}
-                          {property.amenities.length > 3 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{property.amenities.length - 3} more
-                            </Badge>
-                          )}
-                        </div>
-
-                        <div className="flex items-center justify-between pt-2 border-t border-border">
-                          <div>
-                            <span className="text-2xl font-semibold text-primary">
-                              ${property.price}
-                            </span>
-                            <span className="text-muted-foreground">/ night</span>
-                          </div>
-                        </div>
+                      <div className="space-y-3">
+                        <div className="h-6 bg-muted rounded animate-pulse"></div>
+                        <div className="h-4 bg-muted rounded animate-pulse"></div>
+                        <div className="h-4 bg-muted rounded animate-pulse w-2/3"></div>
                       </div>
                     </CardContent>
                   </Card>
-                </Link>
-              ))}
-            </div>
-
-            {filteredProperties.length === 0 && (
+                ))}
+              </div>
+            ) : properties && properties.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {properties.map((property) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    currentImageIndex={currentImageIndex}
+                  />
+                ))}
+              </div>
+            ) : (
               <div className="text-center py-12">
                 <p className="text-xl text-muted-foreground">
                   No properties match your current filters. Try adjusting your search criteria.
