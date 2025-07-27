@@ -255,61 +255,6 @@ const About = () => {
           </div>
         </section>
 
-        {/* Awards & Recognition Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
-                Recognition & Awards
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Our commitment to excellence has been recognized by industry leaders and guests alike.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="card-luxury text-center">
-                <CardContent className="p-6">
-                  <Award className="w-12 h-12 mx-auto mb-4 text-luxury-gold" />
-                  <h3 className="text-lg font-serif font-semibold text-primary mb-2">
-                    Excellence in Hospitality
-                  </h3>
-                  <p className="text-muted-foreground">
-                    East Gippsland Tourism Award
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-1">2023</p>
-                </CardContent>
-              </Card>
-
-              <Card className="card-luxury text-center">
-                <CardContent className="p-6">
-                  <Users className="w-12 h-12 mx-auto mb-4 text-luxury-gold" />
-                  <h3 className="text-lg font-serif font-semibold text-primary mb-2">
-                    Guest Choice Award
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Booking.com
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-1">2023</p>
-                </CardContent>
-              </Card>
-
-              <Card className="card-luxury text-center">
-                <CardContent className="p-6">
-                  <Star className="w-12 h-12 mx-auto mb-4 text-luxury-gold" />
-                  <h3 className="text-lg font-serif font-semibold text-primary mb-2">
-                    5-Star Rating
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Airbnb Superhost Status
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-1">2020-2023</p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className="py-16 bg-gradient-subtle">
           <div className="container mx-auto px-4 lg:px-8">
