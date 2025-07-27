@@ -5,6 +5,10 @@ import { Bed, Bath, Users, Wifi, PawPrint, Car, Star } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useProperties } from "@/hooks/useProperties";
+import PropertyImageCarousel from "@/components/PropertyImageCarousel";
+import propertyInterior1 from "@/assets/property-interior-1.jpg";
+import propertyInterior2 from "@/assets/property-interior-2.jpg";
+import propertyInterior3 from "@/assets/property-interior-3.jpg";
 
 const PropertyGrid = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -15,6 +19,9 @@ const PropertyGrid = () => {
   });
 
   const { data: properties, isLoading, error } = useProperties(filters);
+
+  // Stock images for carousel
+  const stockImages = [propertyInterior1, propertyInterior2, propertyInterior3];
 
   const filterOptions = [
     { key: "all", label: "All Properties", action: () => { setActiveFilter("all"); setFilters({ guests: undefined, petFriendly: undefined, boatParking: undefined }); } },
@@ -81,24 +88,20 @@ const PropertyGrid = () => {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {properties?.slice(0, 6).map((property, index) => (
               <Card 
                 key={property.property_id} 
                 className="card-boutique overflow-hidden group fade-in-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="relative h-72 overflow-hidden">
-                  <img 
-                    src={property.image_folder ? `/lovable-uploads/${property.property_id}-1.jpg` : '/placeholder-property.jpg'}
-                    alt={property.title || 'Property'}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/placeholder-property.jpg';
-                    }}
+                <div className="relative">
+                  <PropertyImageCarousel
+                    images={stockImages}
+                    propertyId={property.property_id}
+                    propertyTitle={property.title || 'Property'}
                   />
-                  <div className="absolute top-6 right-6 flex gap-3">
+                  <div className="absolute top-4 right-4 flex gap-2">
                     {property.airbnb_rating && (
                       <Badge className="bg-white/95 text-primary flex items-center gap-1 shadow-lg backdrop-blur-sm">
                         <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
@@ -111,56 +114,56 @@ const PropertyGrid = () => {
                   </div>
                 </div>
                 
-                <CardContent className="p-8">
+                <CardContent className="p-6">
                   <div className="mb-4">
-                    <h3 className="text-2xl font-serif font-semibold mb-2 text-primary leading-tight">
+                    <h3 className="text-xl font-serif font-semibold mb-2 text-primary leading-tight">
                       {property.title}
                     </h3>
                     {property.subtitle && (
-                      <p className="text-base text-muted-foreground leading-relaxed">{property.subtitle}</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{property.subtitle}</p>
                     )}
                   </div>
                   
                   {/* Property Details with enhanced spacing */}
-                  <div className="grid grid-cols-3 gap-6 mb-6 py-4 border-t border-b border-border/50">
-                    <div className="flex flex-col items-center space-y-2 text-center">
-                      <Bed size={20} className="text-primary" />
-                      <span className="text-lg font-semibold text-primary">{property.bedrooms}</span>
+                  <div className="grid grid-cols-3 gap-4 mb-4 py-3 border-t border-b border-border/50">
+                    <div className="flex flex-col items-center space-y-1 text-center">
+                      <Bed size={18} className="text-primary" />
+                      <span className="text-base font-semibold text-primary">{property.bedrooms}</span>
                       <span className="text-xs text-muted-foreground uppercase tracking-wide">Bedrooms</span>
                     </div>
-                    <div className="flex flex-col items-center space-y-2 text-center">
-                      <Bath size={20} className="text-primary" />
-                      <span className="text-lg font-semibold text-primary">{property.bathrooms}</span>
+                    <div className="flex flex-col items-center space-y-1 text-center">
+                      <Bath size={18} className="text-primary" />
+                      <span className="text-base font-semibold text-primary">{property.bathrooms}</span>
                       <span className="text-xs text-muted-foreground uppercase tracking-wide">Bathrooms</span>
                     </div>
-                    <div className="flex flex-col items-center space-y-2 text-center">
-                      <Users size={20} className="text-primary" />
-                      <span className="text-lg font-semibold text-primary">{property.guests}</span>
+                    <div className="flex flex-col items-center space-y-1 text-center">
+                      <Users size={18} className="text-primary" />
+                      <span className="text-base font-semibold text-primary">{property.guests}</span>
                       <span className="text-xs text-muted-foreground uppercase tracking-wide">Guests</span>
                     </div>
                   </div>
                   
                   {/* Amenities with better spacing */}
-                  <div className="flex flex-wrap gap-3 mb-8">
+                  <div className="flex flex-wrap gap-2 mb-6">
                     {property.pet_friendly && (
-                      <div className="flex items-center space-x-2 text-sm bg-success/10 text-success px-3 py-2 rounded-full">
-                        <PawPrint size={14} />
+                      <div className="flex items-center space-x-1 text-xs bg-success/10 text-success px-2 py-1 rounded-full">
+                        <PawPrint size={12} />
                         <span>Pet Friendly</span>
                       </div>
                     )}
                     {property.boat_parking && (
-                      <div className="flex items-center space-x-2 text-sm bg-ocean-blue/10 text-ocean-blue px-3 py-2 rounded-full">
-                        <Car size={14} />
+                      <div className="flex items-center space-x-1 text-xs bg-ocean-blue/10 text-ocean-blue px-2 py-1 rounded-full">
+                        <Car size={12} />
                         <span>Boat Parking</span>
                       </div>
                     )}
-                    <div className="flex items-center space-x-2 text-sm bg-primary/10 text-primary px-3 py-2 rounded-full">
-                      <Wifi size={14} />
+                    <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                      <Wifi size={12} />
                       <span>WiFi</span>
                     </div>
                   </div>
                   
-                  <Button asChild className="w-full py-4 text-base rounded-full font-semibold tracking-wide hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                  <Button asChild className="w-full py-3 text-sm rounded-full font-semibold tracking-wide hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
                     <Link to={`/properties/${property.slug}`}>
                       View Details
                     </Link>

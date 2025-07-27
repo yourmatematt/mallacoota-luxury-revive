@@ -3,7 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import PropertyGrid from "@/components/PropertyGrid";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import DiscoverSection from "@/components/DiscoverSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
+import TestimonialsHorizontalTicker from "@/components/TestimonialsHorizontalTicker";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
@@ -16,7 +16,7 @@ const Index = () => {
         <PropertyGrid />
         <WhyChooseUs />
         <DiscoverSection />
-        <TestimonialsSection />
+        <TestimonialsHorizontalTicker />
         <CTASection />
       </main>
       <Footer />

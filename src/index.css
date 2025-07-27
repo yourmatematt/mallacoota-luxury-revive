@@ -227,6 +227,60 @@
   .transition-smooth {
     transition: var(--transition);
   }
+
+  /* Horizontal Ticker Animations */
+  .ticker-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticker-track {
+    display: flex;
+    animation: scroll-left 60s linear infinite;
+    width: fit-content;
+  }
+
+  .ticker-slow {
+    animation-duration: 200s;
+  }
+
+  .ticker-item {
+    flex: 0 0 auto;
+    width: 400px;
+    max-width: 400px;
+  }
+
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Enhanced shadow utilities */
+  .shadow-elegant {
+    box-shadow: 0 10px 30px -10px hsl(var(--primary) / 0.3);
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.15);
+  }
+
+  .shadow-3xl {
+    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Gradient backgrounds */
+  .bg-gradient-subtle {
+    background: linear-gradient(135deg, hsl(var(--luxury-cream)), hsl(var(--warm-neutral)));
+  }
+
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
 }
 
 /* Content HTML Styling - For blog posts and property descriptions */

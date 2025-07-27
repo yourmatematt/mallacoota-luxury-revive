@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import heroBackground from "@/assets/hero-pelicans.jpg";
-import boutiqueHeroBg from "@/assets/boutique-hero-bg.jpg";
 
 const HeroSection = () => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
@@ -22,7 +20,7 @@ const HeroSection = () => {
       {/* Enhanced Background Image with parallax effect */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105 transition-transform duration-700"
-        style={{ backgroundImage: `url(${boutiqueHeroBg})` }}
+        style={{ backgroundImage: `url(/lovable-uploads/cdbaf109-97df-45fa-9df9-9d08463fa265.png)` }}
       />
       
       {/* Enhanced Overlay with boutique gradient */}

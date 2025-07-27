@@ -6,23 +6,39 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Star, Users, Bed, Bath, ChevronLeft, ChevronRight, Wifi, Heart } from "lucide-react";
+import { Star, Users, Bed, Bath, Wifi } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
-import { usePropertyImages } from "@/hooks/usePropertyImages";
 import { usePropertyReviews, usePropertyBySlug } from "@/hooks/useProperties";
+import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
+import propertyHero1 from "@/assets/property-hero-1.jpg";
+import propertyHero2 from "@/assets/property-hero-2.jpg";
+import propertyHero3 from "@/assets/property-hero-3.jpg";
+import propertyInterior1 from "@/assets/property-interior-1.jpg";
+import propertyInterior2 from "@/assets/property-interior-2.jpg";
+import propertyInterior3 from "@/assets/property-interior-3.jpg";
+import propertyInterior4 from "@/assets/property-interior-4.jpg";
+import propertyInterior5 from "@/assets/property-interior-5.jpg";
 
 const PropertyDetail = () => {
   const { slug } = useParams();
   const { data: property, isLoading: propertyLoading } = usePropertyBySlug(slug || '');
   const { data: reviews } = usePropertyReviews(property?.id);
-  const { data: images } = usePropertyImages(property?.image_folder);
   const { toast } = useToast();
   
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showGallery, setShowGallery] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+
+  // Stock images for gallery
+  const heroImages = [propertyHero1, propertyHero2, propertyHero3];
+  const allImages = [propertyInterior1, propertyInterior2, propertyInterior3, propertyInterior4, propertyInterior5];
+  
+  // Get hero image based on property id
+  const getHeroImage = (propertyId: string) => {
+    const index = parseInt(propertyId?.slice(-1) || '0') % heroImages.length;
+    return heroImages[index];
+  };
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -117,64 +133,87 @@ ${formData.message}
       
       <main className="pt-20">
         {/* Hero Section */}
-        <section className="relative h-[60vh] overflow-hidden">
-          <div className="relative">
+        <section className="relative h-[70vh] overflow-hidden">
+          <div className="relative h-full">
             <img
-              src={images?.[currentImageIndex]?.url || `/lovable-uploads/${property.image_folder}-1.jpg`}
+              src={getHeroImage(property.property_id)}
               alt={property.title || 'Property'}
               className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = '/placeholder-property.jpg';
-              }}
             />
-            <div className="absolute inset-0 bg-black/30"></div>
+            <div className="hero-overlay"></div>
           </div>
           
-          <div className="absolute bottom-8 left-8 text-white">
-            <h1 className="text-4xl font-bold mb-4">{property.title}</h1>
-            <p className="text-xl text-muted-foreground mb-6">{property.subtitle}</p>
+          <div className="absolute bottom-12 left-12 text-white max-w-2xl">
+            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 fade-in-up">{property.title}</h1>
+            <p className="text-xl text-white/90 mb-8 leading-relaxed fade-in-up stagger-1">{property.subtitle}</p>
             
-            <div className="flex items-center gap-6 text-sm">
-                <div className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
+            <div className="flex items-center gap-8 text-lg fade-in-up stagger-2">
+                <div className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
                   <span>{property.guests} guests</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Bed className="h-4 w-4" />
+                <div className="flex items-center gap-2">
+                  <Bed className="h-5 w-5" />
                   <span>{property.bedrooms} bedrooms</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Bath className="h-4 w-4" />
+                <div className="flex items-center gap-2">
+                  <Bath className="h-5 w-5" />
                   <span>{property.bathrooms} bathrooms</span>
                 </div>
               </div>
           </div>
 
-          {/* Key amenities */}
-          <div className="absolute bottom-8 right-8">
-              <div className="flex flex-wrap gap-2">
+          {/* Key amenities and gallery button */}
+          <div className="absolute bottom-12 right-12">
+              <div className="flex flex-wrap gap-3 mb-6">
                 {property.pet_friendly && (
-                  <Badge variant="secondary">Pet Friendly</Badge>
+                  <Badge className="bg-white/90 text-primary shadow-lg">Pet Friendly</Badge>
                 )}
                 {property.boat_parking && (
-                  <Badge variant="secondary">Boat Parking</Badge>
+                  <Badge className="bg-white/90 text-primary shadow-lg">Boat Parking</Badge>
                 )}
-                <Badge variant="outline">WiFi</Badge>
-                <Badge variant="outline">Kitchen</Badge>
+                <Badge className="bg-white/90 text-primary shadow-lg">WiFi</Badge>
+                <Badge className="bg-white/90 text-primary shadow-lg">Kitchen</Badge>
               </div>
               
               <Button 
-                onClick={() => setShowGallery(true)}
-                variant="outline" 
-                className="w-full"
+                onClick={() => {
+                  setGalleryIndex(0);
+                  setShowGallery(true);
+                }}
+                className="bg-white/95 text-primary hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg"
               >
-                View All {images?.length || 1} Photos
+                View All {allImages.length} Photos
               </Button>
           </div>
         </section>
 
-        <div className="container mx-auto px-4 py-16">
+        {/* Property Images Gallery */}
+        <section className="py-8 bg-gradient-subtle">
+          <div className="container mx-auto px-6">
+            <h2 className="text-3xl font-serif font-bold text-primary mb-8 text-center">Property Gallery</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {allImages.map((image, index) => (
+                <div 
+                  key={index}
+                  className="aspect-square overflow-hidden rounded-xl cursor-pointer group hover:scale-105 transition-all duration-300 shadow-soft hover:shadow-elegant"
+                  onClick={() => {
+                    setGalleryIndex(index);
+                    setShowGallery(true);
+                  }}
+                >
+                  <img
+                    src={image}
+                    alt={`${property.title} - Image ${index + 1}`}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="container mx-auto px-6 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
@@ -354,49 +393,13 @@ ${formData.message}
           </div>
         </div>
 
-        <Dialog open={showGallery} onOpenChange={setShowGallery}>
-          <DialogContent className="max-w-4xl h-[80vh]">
-            <DialogHeader>
-              <DialogTitle>Property Photos</DialogTitle>
-            </DialogHeader>
-            <div className="relative flex-1">
-              <img
-                src={images?.[currentImageIndex]?.url || `/lovable-uploads/${property.image_folder}-1.jpg`}
-                alt={`${property.title} - ${currentImageIndex + 1}`}
-                className="w-full h-full object-cover rounded-lg"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/placeholder-property.jpg';
-                }}
-              />
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute left-4 top-1/2 transform -translate-y-1/2"
-                onClick={() => setCurrentImageIndex(
-                  currentImageIndex === 0 ? (images?.length || 1) - 1 : currentImageIndex - 1
-                )}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute right-4 top-1/2 transform -translate-y-1/2"
-                onClick={() => setCurrentImageIndex(
-                  currentImageIndex === (images?.length || 1) - 1 ? 0 : currentImageIndex + 1
-                )}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 rounded-full px-3 py-1">
-                <span className="text-white text-sm">
-                  {currentImageIndex + 1} / {images?.length || 1}
-                </span>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <PropertyGalleryOverlay
+          images={allImages}
+          isOpen={showGallery}
+          onClose={() => setShowGallery(false)}
+          initialIndex={galleryIndex}
+          propertyTitle={property.title || 'Property'}
+        />
       </main>
 
       <Footer />
