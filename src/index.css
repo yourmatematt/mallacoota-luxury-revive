@@ -181,6 +181,12 @@
   
   .shadow-strong {
     box-shadow: var(--shadow-strong);
+  }
+  
+  /* Transition utilities */
+  .transition-smooth {
+    transition: var(--transition);
+  }
 }
 
 /* Content HTML Styling - For blog posts and property descriptions */
