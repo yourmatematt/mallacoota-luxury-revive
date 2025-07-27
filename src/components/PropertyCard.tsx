@@ -15,15 +15,15 @@ interface PropertyCardProps {
 }
 
 const PropertyCard = ({ property, onMouseEnter, onMouseLeave, currentImageIndex }: PropertyCardProps) => {
-  const { data: images } = usePropertyImages(property.property_id);
-  const currentImage = currentImageIndex[property.property_id] || 0;
+  const { data: images } = usePropertyImages(property.id);
+  const currentImage = currentImageIndex[property.id] || 0;
   const displayImages = images || [];
 
   return (
     <Card 
       className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-      onMouseEnter={() => onMouseEnter(property.property_id, displayImages.length)}
-      onMouseLeave={() => onMouseLeave(property.property_id)}
+      onMouseEnter={() => onMouseEnter(property.id, displayImages.length)}
+      onMouseLeave={() => onMouseLeave(property.id)}
     >
       <div className="relative h-64">
         {displayImages.length > 0 ? (

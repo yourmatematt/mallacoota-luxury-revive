@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface Property {
-  property_id: string;
+  id: string;
   title: string;
   slug: string;
   subtitle?: string;
@@ -45,7 +45,7 @@ export const useProperties = (filters?: {
       const { data, error } = await query;
       
       if (error) throw error;
-      return data as any[];
+      return data as Property[];
     },
   });
 };
@@ -61,7 +61,7 @@ export const usePropertyBySlug = (slug: string) => {
         .single();
       
       if (error) throw error;
-      return data as any;
+      return data as Property;
     },
     enabled: !!slug,
   });
@@ -81,5 +81,23 @@ export const usePropertyReviews = (propertyId?: string) => {
       return data;
     },
     enabled: !!propertyId,
+  });
+};
+
+export const useRandomProperties = (limit: number = 3) => {
+  return useQuery({
+    queryKey: ['random-properties', limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('Properties')
+        .select('*')
+        .limit(100); // Get more than needed for randomization
+      
+      if (error) throw error;
+      
+      // Randomize and return limited number
+      const shuffled = data?.sort(() => 0.5 - Math.random()) || [];
+      return shuffled.slice(0, limit) as Property[];
+    },
   });
 };

@@ -1,34 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export const usePropertyImages = (propertyId?: string) => {
+export const usePropertyImages = (imageFolder?: string) => {
   return useQuery({
-    queryKey: ['property-images', propertyId],
+    queryKey: ['property-images', imageFolder],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('hammond_properties')
-        .select('*')
-        .eq('property_id', propertyId)
-        .order('sort_order');
+      if (!imageFolder) return [];
+      
+      const { data, error } = await supabase.storage
+        .from('hammond-properties')
+        .list(imageFolder, { limit: 100 });
       
       if (error) throw error;
       
       // Generate the storage URLs
-      const imagesWithUrls = await Promise.all(
-        (data || []).map(async (image: any) => {
-          const { data: urlData } = supabase.storage
-            .from('hammond-properties')
-            .getPublicUrl(image.file_name);
-          
-          return {
-            ...image,
-            url: urlData.publicUrl,
-          };
-        })
-      );
+      const imagesWithUrls = (data || []).map((file, index) => {
+        const { data: urlData } = supabase.storage
+          .from('hammond-properties')
+          .getPublicUrl(`${imageFolder}/${file.name}`);
+        
+        return {
+          id: file.name,
+          file_name: file.name,
+          url: urlData.publicUrl,
+          sort_order: index,
+        };
+      });
       
       return imagesWithUrls;
     },
-    enabled: !!propertyId,
+    enabled: !!imageFolder,
   });
 };
