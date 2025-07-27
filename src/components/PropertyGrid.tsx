@@ -83,16 +83,13 @@ const PropertyGrid = () => {
                     propertyId={property.property_id}
                     propertyTitle={property.title || 'Property'}
                   />
-                  <div className="absolute top-4 right-4 flex gap-2">
+                  <div className="absolute top-4 right-4">
                     {property.airbnb_rating && (
                       <Badge className="bg-white/95 text-primary flex items-center gap-1 shadow-lg backdrop-blur-sm">
                         <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                         {property.airbnb_rating}
                       </Badge>
                     )}
-                    <Badge className="bg-boutique-accent/90 text-white shadow-lg backdrop-blur-sm">
-                      AVAILABLE
-                    </Badge>
                   </div>
                 </div>
                 
