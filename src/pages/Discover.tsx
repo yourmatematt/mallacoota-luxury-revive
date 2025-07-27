@@ -62,12 +62,12 @@ const Discover = () => {
                 </Button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Select value={filters.categoryId} onValueChange={(value) => setFilters({...filters, categoryId: value})}>
+                <Select value={filters.categoryId || "all"} onValueChange={(value) => setFilters({...filters, categoryId: value === "all" ? "" : value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Categories</SelectItem>
+                    <SelectItem value="all">All Categories</SelectItem>
                     {categories?.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
                         {category.name}
@@ -76,12 +76,12 @@ const Discover = () => {
                   </SelectContent>
                 </Select>
                 
-                <Select value={filters.seasonId} onValueChange={(value) => setFilters({...filters, seasonId: value})}>
+                <Select value={filters.seasonId || "all"} onValueChange={(value) => setFilters({...filters, seasonId: value === "all" ? "" : value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Season" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Seasons</SelectItem>
+                    <SelectItem value="all">All Seasons</SelectItem>
                     {seasons?.map((season) => (
                       <SelectItem key={season.id} value={season.id}>
                         {season.name}
@@ -90,12 +90,12 @@ const Discover = () => {
                   </SelectContent>
                 </Select>
                 
-                <Select value={filters.activityLevelId} onValueChange={(value) => setFilters({...filters, activityLevelId: value})}>
+                <Select value={filters.activityLevelId || "all"} onValueChange={(value) => setFilters({...filters, activityLevelId: value === "all" ? "" : value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Activity Level" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Levels</SelectItem>
+                    <SelectItem value="all">All Levels</SelectItem>
                     {activityLevels?.map((level) => (
                       <SelectItem key={level.id} value={level.id}>
                         {level.name}
@@ -104,12 +104,12 @@ const Discover = () => {
                   </SelectContent>
                 </Select>
                 
-                <Select value={filters.audienceId} onValueChange={(value) => setFilters({...filters, audienceId: value})}>
+                <Select value={filters.audienceId || "all"} onValueChange={(value) => setFilters({...filters, audienceId: value === "all" ? "" : value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Audience" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Audiences</SelectItem>
+                    <SelectItem value="all">All Audiences</SelectItem>
                     {audiences?.map((audience) => (
                       <SelectItem key={audience.id} value={audience.id}>
                         {audience.name}
@@ -143,7 +143,7 @@ const Discover = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {blogPosts?.map((post) => (
-                <Link key={post.id} to={`/blog/${post.slug}`}>
+                <Link key={post.id} to={`/discover-mallacoota/${post.slug}`}>
                   <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="aspect-video overflow-hidden">
                       <img
