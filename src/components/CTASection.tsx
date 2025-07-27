@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const CTASection = () => {
   return (
@@ -12,26 +12,14 @@ const CTASection = () => {
           </h2>
           
           <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
-            See friendly and Charming! Get Early Guest George! Search Expert Tool and Exclusive Strategic Premium Groups for Local Recommendations!
+            Discover your perfect Mallacoota retreat. Browse our collection of premium vacation rentals.
           </p>
           
-          {/* Email Contact */}
-          <div className="flex items-center justify-center space-x-2 mb-8">
-            <Mail size={20} className="text-luxury-gold" />
-            <a 
-              href="mailto:info@loveevo.com"
-              className="text-luxury-gold hover:text-white transition-colors duration-300 text-lg"
-            >
-              info@loveevo.com
-            </a>
-          </div>
-          
           {/* CTA Button */}
-          <Button 
-            size="lg"
-            className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-4 text-lg rounded-full shadow-strong hover:shadow-medium transition-all duration-300"
-          >
-            Book Now
+          <Button asChild size="lg" className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-4 text-lg rounded-full shadow-strong hover:shadow-medium transition-all duration-300">
+            <Link to="/properties">
+              View All Properties
+            </Link>
           </Button>
         </div>
       </div>

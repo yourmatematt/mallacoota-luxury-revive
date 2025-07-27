@@ -48,8 +48,8 @@ const TestimonialsHorizontalTicker = () => {
 
         {/* Horizontal Ticker */}
         <div className="relative">
-          <div className="ticker-container group">
-            <div className="ticker-track group-hover:ticker-slow">
+          <div className="ticker-container">
+            <div className="ticker-track ticker-slow">
               {duplicatedReviews.map((review, index) => (
                 <Card 
                   key={`${review.id}-${index}`}
