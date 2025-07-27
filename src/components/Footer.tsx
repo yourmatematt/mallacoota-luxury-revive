@@ -18,10 +18,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo */}
           <div className="flex flex-col items-center md:items-start">
-            <div className="flex flex-col leading-tight mb-4">
-              <span className="logo-hammond text-3xl">Hammond</span>
-              <span className="logo-properties text-base">PROPERTIES</span>
-            </div>
+            <img 
+              src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
+              alt="Hammond Properties" 
+              className="h-12 w-auto mb-4"
+            />
           </div>
 
           {/* Navigation */}
