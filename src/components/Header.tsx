@@ -55,7 +55,7 @@ const Header = () => {
           {/* CTA Button */}
           <div className="hidden lg:block">
             <Button className="btn-accent px-6 py-2 rounded-full">
-              Book Now
+              <Link to="/properties">View Stays</Link>
             </Button>
           </div>
 
@@ -86,8 +86,8 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              <Button className="btn-accent px-6 py-2 rounded-full mt-4">
-                Book Now
+              <Button className="btn-accent px-6 py-2 rounded-full mt-4" asChild>
+                <Link to="/properties">View Stays</Link>
               </Button>
             </nav>
           </div>

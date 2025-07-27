@@ -224,54 +224,80 @@ ${formData.message}
               </div>
 
               {/* Contact Information */}
-              <div className="space-y-8">
-                <div>
-                  <h2 className="text-2xl font-serif font-bold text-primary mb-6">
-                    Get in Touch
-                  </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                    Whether you're planning your first visit to Mallacoota or you're a returning guest, 
-                    we're here to ensure your experience is perfect. Our local expertise and personal 
-                    service make all the difference.
-                  </p>
-                </div>
+              <div>
+                <Card className="card-luxury h-full">
+                  <CardContent className="p-8 h-full flex flex-col">
+                    <div className="mb-6">
+                      <h2 className="text-2xl font-serif font-bold text-primary mb-4">
+                        Get in Touch
+                      </h2>
+                      <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                        Whether you're planning your first visit to Mallacoota or you're a returning guest, 
+                        we're here to ensure your experience is perfect. Our local expertise and personal 
+                        service make all the difference.
+                      </p>
+                    </div>
 
-                <div className="grid grid-cols-1 gap-6">
-                  {contactInfo.map((info, index) => (
-                    <Card 
-                      key={index}
-                      className="card-luxury animate-fade-in"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <CardContent className="p-6">
-                        <div className="flex items-start space-x-4">
-                          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                            <info.icon className="w-6 h-6 text-primary" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-primary mb-1">
-                              {info.title}
-                            </h3>
-                            <p className="text-foreground font-medium mb-1">
-                              {info.details}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {info.description}
-                            </p>
-                          </div>
+                    {/* Primary Contact Info */}
+                    <div className="space-y-6 mb-8">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-6 h-6 text-primary" />
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-primary mb-1">
+                            Email
+                          </h3>
+                          <p className="text-foreground font-medium mb-1">
+                            amelia@hammondproperties.com.au
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Primary contact for all enquiries
+                          </p>
+                        </div>
+                      </div>
 
-                {/* Quick Actions */}
-                <Card className="card-luxury">
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-serif font-semibold text-primary mb-4">
-                      Quick Actions
-                    </h3>
-                    <div className="space-y-3">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Phone className="w-6 h-6 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-primary mb-1">
+                            Phone
+                          </h3>
+                          <p className="text-foreground font-medium mb-1">
+                            0401 825 547
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Available 9am - 6pm, 7 days a week
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Clock className="w-6 h-6 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-primary mb-1">
+                            Response Time
+                          </h3>
+                          <p className="text-foreground font-medium mb-1">
+                            Within 24 hours
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Usually much faster during business hours
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="space-y-3 mt-auto">
+                      <h3 className="text-lg font-serif font-semibold text-primary mb-4">
+                        Quick Actions
+                      </h3>
+                      
                       <a 
                         href="mailto:amelia@hammondproperties.com.au"
                         className="flex items-center p-3 bg-accent/10 rounded-lg hover:bg-accent/20 transition-colors group"

@@ -6,29 +6,26 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useProperties } from "@/hooks/useProperties";
 import PropertyImageCarousel from "@/components/PropertyImageCarousel";
+import PropertyFilters from "@/components/PropertyFilters";
 import propertyInterior1 from "@/assets/property-interior-1.jpg";
 import propertyInterior2 from "@/assets/property-interior-2.jpg";
 import propertyInterior3 from "@/assets/property-interior-3.jpg";
 
 const PropertyGrid = () => {
-  const [activeFilter, setActiveFilter] = useState("all");
   const [filters, setFilters] = useState({
-    guests: undefined as number | undefined,
-    petFriendly: undefined as boolean | undefined,
-    boatParking: undefined as boolean | undefined,
+    guests: 2,
+    petFriendly: false,
+    boatParking: false,
   });
 
-  const { data: properties, isLoading, error } = useProperties(filters);
+  const { data: properties, isLoading, error } = useProperties({
+    guests: filters.guests,
+    petFriendly: filters.petFriendly || undefined,
+    boatParking: filters.boatParking || undefined,
+  });
 
   // Stock images for carousel
   const stockImages = [propertyInterior1, propertyInterior2, propertyInterior3];
-
-  const filterOptions = [
-    { key: "all", label: "All Properties", action: () => { setActiveFilter("all"); setFilters({ guests: undefined, petFriendly: undefined, boatParking: undefined }); } },
-    { key: "pet", label: "Pet Friendly", action: () => { setActiveFilter("pet"); setFilters({ guests: undefined, petFriendly: true, boatParking: undefined }); } },
-    { key: "boat", label: "Boat Parking", action: () => { setActiveFilter("boat"); setFilters({ guests: undefined, petFriendly: undefined, boatParking: true }); } },
-    { key: "large", label: "6+ Guests", action: () => { setActiveFilter("large"); setFilters({ guests: 6, petFriendly: undefined, boatParking: undefined }); } },
-  ];
 
   if (error) {
     return (
@@ -53,23 +50,8 @@ const PropertyGrid = () => {
           </p>
         </div>
 
-        {/* Enhanced Filter Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16 fade-in-up stagger-1">
-          {filterOptions.map((filter) => (
-            <Button
-              key={filter.key}
-              variant={activeFilter === filter.key ? "default" : "outline"}
-              className={`rounded-full px-8 py-3 text-base transition-all duration-500 hover:scale-105 ${
-                activeFilter === filter.key 
-                  ? "bg-primary text-primary-foreground shadow-lg" 
-                  : "border-2 border-border hover:border-primary hover:bg-primary/5"
-              }`}
-              onClick={filter.action}
-            >
-              {filter.label}
-            </Button>
-          ))}
-        </div>
+        {/* Property Filters */}
+        <PropertyFilters onFiltersChange={setFilters} />
 
         {/* Property Grid */}
         {isLoading ? (
