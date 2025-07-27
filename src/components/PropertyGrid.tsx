@@ -34,28 +34,28 @@ const PropertyGrid = () => {
   }
 
   return (
-    <section id="properties" className="py-20 bg-secondary">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section id="properties" className="section-spacing bg-warm-neutral/50">
+      <div className="container mx-auto px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
+        <div className="text-center mb-20 fade-in-up">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-primary mb-6">
             Where Comfort Meets Adventure
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
             Premium vacation rentals perfectly positioned for your Mallacoota discovery.
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        {/* Enhanced Filter Tabs */}
+        <div className="flex flex-wrap justify-center gap-4 mb-16 fade-in-up stagger-1">
           {filterOptions.map((filter) => (
             <Button
               key={filter.key}
               variant={activeFilter === filter.key ? "default" : "outline"}
-              className={`rounded-full px-6 py-2 transition-all duration-300 ${
+              className={`rounded-full px-8 py-3 text-base transition-all duration-500 hover:scale-105 ${
                 activeFilter === filter.key 
-                  ? "bg-primary text-primary-foreground" 
-                  : "border-border hover:border-primary"
+                  ? "bg-primary text-primary-foreground shadow-lg" 
+                  : "border-2 border-border hover:border-primary hover:bg-primary/5"
               }`}
               onClick={filter.action}
             >
@@ -66,12 +66,12 @@ const PropertyGrid = () => {
 
         {/* Property Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="overflow-hidden">
-                <div className="h-64 bg-muted animate-pulse"></div>
-                <CardContent className="p-6">
-                  <div className="space-y-3">
+              <Card key={i} className="overflow-hidden rounded-2xl">
+                <div className="h-72 bg-muted animate-pulse"></div>
+                <CardContent className="p-8">
+                  <div className="space-y-4">
                     <div className="h-6 bg-muted rounded animate-pulse"></div>
                     <div className="h-4 bg-muted rounded animate-pulse"></div>
                     <div className="h-4 bg-muted rounded animate-pulse w-2/3"></div>
@@ -81,79 +81,86 @@ const PropertyGrid = () => {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {properties?.slice(0, 6).map((property) => (
-              <Card key={property.id} className="property-card card-luxury overflow-hidden group">
-                <div className="relative h-64 overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
+            {properties?.slice(0, 6).map((property, index) => (
+              <Card 
+                key={property.property_id} 
+                className="card-boutique overflow-hidden group fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="relative h-72 overflow-hidden">
                   <img 
-                    src={property.image_folder ? `/lovable-uploads/${property.id}-1.jpg` : '/placeholder-property.jpg'}
+                    src={property.image_folder ? `/lovable-uploads/${property.property_id}-1.jpg` : '/placeholder-property.jpg'}
                     alt={property.title || 'Property'}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/placeholder-property.jpg';
                     }}
                   />
-                  <div className="absolute top-4 right-4 flex gap-2">
+                  <div className="absolute top-6 right-6 flex gap-3">
                     {property.airbnb_rating && (
-                      <Badge className="bg-white/90 text-primary flex items-center gap-1">
+                      <Badge className="bg-white/95 text-primary flex items-center gap-1 shadow-lg backdrop-blur-sm">
                         <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                         {property.airbnb_rating}
                       </Badge>
                     )}
-                    <Badge className="bg-luxury-gold text-primary">
+                    <Badge className="bg-boutique-accent/90 text-white shadow-lg backdrop-blur-sm">
                       AVAILABLE
                     </Badge>
                   </div>
                 </div>
                 
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-serif font-semibold mb-2 text-primary">
-                    {property.title}
-                  </h3>
-                  {property.subtitle && (
-                    <p className="text-sm text-muted-foreground mb-4">{property.subtitle}</p>
-                  )}
+                <CardContent className="p-8">
+                  <div className="mb-4">
+                    <h3 className="text-2xl font-serif font-semibold mb-2 text-primary leading-tight">
+                      {property.title}
+                    </h3>
+                    {property.subtitle && (
+                      <p className="text-base text-muted-foreground leading-relaxed">{property.subtitle}</p>
+                    )}
+                  </div>
                   
-                  {/* Property Details */}
-                  <div className="grid grid-cols-3 gap-4 mb-4">
-                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                      <Bed size={16} />
-                      <span>{property.bedrooms}</span>
+                  {/* Property Details with enhanced spacing */}
+                  <div className="grid grid-cols-3 gap-6 mb-6 py-4 border-t border-b border-border/50">
+                    <div className="flex flex-col items-center space-y-2 text-center">
+                      <Bed size={20} className="text-primary" />
+                      <span className="text-lg font-semibold text-primary">{property.bedrooms}</span>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Bedrooms</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                      <Bath size={16} />
-                      <span>{property.bathrooms}</span>
+                    <div className="flex flex-col items-center space-y-2 text-center">
+                      <Bath size={20} className="text-primary" />
+                      <span className="text-lg font-semibold text-primary">{property.bathrooms}</span>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Bathrooms</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                      <Users size={16} />
-                      <span>{property.guests}</span>
+                    <div className="flex flex-col items-center space-y-2 text-center">
+                      <Users size={20} className="text-primary" />
+                      <span className="text-lg font-semibold text-primary">{property.guests}</span>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Guests</span>
                     </div>
                   </div>
                   
-                  {/* Amenities */}
-                  <div className="flex items-center justify-between text-sm mb-6">
-                    <div className="flex space-x-3">
-                      {property.pet_friendly && (
-                        <div className="flex items-center space-x-1 text-success">
-                          <PawPrint size={14} />
-                          <span>Pet Friendly</span>
-                        </div>
-                      )}
-                      {property.boat_parking && (
-                        <div className="flex items-center space-x-1 text-ocean-blue">
-                          <Car size={14} />
-                          <span>Boat Parking</span>
-                        </div>
-                      )}
-                      <div className="flex items-center space-x-1 text-ocean-blue">
-                        <Wifi size={14} />
-                        <span>WiFi</span>
+                  {/* Amenities with better spacing */}
+                  <div className="flex flex-wrap gap-3 mb-8">
+                    {property.pet_friendly && (
+                      <div className="flex items-center space-x-2 text-sm bg-success/10 text-success px-3 py-2 rounded-full">
+                        <PawPrint size={14} />
+                        <span>Pet Friendly</span>
                       </div>
+                    )}
+                    {property.boat_parking && (
+                      <div className="flex items-center space-x-2 text-sm bg-ocean-blue/10 text-ocean-blue px-3 py-2 rounded-full">
+                        <Car size={14} />
+                        <span>Boat Parking</span>
+                      </div>
+                    )}
+                    <div className="flex items-center space-x-2 text-sm bg-primary/10 text-primary px-3 py-2 rounded-full">
+                      <Wifi size={14} />
+                      <span>WiFi</span>
                     </div>
                   </div>
                   
-                  <Button asChild className="w-full btn-primary">
+                  <Button asChild className="w-full py-4 text-base rounded-full font-semibold tracking-wide hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
                     <Link to={`/properties/${property.slug}`}>
                       View Details
                     </Link>
@@ -164,9 +171,9 @@ const PropertyGrid = () => {
           </div>
         )}
 
-        {/* View All Properties Link */}
-        <div className="text-center mt-12">
-          <Button asChild variant="outline" size="lg">
+        {/* Enhanced View All Properties Link */}
+        <div className="text-center mt-20 fade-in-up">
+          <Button asChild variant="outline" size="lg" className="px-12 py-6 text-lg rounded-full border-2 border-primary hover:bg-primary hover:text-primary-foreground hover:scale-105 transition-all duration-500 shadow-lg hover:shadow-xl">
             <Link to="/properties">
               View All Properties
             </Link>

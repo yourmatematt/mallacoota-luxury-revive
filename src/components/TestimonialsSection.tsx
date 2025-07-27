@@ -54,52 +54,57 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section className="section-spacing bg-luxury-cream/30 px-6">
+      <div className="container mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
+        <div className="text-center mb-20 fade-in-up">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-primary mb-6">
             What Our Guests Say
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
             Real experiences from families who've made Mallacoota their home away from home.
           </p>
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
           {testimonials.map((testimonial, index) => (
             <Card 
               key={testimonial.id} 
-              className="card-luxury h-full animate-fade-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="card-boutique bg-white/90 backdrop-blur-sm border-0 h-full fade-in-up"
+              style={{ animationDelay: `${index * 0.15}s` }}
             >
-              <CardContent className="p-6 h-full flex flex-col">
+              <CardContent className="p-8 h-full flex flex-col">
                 {/* Rating Stars */}
-                <div className="flex items-center mb-4">
+                <div className="flex items-center justify-center mb-6">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={16} className="fill-luxury-gold text-luxury-gold" />
+                    <Star key={i} size={20} className="fill-yellow-400 text-yellow-400 mx-1" />
                   ))}
                 </div>
                 
                 {/* Testimonial Text */}
-                <p className="text-muted-foreground mb-6 flex-grow leading-relaxed">
+                <p className="text-foreground/80 mb-8 flex-grow leading-relaxed text-center text-lg font-light italic">
                   "{testimonial.text}"
                 </p>
                 
                 {/* Author Info */}
-                <div className="border-t border-border pt-4">
-                  <p className="font-semibold text-primary">
-                    {testimonial.name}
-                  </p>
-                  <div className="flex items-center text-sm text-muted-foreground space-x-2">
-                    {testimonial.location && (
-                      <>
-                        <span>{testimonial.location}</span>
-                        <span>•</span>
-                      </>
-                    )}
-                    <span>{testimonial.date}</span>
+                <div className="flex items-center justify-center border-t border-border/30 pt-6">
+                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-boutique-accent rounded-full flex items-center justify-center text-white font-bold text-lg mr-4 shadow-lg">
+                    {testimonial.name.charAt(0)}
+                  </div>
+                  <div className="text-center">
+                    <p className="font-semibold text-primary text-lg">
+                      {testimonial.name}
+                    </p>
+                    <div className="text-sm text-muted-foreground">
+                      {testimonial.location && (
+                        <>
+                          <span>{testimonial.location}</span>
+                          <span> • </span>
+                        </>
+                      )}
+                      <span>{testimonial.date}</span>
+                    </div>
                   </div>
                 </div>
               </CardContent>

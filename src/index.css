@@ -22,10 +22,12 @@
     --muted: 210 10% 90%;
     --muted-foreground: 215 15% 45%;
     
-    /* Luxury Accent Colors */
-    --luxury-gold: 45 80% 70%;
-    --luxury-cream: 45 30% 95%;
-    --ocean-blue: 200 50% 45%;
+    /* Boutique Hospitality Colors */
+    --luxury-gold: 35 65% 75%;           /* Muted terracotta */
+    --luxury-cream: 45 30% 95%;          /* Soft warm beige */
+    --ocean-blue: 150 25% 65%;           /* Soft sage green */
+    --warm-neutral: 35 15% 90%;          /* Warm off-white base */
+    --boutique-accent: 25 45% 65%;       /* Warm terracotta accent */
     
     /* Card and Surface Colors */
     --card: 0 0% 100%;
@@ -109,6 +111,8 @@
   body {
     @apply bg-background text-foreground font-sans;
     font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -155,9 +159,45 @@
   
   /* Hero Overlay */
   .hero-overlay {
-    background: var(--gradient-hero);
+    background: linear-gradient(135deg, 
+      hsl(215 25% 15% / 0.8), 
+      hsl(215 30% 25% / 0.6),
+      hsl(25 45% 65% / 0.3)
+    );
     @apply absolute inset-0;
   }
+  
+  /* Section spacing utility */
+  .section-spacing {
+    @apply py-20 md:py-24 lg:py-28;
+  }
+  
+  /* Enhanced card styles for boutique feel */
+  .card-boutique {
+    @apply bg-card border-0 rounded-2xl p-6 transition-all duration-500 hover:shadow-strong hover:bg-card-hover hover:scale-[1.02];
+    box-shadow: 0 4px 20px -4px hsl(215 25% 15% / 0.12);
+  }
+  
+  /* Fade-in animation */
+  .fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Staggered animations */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
   
   /* Property Card Hover Effects */
   .property-card {
