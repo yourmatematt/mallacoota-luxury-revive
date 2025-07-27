@@ -15,7 +15,7 @@ interface PropertyCardProps {
 }
 
 const PropertyCard = ({ property, onMouseEnter, onMouseLeave, currentImageIndex }: PropertyCardProps) => {
-  const { data: images } = usePropertyImages(property.id);
+  const { data: images } = usePropertyImages(property.image_folder);
   const currentImage = currentImageIndex[property.id] || 0;
   const displayImages = images || [];
 
@@ -94,9 +94,8 @@ const PropertyCard = ({ property, onMouseEnter, onMouseLeave, currentImageIndex 
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="text-lg font-semibold text-primary">From $280/night</div>
-          <Link to={`/properties/${property.slug}`}>
-            <Button size="sm">View Details</Button>
+          <Link to={`/properties/${property.slug}`} className="flex-1">
+            <Button size="sm" className="w-full">View Details</Button>
           </Link>
         </div>
       </CardContent>

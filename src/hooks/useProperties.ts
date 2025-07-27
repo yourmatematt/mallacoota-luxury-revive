@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export interface Property {
   id: string;
+  property_id: string;
   title: string;
   slug: string;
   subtitle?: string;
@@ -45,7 +46,7 @@ export const useProperties = (filters?: {
       const { data, error } = await query;
       
       if (error) throw error;
-      return data as Property[];
+      return (data || []).map(item => ({ ...item, id: item.property_id })) as Property[];
     },
   });
 };
@@ -58,10 +59,10 @@ export const usePropertyBySlug = (slug: string) => {
         .from('Properties')
         .select('*')
         .eq('slug', slug)
-        .single();
+        .maybeSingle();
       
       if (error) throw error;
-      return data as Property;
+      return data ? { ...data, id: data.property_id } as Property : null;
     },
     enabled: !!slug,
   });
@@ -97,7 +98,7 @@ export const useRandomProperties = (limit: number = 3) => {
       
       // Randomize and return limited number
       const shuffled = data?.sort(() => 0.5 - Math.random()) || [];
-      return shuffled.slice(0, limit) as Property[];
+      return shuffled.slice(0, limit).map(item => ({ ...item, id: item.property_id })) as Property[];
     },
   });
 };

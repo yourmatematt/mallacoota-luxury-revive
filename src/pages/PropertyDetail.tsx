@@ -181,24 +181,22 @@ ${formData.message}
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold mb-4">About This Property</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  {property.description || property.excerpt}
-                </p>
+                <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed">
+                  {property.description ? (
+                    <div dangerouslySetInnerHTML={{ __html: property.description }} />
+                  ) : (
+                    <p>{property.excerpt}</p>
+                  )}
+                </div>
               </div>
 
               <div>
                 <h3 className="text-xl font-bold mb-4">Amenities</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {property.pet_friendly && (
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-primary rounded-full"></div>
                       <span className="text-sm">Pet Friendly</span>
-                    </div>
-                  )}
-                  {property.boat_parking && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
-                      <span className="text-sm">Boat Parking</span>
                     </div>
                   )}
                   <div className="flex items-center gap-2">
@@ -213,6 +211,12 @@ ${formData.message}
                     <div className="w-2 h-2 bg-primary rounded-full"></div>
                     <span className="text-sm">Air Conditioning</span>
                   </div>
+                  {property.boat_parking && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      <span className="text-sm">Boat Parking</span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-primary rounded-full"></div>
                     <span className="text-sm">Parking</span>

@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useCategories, useSeasons, useActivityLevels, useAudiences } from "@/hooks/useBlogFilters";
+import BlogCategoryBadge from "@/components/BlogCategoryBadge";
 
 const Discover = () => {
   const [filters, setFilters] = useState({
@@ -157,7 +158,7 @@ const Discover = () => {
                     </div>
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between mb-3">
-                        <Badge variant="secondary">Article</Badge>
+                        <BlogCategoryBadge categoryId={post.Categories_id} />
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
                           <Clock className="h-4 w-4" />
                           <span>5 min read</span>
