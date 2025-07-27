@@ -83,105 +83,6 @@ export type Database = {
         }
         Relationships: []
       }
-      Blog_Activity_Levels: {
-        Row: {
-          activity_level_id: string
-          blog_id: string
-          id: string
-        }
-        Insert: {
-          activity_level_id: string
-          blog_id: string
-          id?: string
-        }
-        Update: {
-          activity_level_id?: string
-          blog_id?: string
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Blog_Activity_Levels_activity_level_id_fkey"
-            columns: ["activity_level_id"]
-            isOneToOne: false
-            referencedRelation: "Activity Levels"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Blog_Activity_Levels_blog_id_fkey"
-            columns: ["blog_id"]
-            isOneToOne: false
-            referencedRelation: "Discover Mallacoota Blogs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Blog_Audiences: {
-        Row: {
-          Audiences_id: string
-          Discover_Mallacoota_Blogs_id: string
-          id: string
-        }
-        Insert: {
-          Audiences_id: string
-          Discover_Mallacoota_Blogs_id: string
-          id?: string
-        }
-        Update: {
-          Audiences_id?: string
-          Discover_Mallacoota_Blogs_id?: string
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Blog_Audiences_Audiences_id_fkey"
-            columns: ["Audiences_id"]
-            isOneToOne: false
-            referencedRelation: "Audiences"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Blog_Audiences_Discover_Mallacoota_Blogs_id_fkey"
-            columns: ["Discover_Mallacoota_Blogs_id"]
-            isOneToOne: false
-            referencedRelation: "Discover Mallacoota Blogs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Blog_Seasons: {
-        Row: {
-          blog_id: string
-          id: string
-          season_id: string
-        }
-        Insert: {
-          blog_id: string
-          id?: string
-          season_id: string
-        }
-        Update: {
-          blog_id?: string
-          id?: string
-          season_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Blog_Seasons_blog_id_fkey"
-            columns: ["blog_id"]
-            isOneToOne: false
-            referencedRelation: "Discover Mallacoota Blogs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Blog_Seasons_season_id_fkey"
-            columns: ["season_id"]
-            isOneToOne: false
-            referencedRelation: "Seasons"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       Categories: {
         Row: {
           id: string
@@ -265,9 +166,9 @@ export type Database = {
           description: string | null
           excerpt: string | null
           guests: number | null
-          id: string
           image_folder: string | null
           pet_friendly: boolean | null
+          property_id: string
           slug: string | null
           subtitle: string | null
           title: string | null
@@ -280,9 +181,9 @@ export type Database = {
           description?: string | null
           excerpt?: string | null
           guests?: number | null
-          id: string
           image_folder?: string | null
           pet_friendly?: boolean | null
+          property_id: string
           slug?: string | null
           subtitle?: string | null
           title?: string | null
@@ -295,9 +196,9 @@ export type Database = {
           description?: string | null
           excerpt?: string | null
           guests?: number | null
-          id?: string
           image_folder?: string | null
           pet_friendly?: boolean | null
+          property_id?: string
           slug?: string | null
           subtitle?: string | null
           title?: string | null
