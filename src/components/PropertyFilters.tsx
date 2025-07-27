@@ -1,29 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Star, Users, Car, Heart } from "lucide-react";
 
 interface PropertyFiltersProps {
   onFiltersChange: (filters: { guests: number; petFriendly: boolean; boatParking: boolean }) => void;
+  isLoading?: boolean;
 }
 
-const PropertyFilters = ({ onFiltersChange }: PropertyFiltersProps) => {
+const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) => {
   const [guestCount, setGuestCount] = useState(2);
   const [petFriendly, setPetFriendly] = useState(false);
   const [boatParking, setBoatParking] = useState(false);
 
+  // Debounced filter change handler
+  const debouncedFiltersChange = useCallback(
+    debounce((filters: { guests: number; petFriendly: boolean; boatParking: boolean }) => {
+      onFiltersChange(filters);
+    }, 300),
+    [onFiltersChange]
+  );
+
+  // Update filters when any filter value changes
+  useEffect(() => {
+    debouncedFiltersChange({ guests: guestCount, petFriendly, boatParking });
+  }, [guestCount, petFriendly, boatParking, debouncedFiltersChange]);
+
   const handleGuestChange = (newCount: number) => {
     setGuestCount(newCount);
-    onFiltersChange({ guests: newCount, petFriendly, boatParking });
   };
 
   const handlePetFriendlyChange = (value: boolean) => {
     setPetFriendly(value);
-    onFiltersChange({ guests: guestCount, petFriendly: value, boatParking });
   };
 
   const handleBoatParkingChange = (value: boolean) => {
     setBoatParking(value);
-    onFiltersChange({ guests: guestCount, petFriendly, boatParking: value });
+  };
+
+  const handleSearchClick = () => {
+    // Immediately trigger search when search button is clicked
+    onFiltersChange({ guests: guestCount, petFriendly, boatParking });
   };
 
   return (
@@ -81,13 +97,29 @@ const PropertyFilters = ({ onFiltersChange }: PropertyFiltersProps) => {
 
         {/* Action Button */}
         <div className="text-center md:text-right">
-          <Button className="px-8">
-            Search Properties
+          <Button 
+            className="px-8" 
+            onClick={handleSearchClick}
+            disabled={isLoading}
+          >
+            {isLoading ? "Searching..." : "Search Properties"}
           </Button>
         </div>
       </div>
     </div>
   );
 };
+
+// Debounce utility function
+function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 export default PropertyFilters;

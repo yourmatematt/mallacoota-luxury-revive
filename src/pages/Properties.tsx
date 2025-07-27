@@ -8,16 +8,19 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useProperties } from "@/hooks/useProperties";
 import PropertyCard from "@/components/PropertyCard";
+import PropertyFilters from "@/components/PropertyFilters";
 
 const Properties = () => {
-  const [guestCount, setGuestCount] = useState(2);
-  const [petFriendly, setPetFriendly] = useState(false);
-  const [boatParking, setBoatParking] = useState(false);
+  const [filters, setFilters] = useState({
+    guests: 2,
+    petFriendly: false,
+    boatParking: false,
+  });
 
   const { data: properties, isLoading, error } = useProperties({
-    guests: guestCount,
-    petFriendly: petFriendly || undefined,
-    boatParking: boatParking || undefined,
+    guests: filters.guests,
+    petFriendly: filters.petFriendly || undefined,
+    boatParking: filters.boatParking || undefined,
   });
 
   if (error) {
@@ -53,65 +56,16 @@ const Properties = () => {
             </div>
 
             {/* Filters */}
-            <div className="max-w-4xl mx-auto bg-card rounded-2xl p-6 shadow-soft border">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-                {/* Guest Count */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Guests</label>
-                  <div className="flex items-center space-x-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setGuestCount(Math.max(1, guestCount - 1))}
-                      className="h-8 w-8 p-0"
-                    >
-                      -
-                    </Button>
-                    <span className="text-foreground font-medium w-8 text-center">{guestCount}</span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setGuestCount(guestCount + 1)}
-                      className="h-8 w-8 p-0"
-                    >
-                      +
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Pet Friendly Toggle */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Pet Friendly</label>
-                  <Button
-                    variant={petFriendly ? "default" : "outline"}
-                    onClick={() => setPetFriendly(!petFriendly)}
-                    className="w-full justify-start"
-                  >
-                    <Heart className="w-4 h-4 mr-2" />
-                    {petFriendly ? "Yes" : "Any"}
-                  </Button>
-                </div>
-
-                {/* Boat Parking Toggle */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Boat Parking</label>
-                  <Button
-                    variant={boatParking ? "default" : "outline"}
-                    onClick={() => setBoatParking(!boatParking)}
-                    className="w-full justify-start"
-                  >
-                    <Car className="w-4 h-4 mr-2" />
-                    {boatParking ? "Yes" : "Any"}
-                  </Button>
-                </div>
-
-                {/* Results Count */}
-                <div className="text-center md:text-right">
-                  <p className="text-sm text-muted-foreground">
-                    {isLoading ? "Loading..." : `${properties?.length || 0} propert${properties?.length === 1 ? 'y' : 'ies'} found`}
-                  </p>
-                </div>
-              </div>
+            <PropertyFilters 
+              onFiltersChange={setFilters}
+              isLoading={isLoading}
+            />
+            
+            {/* Results Count */}
+            <div className="text-center mt-8">
+              <p className="text-lg text-muted-foreground">
+                {isLoading ? "Loading properties..." : `${properties?.length || 0} propert${properties?.length === 1 ? 'y' : 'ies'} found`}
+              </p>
             </div>
           </div>
         </section>
