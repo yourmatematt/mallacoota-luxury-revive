@@ -181,11 +181,11 @@ ${formData.message}
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold mb-4">About This Property</h2>
-                <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed">
+                <div className="content-html">
                   {property.description ? (
                     <div dangerouslySetInnerHTML={{ __html: property.description }} />
                   ) : (
-                    <p>{property.excerpt}</p>
+                    <p className="text-muted-foreground leading-relaxed">{property.excerpt}</p>
                   )}
                 </div>
               </div>
