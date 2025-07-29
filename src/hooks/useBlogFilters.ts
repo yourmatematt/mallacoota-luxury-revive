@@ -1,6 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
+// Types for better TypeScript support
+type FilterItem = {
+  value: string;
+  label: string;
+  count: number;
+};
+
+type FilterOptions = {
+  audiences: FilterItem[];
+  seasons: FilterItem[];
+  activityLevels: FilterItem[];
+  categories: FilterItem[];
+};
+
+type RawFilterItem = {
+  filter_type: string;
+  value: string;
+  label: string;
+  count: number;
+};
+
 export const useCategories = () => {
   return useQuery({
     queryKey: ['categories'],
@@ -11,7 +32,7 @@ export const useCategories = () => {
         .order('name');
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 };
@@ -26,7 +47,7 @@ export const useSeasons = () => {
         .order('name');
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 };
@@ -41,7 +62,7 @@ export const useActivityLevels = () => {
         .order('name');
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 };
@@ -56,24 +77,9 @@ export const useAudiences = () => {
         .order('name');
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
-};
-
-// Types for better TypeScript support
-type FilterOptions = {
-  audiences: Array<{ value: string; label: string; count: number }>;
-  seasons: Array<{ value: string; label: string; count: number }>;
-  activityLevels: Array<{ value: string; label: string; count: number }>;
-  categories: Array<{ value: string; label: string; count: number }>;
-};
-
-type FilterItem = {
-  filter_type: string;
-  value: string;
-  label: string;
-  count: number;
 };
 
 // New advanced filtering hooks
@@ -108,25 +114,41 @@ export const useFilterCounts = () => {
 
       if (error) throw error;
       
-      // Group the results by filter type for easier use
-      const grouped = (data as FilterItem[] || []).reduce((acc: Record<string, Array<{ value: string; label: string; count: number }>>, item: FilterItem) => {
-        if (!acc[item.filter_type]) {
-          acc[item.filter_type] = [];
-        }
-        acc[item.filter_type].push({
+      const rawData = (data as RawFilterItem[]) || [];
+      
+      // Initialize the result object
+      const result: FilterOptions = {
+        audiences: [],
+        seasons: [],
+        activityLevels: [],
+        categories: []
+      };
+
+      // Group the results by filter type
+      rawData.forEach((item) => {
+        const filterItem: FilterItem = {
           value: item.value,
           label: item.label,
           count: item.count
-        });
-        return acc;
-      }, {} as Record<string, Array<{ value: string; label: string; count: number }>>);
+        };
 
-      return {
-        audiences: grouped.audience || [],
-        seasons: grouped.season || [],
-        activityLevels: grouped.activity_level || [],
-        categories: grouped.category || []
-      };
+        switch (item.filter_type) {
+          case 'audience':
+            result.audiences.push(filterItem);
+            break;
+          case 'season':
+            result.seasons.push(filterItem);
+            break;
+          case 'activity_level':
+            result.activityLevels.push(filterItem);
+            break;
+          case 'category':
+            result.categories.push(filterItem);
+            break;
+        }
+      });
+
+      return result;
     },
   });
 };
