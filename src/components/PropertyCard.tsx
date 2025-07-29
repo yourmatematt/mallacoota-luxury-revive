@@ -24,6 +24,13 @@ const PropertyCard = ({ property }: { property: Property }) => {
     ? realImages.map(img => img.url)
     : stockImages;
 
+  // DEBUG: Add this temporarily to see what's happening
+  console.log('=== DEBUG INFO ===');
+  console.log('Property image folder:', property.image_folder);
+  console.log('Real images:', realImages);
+  console.log('IsLoading:', isLoading);
+  console.log('Display images:', displayImages);
+
   return (
     <Card className="card-boutique overflow-hidden group fade-in-up">
       <div className="relative">
