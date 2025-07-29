@@ -109,7 +109,7 @@ export const useFilterCounts = () => {
       if (error) throw error;
       
       // Group the results by filter type for easier use
-      const grouped = (data as FilterItem[] || []).reduce((acc: any, item: FilterItem) => {
+      const grouped = (data as FilterItem[] || []).reduce((acc: Record<string, Array<{ value: string; label: string; count: number }>>, item: FilterItem) => {
         if (!acc[item.filter_type]) {
           acc[item.filter_type] = [];
         }
@@ -119,7 +119,7 @@ export const useFilterCounts = () => {
           count: item.count
         });
         return acc;
-      }, {});
+      }, {} as Record<string, Array<{ value: string; label: string; count: number }>>);
 
       return {
         audiences: grouped.audience || [],
