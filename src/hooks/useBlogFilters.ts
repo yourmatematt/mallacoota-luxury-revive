@@ -61,6 +61,21 @@ export const useAudiences = () => {
   });
 };
 
+// Types for better TypeScript support
+type FilterOptions = {
+  audiences: Array<{ value: string; label: string; count: number }>;
+  seasons: Array<{ value: string; label: string; count: number }>;
+  activityLevels: Array<{ value: string; label: string; count: number }>;
+  categories: Array<{ value: string; label: string; count: number }>;
+};
+
+type FilterItem = {
+  filter_type: string;
+  value: string;
+  label: string;
+  count: number;
+};
+
 // New advanced filtering hooks
 export const useFilteredBlogs = (
   audienceSlugs: string[] = [],
@@ -79,14 +94,14 @@ export const useFilteredBlogs = (
       });
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
     enabled: true, // Always enabled, will return all blogs if no filters
   });
 };
 
 export const useFilterCounts = () => {
-  return useQuery({
+  return useQuery<FilterOptions>({
     queryKey: ['filter-counts'],
     queryFn: async () => {
       const { data, error } = await supabase.rpc('get_filter_counts');
@@ -94,7 +109,7 @@ export const useFilterCounts = () => {
       if (error) throw error;
       
       // Group the results by filter type for easier use
-      const grouped = data.reduce((acc: any, item: any) => {
+      const grouped = (data as FilterItem[] || []).reduce((acc: any, item: FilterItem) => {
         if (!acc[item.filter_type]) {
           acc[item.filter_type] = [];
         }
@@ -123,7 +138,7 @@ export const useBlogsWithRelationships = () => {
       const { data, error } = await supabase.rpc('get_blogs_with_relationships');
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 };
