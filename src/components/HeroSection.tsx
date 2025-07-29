@@ -72,7 +72,7 @@ const HeroSection = () => {
       </div>
       
       {/* Enhanced Scroll Indicator */}
-      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-white/80 animate-bounce fade-in-up stagger-3">
+      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-white/80 animate-bounce fade-in-up stagger-3 flex justify-center w-full">
         <div className="flex flex-col items-center space-y-3">
           <span className="text-xs font-light tracking-[0.2em] uppercase">Discover</span>
           <div className="w-6 h-10 border-2 border-white/60 rounded-full flex justify-center">
