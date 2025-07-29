@@ -6,23 +6,38 @@ import { Users, Car, PawPrint, Star, Bed, Bath, Wifi } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Property } from "@/hooks/useProperties";
 import PropertyImageCarousel from "@/components/PropertyImageCarousel";
+import { usePropertyCardImages } from "@/hooks/usePropertyImages";
+// Keep stock images as fallbacks
 import propertyInterior1 from "@/assets/property-interior-1.jpg";
 import propertyInterior2 from "@/assets/property-interior-2.jpg";
 import propertyInterior3 from "@/assets/property-interior-3.jpg";
 
-
 const PropertyCard = ({ property }: { property: Property }) => {
-  // Stock images for carousel
+  // Get real images from Supabase
+  const { data: realImages, isLoading } = usePropertyCardImages(property.image_folder);
+  
+  // Stock images as fallback
   const stockImages = [propertyInterior1, propertyInterior2, propertyInterior3];
+  
+  // Use real images if available, otherwise fall back to stock images
+  const displayImages = realImages && realImages.length > 0 
+    ? realImages.map(img => img.url)
+    : stockImages;
 
   return (
     <Card className="card-boutique overflow-hidden group fade-in-up">
       <div className="relative">
-        <PropertyImageCarousel
-          images={stockImages}
-          propertyId={property.property_id}
-          propertyTitle={property.title || 'Property'}
-        />
+        {isLoading ? (
+          <div className="h-64 bg-gray-200 animate-pulse flex items-center justify-center">
+            <span className="text-gray-500">Loading images...</span>
+          </div>
+        ) : (
+          <PropertyImageCarousel
+            images={displayImages}
+            propertyId={property.property_id}
+            propertyTitle={property.title || 'Property'}
+          />
+        )}
         <div className="absolute top-4 right-4">
           {property.airbnb_rating && (
             <Badge className="bg-white/95 text-primary flex items-center gap-1 shadow-lg backdrop-blur-sm">
