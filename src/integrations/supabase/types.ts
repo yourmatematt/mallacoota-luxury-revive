@@ -335,16 +335,16 @@ export type Database = {
           category_slugs?: string[]
         }
         Returns: {
+          Categories_id: string | null
+          content: string | null
+          excerpt: string | null
+          hero_image_url: string | null
           id: string
-          slug: string
-          title: string
-          excerpt: string
-          content: string
-          meta_title: string
-          meta_description: string
-          hero_image_url: string
-          published_date: string
-          Categories_id: string
+          meta_description: string | null
+          meta_title: string | null
+          published_date: string | null
+          slug: string | null
+          title: string | null
         }[]
       }
       get_blogs_with_relationships: {
@@ -355,12 +355,13 @@ export type Database = {
           title: string
           excerpt: string
           content: string
+          hero_image_url: string
           meta_title: string
           meta_description: string
-          hero_image_url: string
           published_date: string
-          Categories_id: string
-          category: Json
+          category_id: string
+          category_name: string
+          category_slug: string
           audiences: Json
           seasons: Json
           activity_levels: Json
