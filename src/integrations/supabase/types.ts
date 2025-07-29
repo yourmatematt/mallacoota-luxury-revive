@@ -83,6 +83,114 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_activity_levels: {
+        Row: {
+          activity_level_id: string
+          blog_id: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          activity_level_id: string
+          blog_id: string
+          created_at?: string | null
+          id?: string
+        }
+        Update: {
+          activity_level_id?: string
+          blog_id?: string
+          created_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_activity_levels_activity_level_id_fkey"
+            columns: ["activity_level_id"]
+            isOneToOne: false
+            referencedRelation: "Activity Levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_activity_levels_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "Discover Mallacoota Blogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_audiences: {
+        Row: {
+          audience_id: string
+          blog_id: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          audience_id: string
+          blog_id: string
+          created_at?: string | null
+          id?: string
+        }
+        Update: {
+          audience_id?: string
+          blog_id?: string
+          created_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_audiences_audience_id_fkey"
+            columns: ["audience_id"]
+            isOneToOne: false
+            referencedRelation: "Audiences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_audiences_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "Discover Mallacoota Blogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_seasons: {
+        Row: {
+          blog_id: string
+          created_at: string | null
+          id: string
+          season_id: string
+        }
+        Insert: {
+          blog_id: string
+          created_at?: string | null
+          id?: string
+          season_id: string
+        }
+        Update: {
+          blog_id?: string
+          created_at?: string | null
+          id?: string
+          season_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_seasons_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "Discover Mallacoota Blogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_seasons_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "Seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Categories: {
         Row: {
           id: string
@@ -103,8 +211,6 @@ export type Database = {
       }
       "Discover Mallacoota Blogs": {
         Row: {
-          activity_levels: string | null
-          audiences: string | null
           Categories_id: string | null
           content: string | null
           excerpt: string | null
@@ -113,13 +219,10 @@ export type Database = {
           meta_description: string | null
           meta_title: string | null
           published_date: string | null
-          seasons: string | null
           slug: string | null
           title: string | null
         }
         Insert: {
-          activity_levels?: string | null
-          audiences?: string | null
           Categories_id?: string | null
           content?: string | null
           excerpt?: string | null
@@ -128,13 +231,10 @@ export type Database = {
           meta_description?: string | null
           meta_title?: string | null
           published_date?: string | null
-          seasons?: string | null
           slug?: string | null
           title?: string | null
         }
         Update: {
-          activity_levels?: string | null
-          audiences?: string | null
           Categories_id?: string | null
           content?: string | null
           excerpt?: string | null
@@ -143,7 +243,6 @@ export type Database = {
           meta_description?: string | null
           meta_title?: string | null
           published_date?: string | null
-          seasons?: string | null
           slug?: string | null
           title?: string | null
         }
@@ -228,7 +327,54 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      filter_blogs_advanced: {
+        Args: {
+          audience_slugs?: string[]
+          season_slugs?: string[]
+          activity_slugs?: string[]
+          category_slugs?: string[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          title: string
+          excerpt: string
+          content: string
+          meta_title: string
+          meta_description: string
+          hero_image_url: string
+          published_date: string
+          Categories_id: string
+        }[]
+      }
+      get_blogs_with_relationships: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          slug: string
+          title: string
+          excerpt: string
+          content: string
+          meta_title: string
+          meta_description: string
+          hero_image_url: string
+          published_date: string
+          Categories_id: string
+          category: Json
+          audiences: Json
+          seasons: Json
+          activity_levels: Json
+        }[]
+      }
+      get_filter_counts: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          filter_type: string
+          value: string
+          label: string
+          count: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
