@@ -149,7 +149,7 @@ ${formData.message}
       
       <main className="pt-20">
         {/* Hero Section */}
-        <section className="relative h-[70vh] overflow-hidden">
+        <section className="relative h-screen overflow-hidden">
           <div className="relative h-full">
             <img
               src={getHeroImage(property.property_id)}
