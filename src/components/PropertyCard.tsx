@@ -34,32 +34,35 @@ const PropertyCard = ({ property }: { property: Property }) => {
 
   // Add this right after your existing debug logs in PropertyCard
   React.useEffect(() => {
-    const directTest = async () => {
-      console.log('=== DIRECT STORAGE TEST ===');
+    const testPublicAccess = async () => {
+      console.log('=== PUBLIC URL TEST ===');
+      
+      // Test if we can access a public URL directly
+      const { data: urlData } = supabase.storage
+        .from('hammond-properties')
+        .getPublicUrl('27-mirrabooka-rd/image_1.jpg');
+      
+      console.log('Generated public URL:', urlData.publicUrl);
+      
+      // Test if the URL actually works
       try {
-        const { data, error } = await supabase.storage
-          .from('hammond-properties')
-          .list('27-mirrabooka-rd');
-        
-        console.log('Direct test - data:', data);
-        console.log('Direct test - error:', error);
-        
-        if (data && data.length > 0) {
-          console.log('Found files:', data.map(f => f.name));
-          
-          // Test a public URL
-          const { data: urlData } = supabase.storage
-            .from('hammond-properties')
-            .getPublicUrl('27-mirrabooka-rd/image_1.jpg');
-          
-          console.log('Test URL:', urlData.publicUrl);
-        }
+        const response = await fetch(urlData.publicUrl);
+        console.log('URL fetch status:', response.status);
+        console.log('URL fetch ok:', response.ok);
       } catch (err) {
-        console.log('Direct test failed:', err);
+        console.log('URL fetch failed:', err);
       }
+      
+      // Also test the list API one more time
+      const { data: listData, error: listError } = await supabase.storage
+        .from('hammond-properties')
+        .list('27-mirrabooka-rd');
+      
+      console.log('List API - data:', listData);
+      console.log('List API - error:', listError);
     };
     
-    directTest();
+    testPublicAccess();
   }, []);
 
   return (
