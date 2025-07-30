@@ -17,8 +17,8 @@ export const usePropertyImages = (imageFolder: string) => {
       // Since list API isn't working but public URLs are, let's try known filenames
       const knownImageNames = [];
       
-      // Check for both .jpg, .JPG, and .png extensions
-      for (let i = 1; i <= 23; i++) {
+      // Check for both .jpg, .JPG, and .png extensions (up to 60 images)
+      for (let i = 1; i <= 60; i++) {
         knownImageNames.push(`image_${i}.jpg`);
         knownImageNames.push(`image_${i}.JPG`);
         knownImageNames.push(`image_${i}.png`);
