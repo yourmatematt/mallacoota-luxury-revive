@@ -26,6 +26,9 @@ export const usePropertyImages = (imageFolder: string) => {
 
       const validImages = [];
 
+      console.log(`=== DEBUG: ${imageFolder} ===`);
+      console.log('Checking for images...');
+
       // Test each potential image to see if it exists
       for (let i = 0; i < knownImageNames.length; i++) {
         const imageName = knownImageNames[i];
@@ -45,11 +48,14 @@ export const usePropertyImages = (imageFolder: string) => {
               url: urlData.publicUrl,
               order: imageNumber
             });
+            console.log(`✅ Found: ${imageName}`);
           }
         } catch (err) {
           // Image doesn't exist, skip it
         }
       }
+
+      console.log(`Total valid images found: ${validImages.length}`);
 
       // Sort by order to ensure image_1 comes before image_2, etc.
       validImages.sort((a, b) => a.order - b.order);
