@@ -26,15 +26,18 @@ export const usePropertyImages = (imageFolder: string) => {
 
       if (error) {
         console.error(`❌ Error listing files in ${imageFolder}:`, error);
+        console.error(`❌ Full error details:`, JSON.stringify(error, null, 2));
         return [];
       }
 
       if (!files || files.length === 0) {
         console.warn(`⚠️ No files found in: ${imageFolder}`);
+        console.log(`🔍 Trying to list files from: hammond-properties/${imageFolder}`);
         return [];
       }
 
       console.log("📂 Raw files returned by Supabase:", files);
+      console.log(`🎯 Found ${files.length} total files in ${imageFolder}:`, files.map(f => f.name));
 
       const validImages: PropertyImage[] = files
         .filter(file => {
