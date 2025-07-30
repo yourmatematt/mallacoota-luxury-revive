@@ -9,6 +9,8 @@ export type PropertyImage = {
 
 // Core hook to get ordered images from Supabase Storage
 export const usePropertyImages = (imageFolder: string) => {
+  const nestedPath = `${imageFolder}/${imageFolder}`; // handles nested folder structure
+
   console.log("📦 usePropertyImages called with:", imageFolder);
 
   return useQuery({
@@ -21,18 +23,18 @@ export const usePropertyImages = (imageFolder: string) => {
 
       const { data: files, error } = await supabase.storage
         .from('hammond-properties')
-        .list(imageFolder, {
+        .list(nestedPath, {
           limit: 100,
           offset: 0,
         });
 
       if (error) {
-        console.error(`❌ Error listing images for "${imageFolder}":`, error);
+        console.error(`❌ Error listing images for "${nestedPath}":`, error);
         return [];
       }
 
       if (!files || files.length === 0) {
-        console.warn(`⚠️ No images found in: hammond-properties/${imageFolder}`);
+        console.warn(`⚠️ No images found in: hammond-properties/${nestedPath}`);
         return [];
       }
 
@@ -44,11 +46,11 @@ export const usePropertyImages = (imageFolder: string) => {
 
           const { data: urlData } = supabase.storage
             .from('hammond-properties')
-            .getPublicUrl(`${imageFolder}/${file.name}`);
+            .getPublicUrl(`${nestedPath}/${file.name}`);
 
           const publicUrl = urlData?.publicUrl || '';
 
-          console.log("🖼️ Found:", `${imageFolder}/${file.name}`);
+          console.log("🖼️ Found:", `${nestedPath}/${file.name}`);
           console.log("🔗 Public URL:", publicUrl);
 
           return {
@@ -60,7 +62,7 @@ export const usePropertyImages = (imageFolder: string) => {
         .filter(image => image.url)
         .sort((a, b) => a.order - b.order);
 
-      console.info(`✅ Loaded ${validImages.length} image(s) from ${imageFolder}`);
+      console.info(`✅ Loaded ${validImages.length} image(s) from ${nestedPath}`);
       return validImages;
     },
     enabled: !!imageFolder,
