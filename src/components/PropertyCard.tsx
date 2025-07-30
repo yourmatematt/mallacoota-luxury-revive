@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Property } from "@/hooks/useProperties";
 import PropertyImageCarousel from "@/components/PropertyImageCarousel";
 import { usePropertyCardImages } from "@/hooks/usePropertyImages";
+import { supabase } from "@/integrations/supabase/client";
 // Keep stock images as fallbacks
 import propertyInterior1 from "@/assets/property-interior-1.jpg";
 import propertyInterior2 from "@/assets/property-interior-2.jpg";
@@ -30,6 +31,36 @@ const PropertyCard = ({ property }: { property: Property }) => {
   console.log('Real images:', realImages);
   console.log('IsLoading:', isLoading);
   console.log('Display images:', displayImages);
+
+  // Add this right after your existing debug logs in PropertyCard
+  React.useEffect(() => {
+    const directTest = async () => {
+      console.log('=== DIRECT STORAGE TEST ===');
+      try {
+        const { data, error } = await supabase.storage
+          .from('hammond-properties')
+          .list('27-mirrabooka-rd');
+        
+        console.log('Direct test - data:', data);
+        console.log('Direct test - error:', error);
+        
+        if (data && data.length > 0) {
+          console.log('Found files:', data.map(f => f.name));
+          
+          // Test a public URL
+          const { data: urlData } = supabase.storage
+            .from('hammond-properties')
+            .getPublicUrl('27-mirrabooka-rd/image_1.jpg');
+          
+          console.log('Test URL:', urlData.publicUrl);
+        }
+      } catch (err) {
+        console.log('Direct test failed:', err);
+      }
+    };
+    
+    directTest();
+  }, []);
 
   return (
     <Card className="card-boutique overflow-hidden group fade-in-up">
