@@ -9,10 +9,15 @@ export type PropertyImage = {
 
 // Core hook to get ordered images from Supabase Storage
 export const usePropertyImages = (imageFolder: string) => {
+  console.log("📦 usePropertyImages called with:", imageFolder);
+
   return useQuery({
     queryKey: ['property-images', imageFolder],
     queryFn: async () => {
-      if (!imageFolder) return [];
+      if (!imageFolder) {
+        console.warn("⚠️ No imageFolder passed to usePropertyImages");
+        return [];
+      }
 
       const { data: files, error } = await supabase.storage
         .from('hammond-properties')
@@ -22,12 +27,12 @@ export const usePropertyImages = (imageFolder: string) => {
         });
 
       if (error) {
-        console.error(`❌ Error listing images for ${imageFolder}:`, error);
+        console.error(`❌ Error listing images for "${imageFolder}":`, error);
         return [];
       }
 
       if (!files || files.length === 0) {
-        console.warn(`⚠️ No images found for folder: ${imageFolder}`);
+        console.warn(`⚠️ No images found in: hammond-properties/${imageFolder}`);
         return [];
       }
 
@@ -43,8 +48,8 @@ export const usePropertyImages = (imageFolder: string) => {
 
           const publicUrl = urlData?.publicUrl || '';
 
-          console.log('🖼️ Image:', `${imageFolder}/${file.name}`);
-          console.log('🔗 URL:', publicUrl);
+          console.log("🖼️ Found:", `${imageFolder}/${file.name}`);
+          console.log("🔗 Public URL:", publicUrl);
 
           return {
             name: file.name,
@@ -52,10 +57,10 @@ export const usePropertyImages = (imageFolder: string) => {
             order: imageNumber,
           };
         })
-        .filter(image => image.url) // Remove any without valid URLs
+        .filter(image => image.url)
         .sort((a, b) => a.order - b.order);
 
-      console.info(`✅ Loaded ${validImages.length} images for ${imageFolder}`);
+      console.info(`✅ Loaded ${validImages.length} image(s) from ${imageFolder}`);
       return validImages;
     },
     enabled: !!imageFolder,
@@ -67,6 +72,7 @@ export const usePropertyImages = (imageFolder: string) => {
 // Hero image (image_1.jpg)
 export const usePropertyHeroImage = (imageFolder: string) => {
   const { data: allImages, ...rest } = usePropertyImages(imageFolder);
+
   return {
     ...rest,
     data: allImages?.find(img => img.name.toLowerCase() === 'image_1.jpg') || null,
@@ -76,6 +82,7 @@ export const usePropertyHeroImage = (imageFolder: string) => {
 // Card images (image_1 to image_3)
 export const usePropertyCardImages = (imageFolder: string) => {
   const { data: allImages, ...rest } = usePropertyImages(imageFolder);
+
   return {
     ...rest,
     data: allImages?.filter(img => img.order <= 3).slice(0, 3) || [],
@@ -85,6 +92,7 @@ export const usePropertyCardImages = (imageFolder: string) => {
 // Gallery images (image_2 and above)
 export const usePropertyGalleryImages = (imageFolder: string) => {
   const { data: allImages, ...rest } = usePropertyImages(imageFolder);
+
   return {
     ...rest,
     data: allImages?.filter(img => img.order > 1) || [],
