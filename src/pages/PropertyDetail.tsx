@@ -214,6 +214,7 @@ ${formData.message}
                 opts={{
                   align: "start",
                   slidesToScroll: 1,
+                  loop: true,
                 }}
                 className="w-full"
               >
