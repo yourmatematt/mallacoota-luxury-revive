@@ -7,49 +7,57 @@ export type PropertyImage = {
   order: number;
 };
 
-// Hook to get all images for a property
+// Hook to get all images for a property (bypassing broken list API)
 export const usePropertyImages = (imageFolder: string) => {
   return useQuery({
     queryKey: ['property-images', imageFolder],
     queryFn: async () => {
       if (!imageFolder) return [];
 
-      const { data, error } = await supabase.storage
-        .from('hammond-properties') // Make sure this matches your actual bucket name
-        .list(imageFolder);
+      console.log('=== BYPASSING LIST API ===');
+      console.log('Using direct URLs for folder:', imageFolder);
 
-      if (error) throw error;
+      // Since list API isn't working but public URLs are, let's try known filenames
+      const knownImageNames = [
+        'image_1.jpg', 'image_2.jpg', 'image_3.jpg', 'image_4.jpg', 'image_5.jpg',
+        'image_6.jpg', 'image_7.jpg', 'image_8.jpg', 'image_9.jpg', 'image_10.jpg',
+        'image_11.jpg', 'image_12.jpg', 'image_13.jpg', 'image_14.jpg', 'image_15.jpg',
+        'image_16.jpg', 'image_17.jpg', 'image_18.jpg', 'image_19.jpg', 'image_20.jpg',
+        'image_21.jpg', 'image_22.jpg', 'image_23.jpg'
+      ];
 
-      // Filter only image files and sort by name
-      const imageFiles = (data || [])
-        .filter(file => file.name.match(/\.(jpg|jpeg|png|webp)$/i))
-        .sort((a, b) => {
-          // Extract number from filename (image_1.jpg -> 1)
-          const getImageNumber = (filename: string) => {
-            const match = filename.match(/image_(\d+)/);
-            return match ? parseInt(match[1]) : 999;
-          };
-          return getImageNumber(a.name) - getImageNumber(b.name);
-        });
+      const validImages = [];
 
-      // Get public URLs for each image (try this first)
-      const imagesWithUrls = imageFiles.map((file, index) => {
+      // Test each potential image to see if it exists
+      for (let i = 0; i < knownImageNames.length; i++) {
+        const imageName = knownImageNames[i];
         const { data: urlData } = supabase.storage
           .from('hammond-properties')
-          .getPublicUrl(`${imageFolder}/${file.name}`);
+          .getPublicUrl(`${imageFolder}/${imageName}`);
 
-        return {
-          name: file.name,
-          url: urlData.publicUrl,
-          order: index + 1
-        };
-      });
+        try {
+          const response = await fetch(urlData.publicUrl, { method: 'HEAD' });
+          if (response.ok) {
+            validImages.push({
+              name: imageName,
+              url: urlData.publicUrl,
+              order: i + 1
+            });
+            console.log(`✅ Found: ${imageName}`);
+          }
+        } catch (err) {
+          // Image doesn't exist, skip it
+          console.log(`❌ Not found: ${imageName}`);
+        }
+      }
 
-      return imagesWithUrls;
+      console.log('Valid images found:', validImages.length);
+      return validImages;
     },
     enabled: !!imageFolder,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime)
+    staleTime: 0, // Don't use cache
+    gcTime: 0, // Don't store in cache
+    refetchOnMount: true, // Always refetch
   });
 };
 
