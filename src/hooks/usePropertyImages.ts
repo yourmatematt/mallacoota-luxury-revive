@@ -66,3 +66,33 @@ export const usePropertyImages = (imageFolder: string) => {
     gcTime: 10 * 60 * 1000,
   });
 };
+
+// Hook for PropertyDetail hero - returns only image_1.jpg
+export const usePropertyHeroImage = (imageFolder: string) => {
+  const { data: allImages, ...rest } = usePropertyImages(imageFolder);
+  
+  return {
+    ...rest,
+    data: allImages?.find(img => img.order === 1) || null,
+  };
+};
+
+// Hook for PropertyCard/PropertyGrid - returns first 3 images
+export const usePropertyCardImages = (imageFolder: string) => {
+  const { data: allImages, ...rest } = usePropertyImages(imageFolder);
+  
+  return {
+    ...rest,
+    data: allImages?.slice(0, 3) || [],
+  };
+};
+
+// Hook for PropertyGallery - returns all images except image_1.jpg
+export const usePropertyGalleryImages = (imageFolder: string) => {
+  const { data: allImages, ...rest } = usePropertyImages(imageFolder);
+  
+  return {
+    ...rest,
+    data: allImages?.filter(img => img.order !== 1) || [],
+  };
+};
