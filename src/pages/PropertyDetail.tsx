@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { usePropertyReviews, usePropertyBySlug } from "@/hooks/useProperties";
 import { usePropertyHeroImage, usePropertyGalleryImages } from "@/hooks/usePropertyImages";
 import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
 import propertyHero2 from "@/assets/property-hero-2.jpg";
@@ -208,23 +209,36 @@ ${formData.message}
         <section className="py-8 bg-gradient-subtle">
           <div className="container mx-auto px-6">
             <h2 className="text-3xl font-serif font-bold text-primary mb-8 text-center">Property Gallery</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {allImages.map((image, index) => (
-                <div 
-                  key={index}
-                  className="aspect-square overflow-hidden rounded-xl cursor-pointer group hover:scale-105 transition-all duration-300 shadow-soft hover:shadow-elegant"
-                  onClick={() => {
-                    setGalleryIndex(index);
-                    setShowGallery(true);
-                  }}
-                >
-                  <img
-                    src={image}
-                    alt={`${property.title} - Image ${index + 1}`}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                </div>
-              ))}
+            <div className="relative">
+              <Carousel
+                opts={{
+                  align: "start",
+                  slidesToScroll: 1,
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-4">
+                  {allImages.map((image, index) => (
+                    <CarouselItem key={index} className="pl-4 md:basis-1/3 lg:basis-1/5">
+                      <div 
+                        className="aspect-square overflow-hidden rounded-xl cursor-pointer group hover:scale-105 transition-all duration-300 shadow-soft hover:shadow-elegant"
+                        onClick={() => {
+                          setGalleryIndex(index);
+                          setShowGallery(true);
+                        }}
+                      >
+                        <img
+                          src={image}
+                          alt={`${property.title} - Image ${index + 1}`}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
+              </Carousel>
             </div>
           </div>
         </section>
