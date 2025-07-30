@@ -7,14 +7,13 @@ export type PropertyImage = {
   order: number;
 };
 
-// Optimized hook to get all images for a property using Supabase storage list API
+// Core hook to get ordered images from Supabase Storage
 export const usePropertyImages = (imageFolder: string) => {
   return useQuery({
     queryKey: ['property-images', imageFolder],
     queryFn: async () => {
       if (!imageFolder) return [];
 
-      // Use Supabase storage list API to get all files in the folder
       const { data: files, error } = await supabase.storage
         .from('hammond-properties')
         .list(imageFolder, {
@@ -23,83 +22,76 @@ export const usePropertyImages = (imageFolder: string) => {
         });
 
       if (error) {
-        console.error(`Error listing images for ${imageFolder}:`, error);
+        console.error(`❌ Error listing images for ${imageFolder}:`, error);
         return [];
       }
 
       if (!files || files.length === 0) {
-        console.log(`No images found for ${imageFolder}`);
+        console.warn(`⚠️ No images found for folder: ${imageFolder}`);
         return [];
       }
 
-      // Filter for image files and create PropertyImage objects
       const validImages = files
-        .filter(file => {
-          // Only include jpg files that follow the image_N.jpg pattern
-          return /^image_\d+\.jpg$/i.test(file.name);
-        })
+        .filter(file => /^image_\d+\.jpg$/i.test(file.name))
         .map(file => {
-          // Extract the number from filename for proper ordering
           const match = file.name.match(/image_(\d+)/i);
           const imageNumber = match ? parseInt(match[1]) : 999;
-          
-          // Get the public URL for the image
+
           const { data: urlData } = supabase.storage
             .from('hammond-properties')
             .getPublicUrl(`${imageFolder}/${file.name}`);
 
+          const publicUrl = urlData?.publicUrl || '';
+
+          console.log('🖼️ Image:', `${imageFolder}/${file.name}`);
+          console.log('🔗 URL:', publicUrl);
+
           return {
             name: file.name,
-            url: urlData.publicUrl,
-            order: imageNumber
+            url: publicUrl,
+            order: imageNumber,
           };
         })
-        .sort((a, b) => a.order - b.order); // Sort by order to ensure image_1 comes first
+        .filter(image => image.url) // Remove any without valid URLs
+        .sort((a, b) => a.order - b.order);
 
-      console.log(`Found ${validImages.length} images for ${imageFolder}`);
+      console.info(`✅ Loaded ${validImages.length} images for ${imageFolder}`);
       return validImages;
     },
     enabled: !!imageFolder,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 };
 
-// Hook to get just the hero image (image_1)
+// Hero image (image_1.jpg)
 export const usePropertyHeroImage = (imageFolder: string) => {
   const { data: allImages, ...rest } = usePropertyImages(imageFolder);
-  
   return {
     ...rest,
-    data: allImages?.find(img => img.name.includes('image_1')) || null
+    data: allImages?.find(img => img.name.toLowerCase() === 'image_1.jpg') || null,
   };
 };
 
-// Hook to get property card gallery images (image_1, image_2, image_3)
+// Card images (image_1 to image_3)
 export const usePropertyCardImages = (imageFolder: string) => {
   const { data: allImages, ...rest } = usePropertyImages(imageFolder);
-  
   return {
     ...rest,
-    data: allImages?.filter(img => {
-      const match = img.name.match(/image_(\d+)/);
-      const imageNumber = match ? parseInt(match[1]) : 999;
-      return imageNumber <= 3;
-    }).slice(0, 3) || []
+    data: allImages?.filter(img => img.order <= 3).slice(0, 3) || [],
   };
 };
 
-// Hook to get gallery images (all except image_1)
+// Gallery images (image_2 and above)
 export const usePropertyGalleryImages = (imageFolder: string) => {
   const { data: allImages, ...rest } = usePropertyImages(imageFolder);
-  
   return {
     ...rest,
-    data: allImages?.filter(img => !img.name.includes('image_1')) || []
+    data: allImages?.filter(img => img.order > 1) || [],
   };
 };
 
-// Utility function to get property images by use case
+// Utility for reuse by UI components
 export const getPropertyImagesByType = (
   images: PropertyImage[] | undefined,
   type: 'hero' | 'card' | 'gallery'
@@ -108,15 +100,11 @@ export const getPropertyImagesByType = (
 
   switch (type) {
     case 'hero':
-      return images.filter(img => img.name.includes('image_1'));
+      return images.filter(img => img.name.toLowerCase() === 'image_1.jpg');
     case 'card':
-      return images.filter(img => {
-        const match = img.name.match(/image_(\d+)/);
-        const imageNumber = match ? parseInt(match[1]) : 999;
-        return imageNumber <= 3;
-      }).slice(0, 3);
+      return images.filter(img => img.order <= 3).slice(0, 3);
     case 'gallery':
-      return images.filter(img => !img.name.includes('image_1'));
+      return images.filter(img => img.order > 1);
     default:
       return images;
   }
