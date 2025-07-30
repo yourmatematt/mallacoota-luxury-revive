@@ -14,17 +14,15 @@ export const usePropertyImages = (imageFolder: string) => {
     queryFn: async () => {
       if (!imageFolder) return [];
 
-      console.log('=== BYPASSING LIST API ===');
-      console.log('Using direct URLs for folder:', imageFolder);
-
       // Since list API isn't working but public URLs are, let's try known filenames
-      const knownImageNames = [
-        'image_1.jpg', 'image_2.jpg', 'image_3.jpg', 'image_4.jpg', 'image_5.jpg',
-        'image_6.jpg', 'image_7.jpg', 'image_8.jpg', 'image_9.jpg', 'image_10.jpg',
-        'image_11.jpg', 'image_12.jpg', 'image_13.jpg', 'image_14.jpg', 'image_15.jpg',
-        'image_16.jpg', 'image_17.jpg', 'image_18.jpg', 'image_19.jpg', 'image_20.jpg',
-        'image_21.jpg', 'image_22.jpg', 'image_23.jpg'
-      ];
+      const knownImageNames = [];
+      
+      // Check for both .jpg, .JPG, and .png extensions
+      for (let i = 1; i <= 23; i++) {
+        knownImageNames.push(`image_${i}.jpg`);
+        knownImageNames.push(`image_${i}.JPG`);
+        knownImageNames.push(`image_${i}.png`);
+      }
 
       const validImages = [];
 
@@ -38,26 +36,29 @@ export const usePropertyImages = (imageFolder: string) => {
         try {
           const response = await fetch(urlData.publicUrl, { method: 'HEAD' });
           if (response.ok) {
+            // Extract the number from filename for proper ordering
+            const match = imageName.match(/image_(\d+)/);
+            const imageNumber = match ? parseInt(match[1]) : 999;
+            
             validImages.push({
               name: imageName,
               url: urlData.publicUrl,
-              order: i + 1
+              order: imageNumber
             });
-            console.log(`✅ Found: ${imageName}`);
           }
         } catch (err) {
           // Image doesn't exist, skip it
-          console.log(`❌ Not found: ${imageName}`);
         }
       }
 
-      console.log('Valid images found:', validImages.length);
+      // Sort by order to ensure image_1 comes before image_2, etc.
+      validImages.sort((a, b) => a.order - b.order);
+
       return validImages;
     },
     enabled: !!imageFolder,
-    staleTime: 0, // Don't use cache
-    gcTime: 0, // Don't store in cache
-    refetchOnMount: true, // Always refetch
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
