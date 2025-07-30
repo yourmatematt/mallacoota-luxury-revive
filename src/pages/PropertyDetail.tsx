@@ -11,7 +11,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
 import { usePropertyReviews, usePropertyBySlug } from "@/hooks/useProperties";
+import { usePropertyHeroImage, usePropertyGalleryImages } from "@/hooks/usePropertyImages";
 import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
+// Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
 import propertyHero2 from "@/assets/property-hero-2.jpg";
 import propertyHero3 from "@/assets/property-hero-3.jpg";
@@ -27,18 +29,32 @@ const PropertyDetail = () => {
   const { data: reviews } = usePropertyReviews(property?.id);
   const { toast } = useToast();
   
+  // Get real images from Supabase
+  const { data: heroImage } = usePropertyHeroImage(property?.image_folder || '');
+  const { data: galleryImages } = usePropertyGalleryImages(property?.image_folder || '');
+  
   const [showGallery, setShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
 
-  // Stock images for gallery
+  // Stock images for fallbacks
   const heroImages = [propertyHero1, propertyHero2, propertyHero3];
-  const allImages = [propertyInterior1, propertyInterior2, propertyInterior3, propertyInterior4, propertyInterior5];
+  const stockGalleryImages = [propertyInterior1, propertyInterior2, propertyInterior3, propertyInterior4, propertyInterior5];
   
-  // Get hero image based on property id
+  // Get hero image - use real image if available, otherwise fallback to stock
   const getHeroImage = (propertyId: string) => {
+    if (heroImage?.url) {
+      return heroImage.url;
+    }
+    // Fallback to stock image
     const index = parseInt(propertyId?.slice(-1) || '0') % heroImages.length;
     return heroImages[index];
   };
+
+  // Get gallery images - use real images if available, otherwise fallback to stock
+  const allImages = galleryImages && galleryImages.length > 0 
+    ? galleryImages.map(img => img.url)
+    : stockGalleryImages;
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
