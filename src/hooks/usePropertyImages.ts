@@ -7,59 +7,59 @@ export type PropertyImage = {
   order: number;
 };
 
-// Hook to get all images for a property (bypassing broken list API)
+// Optimized hook to get all images for a property using Supabase storage list API
 export const usePropertyImages = (imageFolder: string) => {
   return useQuery({
     queryKey: ['property-images', imageFolder],
     queryFn: async () => {
       if (!imageFolder) return [];
 
-      // Since list API isn't working but public URLs are, let's try known filenames
-      const knownImageNames = [];
-      
-      // Check for both .jpg, .JPG, and .png extensions (up to 60 images)
-      for (let i = 1; i <= 60; i++) {
-        knownImageNames.push(`image_${i}.jpg`);
-        knownImageNames.push(`image_${i}.JPG`);
-        knownImageNames.push(`image_${i}.png`);
+      // Use Supabase storage list API to get all files in the folder
+      const { data: files, error } = await supabase.storage
+        .from('hammond-properties')
+        .list(imageFolder, {
+          limit: 100,
+          offset: 0,
+        });
+
+      if (error) {
+        console.error(`Error listing images for ${imageFolder}:`, error);
+        return [];
       }
 
-      const validImages = [];
-
-      console.log(`=== DEBUG: ${imageFolder} ===`);
-      console.log('Checking for images...');
-
-      // Test each potential image to see if it exists
-      for (let i = 0; i < knownImageNames.length; i++) {
-        const imageName = knownImageNames[i];
-        const { data: urlData } = supabase.storage
-          .from('hammond-properties')
-          .getPublicUrl(`${imageFolder}/${imageName}`);
-
-        try {
-          const response = await fetch(urlData.publicUrl, { method: 'HEAD' });
-          if (response.ok) {
-            // Extract the number from filename for proper ordering
-            const match = imageName.match(/image_(\d+)/);
-            const imageNumber = match ? parseInt(match[1]) : 999;
-            
-            validImages.push({
-              name: imageName,
-              url: urlData.publicUrl,
-              order: imageNumber
-            });
-            console.log(`✅ Found: ${imageName}`);
-          }
-        } catch (err) {
-          // Image doesn't exist, skip it
-        }
+      if (!files || files.length === 0) {
+        console.log(`No images found for ${imageFolder}`);
+        return [];
       }
 
-      console.log(`Total valid images found: ${validImages.length}`);
+      // Filter for image files and create PropertyImage objects
+      const validImages = files
+        .filter(file => {
+          // Only include image files (jpg, jpeg, png)
+          const isImageFile = /\.(jpe?g|png)$/i.test(file.name);
+          // Only include files that follow the image_N pattern
+          const isNumberedImage = /^image_\d+\.(jpe?g|png)$/i.test(file.name);
+          return isImageFile && isNumberedImage;
+        })
+        .map(file => {
+          // Extract the number from filename for proper ordering
+          const match = file.name.match(/image_(\d+)/i);
+          const imageNumber = match ? parseInt(match[1]) : 999;
+          
+          // Get the public URL for the image
+          const { data: urlData } = supabase.storage
+            .from('hammond-properties')
+            .getPublicUrl(`${imageFolder}/${file.name}`);
 
-      // Sort by order to ensure image_1 comes before image_2, etc.
-      validImages.sort((a, b) => a.order - b.order);
+          return {
+            name: file.name,
+            url: urlData.publicUrl,
+            order: imageNumber
+          };
+        })
+        .sort((a, b) => a.order - b.order); // Sort by order to ensure image_1 comes first
 
+      console.log(`Found ${validImages.length} images for ${imageFolder}`);
       return validImages;
     },
     enabled: !!imageFolder,
