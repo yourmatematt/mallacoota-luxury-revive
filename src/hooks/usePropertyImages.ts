@@ -15,7 +15,7 @@ export const usePropertyImages = (imageFolder: string) => {
       if (!imageFolder) return [];
 
       const { data, error } = await supabase.storage
-        .from('hammond-properties')
+        .from('hammond-properties') // Make sure this matches your actual bucket name
         .list(imageFolder);
 
       if (error) throw error;
@@ -32,22 +32,20 @@ export const usePropertyImages = (imageFolder: string) => {
           return getImageNumber(a.name) - getImageNumber(b.name);
         });
 
-      // Get signed URLs for each image (since bucket is private)
-      const imagesWithUrls = await Promise.all(
-        imageFiles.map(async (file, index) => {
-          const { data: urlData } = await supabase.storage
-            .from('hammond-properties')
-            .createSignedUrl(`${imageFolder}/${file.name}`, 3600); // 1 hour expiry
+      // Get public URLs for each image (try this first)
+      const imagesWithUrls = imageFiles.map((file, index) => {
+        const { data: urlData } = supabase.storage
+          .from('hammond-properties')
+          .getPublicUrl(`${imageFolder}/${file.name}`);
 
-          return {
-            name: file.name,
-            url: urlData?.signedUrl || '',
-            order: index + 1
-          };
-        })
-      );
+        return {
+          name: file.name,
+          url: urlData.publicUrl,
+          order: index + 1
+        };
+      });
 
-      return imagesWithUrls.filter(img => img.url); // Remove any failed URLs
+      return imagesWithUrls;
     },
     enabled: !!imageFolder,
     staleTime: 5 * 60 * 1000, // 5 minutes
