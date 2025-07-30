@@ -35,11 +35,8 @@ export const usePropertyImages = (imageFolder: string) => {
       // Filter for image files and create PropertyImage objects
       const validImages = files
         .filter(file => {
-          // Only include image files (jpg, jpeg, png)
-          const isImageFile = /\.(jpe?g|png)$/i.test(file.name);
-          // Only include files that follow the image_N pattern
-          const isNumberedImage = /^image_\d+\.(jpe?g|png)$/i.test(file.name);
-          return isImageFile && isNumberedImage;
+          // Only include jpg files that follow the image_N.jpg pattern
+          return /^image_\d+\.jpg$/i.test(file.name);
         })
         .map(file => {
           // Extract the number from filename for proper ordering
