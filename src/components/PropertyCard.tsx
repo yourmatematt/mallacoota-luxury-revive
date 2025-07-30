@@ -32,7 +32,7 @@ const PropertyCard = ({ property }: { property: Property }) => {
   console.log('IsLoading:', isLoading);
   console.log('Display images:', displayImages);
 
-  // Add this right after your existing debug logs in PropertyCard
+  // NEW TEST - Check public URL access
   React.useEffect(() => {
     const testPublicAccess = async () => {
       console.log('=== PUBLIC URL TEST ===');
