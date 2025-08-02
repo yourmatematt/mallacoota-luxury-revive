@@ -47,14 +47,14 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
     <div className="max-w-4xl mx-auto bg-card rounded-2xl p-6 shadow-soft border">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
         {/* Guest Count */}
-        <div className="space-y-2 flex flex-col justify-end">
+        <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Guests</label>
           <div className="flex items-center space-x-3">
             <Button
               variant="outline"
               size="sm"
               onClick={() => handleGuestChange(Math.max(1, guestCount - 1))}
-              className="h-8 w-8 p-0"
+              className="h-10 w-10 p-0"
             >
               -
             </Button>
@@ -63,7 +63,7 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
               variant="outline"
               size="sm"
               onClick={() => handleGuestChange(guestCount + 1)}
-              className="h-8 w-8 p-0"
+              className="h-10 w-10 p-0"
             >
               +
             </Button>
