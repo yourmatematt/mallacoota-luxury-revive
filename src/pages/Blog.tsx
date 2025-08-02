@@ -147,7 +147,7 @@ const Blog = () => {
       <Header />
       
       <main className="pt-20">
-        {/* Hero Section */}
+{/* Hero Section */}
         <section className="py-16 bg-gradient-subtle">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center mb-12">
@@ -155,12 +155,12 @@ const Blog = () => {
                 Discover Mallacoota
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Your guide to experiencing the best of our coastal paradise. Local insights, hidden gems, and insider tips to make your stay unforgettable.
+                Explore the hidden gems, local attractions, and unique experiences that make Mallacoota special
               </p>
             </div>
 
             {/* Search Bar */}
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto mb-8">
               <Input
                 type="text"
                 placeholder="Search articles..."
