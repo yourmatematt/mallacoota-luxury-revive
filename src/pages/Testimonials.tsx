@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useProperties } from "@/hooks/useProperties";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { CSSProperties } from "react";
 
 interface Review {
   id: string;
@@ -26,7 +27,9 @@ interface Review {
 const Testimonials = () => {
   const [searchParams] = useSearchParams();
   const [selectedProperty, setSelectedProperty] = useState<string>("All");
+  const [scrollProgresses, setScrollProgresses] = useState<Record<string, number>>({});
   const isMobile = useIsMobile();
+  const titleRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Fetch properties and reviews from Supabase
   const { data: properties, isLoading: propertiesLoading } = useProperties();
@@ -68,6 +71,73 @@ const Testimonials = () => {
     reviews: (allReviews || []).filter(review => review.property_id === property.id),
     reviewCount: (allReviews || []).filter(review => review.property_id === property.id).length
   }));
+
+  // Scroll effect logic
+  useEffect(() => {
+    const handleScroll = () => {
+      const navbarHeight = 80;
+      const newProgresses: Record<string, number> = {};
+
+      reviewsByProperty.forEach((property) => {
+        if (property.reviews.length >= 3) {
+          const titleRef = titleRefs.current[property.id];
+          if (titleRef) {
+            const titleRect = titleRef.getBoundingClientRect();
+            const titleHitsNavbar = titleRect.top <= navbarHeight;
+            
+            if (titleHitsNavbar) {
+              const progress = Math.max(0, Math.min(1, (navbarHeight - titleRect.top) / 400));
+              newProgresses[property.id] = progress;
+            } else {
+              newProgresses[property.id] = 0;
+            }
+          }
+        }
+      });
+
+      setScrollProgresses(newProgresses);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [reviewsByProperty]);
+
+  // Card styling function for stacking effect
+  const getCardStyle = (index: number, propertyId: string): CSSProperties => {
+    const scrollProgress = scrollProgresses[propertyId] || 0;
+    const column = index % 3;
+    const layer = Math.floor(index / 3);
+    
+    if (layer === 0) {
+      return {
+        position: 'relative' as const,
+        zIndex: 1,
+        transform: 'translateY(0)',
+        opacity: 1,
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+      };
+    }
+    
+    const cardDelay = (index - 3) * 0.2;
+    const adjustedProgress = Math.max(0, scrollProgress - cardDelay);
+    const stackProgress = Math.min(1, adjustedProgress * 2);
+    
+    const isVisible = adjustedProgress > 0;
+    const slideUpAmount = isVisible ? Math.max(0, 100 - stackProgress * 120) : 100;
+    
+    return {
+      position: 'absolute' as const,
+      top: 0,
+      left: `${column * 33.333}%`,
+      width: 'calc(33.333% - 2rem)',
+      zIndex: 10 + layer,
+      transform: `translateY(${slideUpAmount}%)`,
+      opacity: isVisible ? Math.min(1, stackProgress * 1.5) : 0,
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+    };
+  };
 
   if (propertiesLoading || reviewsLoading) {
     return (
@@ -154,12 +224,16 @@ const Testimonials = () => {
 
         {/* Reviews Section */}
         {selectedProperty === "All" ? (
-          // Show reviews grouped by property
+          // Show reviews grouped by property with scroll stacking effect
           <section className="py-16">
             <div className="container mx-auto px-4 lg:px-8">
               {reviewsByProperty.map((property) => (
-                <div key={property.id} className="mb-16">
-                  <div className="flex items-center justify-between mb-8">
+                <div key={property.id} className="mb-24">
+                  {/* Property Title - Triggers scroll effect */}
+                  <div 
+                    ref={(el) => titleRefs.current[property.id] = el}
+                    className="flex items-center justify-between mb-8"
+                  >
                     <div>
                       <h2 className="text-3xl font-serif font-bold text-primary mb-2">
                         {property.title}
@@ -175,44 +249,91 @@ const Testimonials = () => {
                     </Link>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {property.reviews.slice(0, 6).map((review, index) => (
-                      <Card 
-                        key={review.id}
-                        className="card-luxury h-full animate-fade-in"
-                        style={{ animationDelay: `${index * 0.1}s` }}
-                      >
-                        <CardContent className="p-6 h-full flex flex-col">
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center">
-                              {[...Array(parseInt(review.rating) || 5)].map((_, i) => (
-                                <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
-                              ))}
+                  {/* Reviews Grid with Stacking Effect */}
+                  {property.reviews.length >= 3 ? (
+                    <div className="relative">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
+                        {property.reviews.slice(0, 6).map((review, index) => (
+                          <Card 
+                            key={review.id}
+                            className="card-luxury h-full"
+                            style={getCardStyle(index, property.id)}
+                          >
+                            <CardContent className="p-6 h-full flex flex-col">
+                              <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center">
+                                  {[...Array(parseInt(review.rating) || 5)].map((_, i) => (
+                                    <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
+                                  ))}
+                                </div>
+                                <Badge variant="secondary" className="text-xs">
+                                  {review.source}
+                                </Badge>
+                              </div>
+                              
+                              <p className="text-muted-foreground mb-6 flex-grow leading-relaxed">
+                                "{review.review}"
+                              </p>
+                              
+                              <div className="border-t border-border pt-4">
+                                <p className="font-semibold text-primary">
+                                  {review.reviewer}
+                                </p>
+                                <div className="flex items-center text-sm text-muted-foreground space-x-2">
+                                  <span>{new Date(review.review_date).toLocaleDateString('en-AU', {
+                                    year: 'numeric',
+                                    month: 'long'
+                                  })}</span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                      {/* Spacer for scroll effect */}
+                      <div className="h-96"></div>
+                    </div>
+                  ) : (
+                    /* Regular grid for properties with fewer than 3 reviews */
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {property.reviews.map((review, index) => (
+                        <Card 
+                          key={review.id}
+                          className="card-luxury h-full animate-fade-in"
+                          style={{ animationDelay: `${index * 0.1}s` }}
+                        >
+                          <CardContent className="p-6 h-full flex flex-col">
+                            <div className="flex items-center justify-between mb-4">
+                              <div className="flex items-center">
+                                {[...Array(parseInt(review.rating) || 5)].map((_, i) => (
+                                  <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
+                                ))}
+                              </div>
+                              <Badge variant="secondary" className="text-xs">
+                                {review.source}
+                              </Badge>
                             </div>
-                            <Badge variant="secondary" className="text-xs">
-                              {review.source}
-                            </Badge>
-                          </div>
-                          
-                          <p className="text-muted-foreground mb-6 flex-grow leading-relaxed">
-                            "{review.review}"
-                          </p>
-                          
-                          <div className="border-t border-border pt-4">
-                            <p className="font-semibold text-primary">
-                              {review.reviewer}
+                            
+                            <p className="text-muted-foreground mb-6 flex-grow leading-relaxed">
+                              "{review.review}"
                             </p>
-                            <div className="flex items-center text-sm text-muted-foreground space-x-2">
-                              <span>{new Date(review.review_date).toLocaleDateString('en-AU', {
-                                year: 'numeric',
-                                month: 'long'
-                              })}</span>
+                            
+                            <div className="border-t border-border pt-4">
+                              <p className="font-semibold text-primary">
+                                {review.reviewer}
+                              </p>
+                              <div className="flex items-center text-sm text-muted-foreground space-x-2">
+                                <span>{new Date(review.review_date).toLocaleDateString('en-AU', {
+                                  year: 'numeric',
+                                  month: 'long'
+                                })}</span>
+                              </div>
                             </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
                   
                   {property.reviews.length > 6 && (
                     <div className="text-center mt-8">
