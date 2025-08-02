@@ -44,8 +44,10 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
         
         if (titleHitsNavbar) {
           const sectionRect = sectionRef.current.getBoundingClientRect();
-          // Calculate scroll progress within the section - more responsive
-          const progress = Math.max(0, Math.min(1, (navbarHeight - titleRect.top) / (sectionRect.height * 0.6)));
+          // Calculate scroll progress more precisely
+          const totalScrollDistance = sectionRect.height - window.innerHeight;
+          const currentScroll = Math.max(0, navbarHeight - titleRect.top);
+          const progress = Math.max(0, Math.min(1, currentScroll / (totalScrollDistance * 0.8)));
           setScrollProgress(progress);
         } else {
           setScrollProgress(0);
@@ -74,12 +76,12 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
     }
     
     // Stacking cards (4, 5, 6) with sequential delays
-    const cardDelay = (index - 3) * 0.15; // Reduced delay: 0, 0.15, 0.30 for cards 4, 5, 6
-    const adjustedProgress = Math.max(0, scrollProgress - cardDelay);
-    const stackProgress = Math.min(1, adjustedProgress * 4); // Faster animation
+    const cardDelay = (index - 3) * 0.25; // 0, 0.25, 0.5 for cards 4, 5, 6
+    const adjustedProgress = Math.max(0, (scrollProgress - cardDelay) / (1 - cardDelay));
+    const stackProgress = Math.min(1, adjustedProgress);
     
-    const isVisible = adjustedProgress > 0;
-    const slideUpAmount = isVisible ? Math.max(-10, 100 - stackProgress * 115) : 100;
+    const isVisible = scrollProgress > cardDelay;
+    const slideUpAmount = isVisible ? Math.max(-5, 100 - stackProgress * 105) : 100;
     
     return {
       position: 'absolute' as const,
