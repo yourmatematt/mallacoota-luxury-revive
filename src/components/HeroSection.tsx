@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
@@ -16,7 +17,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Enhanced Background Image with parallax effect */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105 transition-transform duration-700"
@@ -26,30 +27,30 @@ const HeroSection = () => {
       {/* Enhanced Overlay with boutique gradient */}
       <div className="hero-overlay" />
       
-      {/* Content with improved animations */}
+      {/* Content with improved animations and proper spacing */}
       <div className="relative z-10 text-center text-white px-6 md:px-4 max-w-6xl mx-auto">
         <div className="fade-in-up">
-          {/* Main Logo with enhanced styling */}
-          <div className="mb-8 fade-in-up">
+          {/* Main Logo with enhanced styling and responsive sizing */}
+          <div className="mb-6 md:mb-8 fade-in-up">
             <img 
               src="/lovable-uploads/84582fc3-db49-43eb-8ce3-96b77e7c977c.png" 
               alt="Hammond Properties" 
-              className="h-28 md:h-36 lg:h-44 w-auto mx-auto drop-shadow-2xl"
+              className="h-20 md:h-28 lg:h-36 xl:h-44 w-auto mx-auto drop-shadow-2xl"
             />
           </div>
           
           {/* Enhanced Tagline */}
-          <p className="text-xl md:text-2xl lg:text-3xl font-light mb-12 max-w-3xl mx-auto leading-relaxed fade-in-up stagger-1">
+          <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light mb-8 md:mb-12 max-w-3xl mx-auto leading-relaxed fade-in-up stagger-1">
             Come as guests. Leave as family
           </p>
           
           {/* Three Vertical Lines with Enhanced Animated Text */}
-          <div className="text-lg md:text-xl lg:text-2xl font-medium space-y-3 mb-16 fade-in-up stagger-2">
+          <div className="text-base md:text-lg lg:text-xl xl:text-2xl font-medium space-y-2 md:space-y-3 mb-12 md:mb-16 fade-in-up stagger-2">
             <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
               Experience Mallacoota's
             </div>
             <div 
-              className="text-boutique-accent font-serif italic text-2xl md:text-3xl lg:text-4xl animate-rotate-text h-12 flex items-center justify-center"
+              className="text-boutique-accent font-serif italic text-xl md:text-2xl lg:text-3xl xl:text-4xl animate-rotate-text h-10 md:h-12 flex items-center justify-center"
               key={currentTextIndex}
             >
               {rotatingTexts[currentTextIndex]}
@@ -63,7 +64,7 @@ const HeroSection = () => {
           <div className="animate-slide-up fade-in-up stagger-3" style={{ animationDelay: '0.7s' }}>
             <Button 
               size="lg" 
-              className="bg-white/95 backdrop-blur-sm text-primary hover:bg-white hover:scale-105 px-12 py-6 text-lg rounded-full font-semibold tracking-wide shadow-2xl hover:shadow-3xl transition-all duration-500 border border-white/20"
+              className="bg-white/95 backdrop-blur-sm text-primary hover:bg-white hover:scale-105 px-8 md:px-12 py-4 md:py-6 text-base md:text-lg rounded-full font-semibold tracking-wide shadow-2xl hover:shadow-3xl transition-all duration-500 border border-white/20"
             >
               Start Your Journey
             </Button>
