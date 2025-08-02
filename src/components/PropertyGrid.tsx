@@ -63,22 +63,22 @@ const HomePropertyCard = ({ property, index }: { property: any; index: number })
           )}
         </div>
         
-        {/* Property Details with enhanced spacing */}
-        <div className="grid grid-cols-3 gap-4 mb-4 py-3 border-t border-b border-border/50">
-          <div className="flex flex-col items-center space-y-1 text-center">
-            <Bed size={18} className="text-primary" />
-            <span className="text-base font-semibold text-primary">{property.bedrooms}</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-wide">Bedrooms</span>
+        {/* Property Details with improved responsive layout */}
+        <div className="flex justify-between items-center mb-4 py-3 border-t border-b border-border/50 gap-2">
+          <div className="flex flex-col items-center space-y-1 text-center min-w-0 flex-1">
+            <Bed size={16} className="text-primary flex-shrink-0" />
+            <span className="text-sm font-semibold text-primary">{property.bedrooms}</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-wide truncate">Beds</span>
           </div>
-          <div className="flex flex-col items-center space-y-1 text-center">
-            <Bath size={18} className="text-primary" />
-            <span className="text-base font-semibold text-primary">{property.bathrooms}</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-wide">Bathrooms</span>
+          <div className="flex flex-col items-center space-y-1 text-center min-w-0 flex-1">
+            <Bath size={16} className="text-primary flex-shrink-0" />
+            <span className="text-sm font-semibold text-primary">{property.bathrooms}</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-wide truncate">Baths</span>
           </div>
-          <div className="flex flex-col items-center space-y-1 text-center">
-            <Users size={18} className="text-primary" />
-            <span className="text-base font-semibold text-primary">{property.guests}</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-wide">Guests</span>
+          <div className="flex flex-col items-center space-y-1 text-center min-w-0 flex-1">
+            <Users size={16} className="text-primary flex-shrink-0" />
+            <span className="text-sm font-semibold text-primary">{property.guests}</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-wide truncate">Guests</span>
           </div>
         </div>
         
