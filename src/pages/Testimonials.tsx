@@ -84,8 +84,10 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
     return {
       position: 'absolute' as const,
       top: 0,
-      left: `calc(${column * 33.333}% + ${column * 2}rem)`, // Account for gap
-      width: 'calc(33.333% - 1.333rem)', // Account for gap
+      left: `${column * 33.333}%`,
+      width: '33.333%',
+      paddingLeft: column > 0 ? '1rem' : '0',
+      paddingRight: column < 2 ? '1rem' : '0',
       zIndex: 10 + layer,
       transform: `translateY(${slideUpAmount}%)`,
       opacity: isVisible ? Math.min(1, stackProgress * 1.2) : 0,
