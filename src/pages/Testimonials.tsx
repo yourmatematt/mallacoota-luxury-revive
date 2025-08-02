@@ -191,18 +191,19 @@ const Testimonials = () => {
             </div>
 
             {/* Filter Controls */}
-            <div className="max-w-4xl mx-auto bg-card rounded-2xl p-6 shadow-soft border">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div className="max-w-4xl mx-auto bg-card rounded-2xl p-8 shadow-soft border">
+              <div className="flex flex-col space-y-6">
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-3 block">
-                    <Filter className="w-4 h-4 inline mr-2" />
+                  <label className="text-sm font-medium text-foreground mb-4 flex items-center">
+                    <Filter className="w-4 h-4 mr-2" />
                     Filter by Property
                   </label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     <Button
                       variant={selectedProperty === "All" ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSelectedProperty("All")}
+                      className="font-medium"
                     >
                       All Properties ({allReviews?.length || 0})
                     </Button>
@@ -212,13 +213,13 @@ const Testimonials = () => {
                         variant={selectedProperty === property.id ? "default" : "outline"}
                         size="sm"
                         onClick={() => setSelectedProperty(property.id)}
+                        className="font-medium"
                       >
                         {property.title} ({property.reviewCount})
                       </Button>
                     ))}
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
