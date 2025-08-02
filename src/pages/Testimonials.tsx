@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,6 @@ interface Review {
 const Testimonials = () => {
   const [searchParams] = useSearchParams();
   const [selectedProperty, setSelectedProperty] = useState<string>("All");
-  const [sortBy, setSortBy] = useState<string>("newest");
 
   // Fetch properties and reviews from Supabase
   const { data: properties, isLoading: propertiesLoading } = useProperties();
@@ -47,20 +47,9 @@ const Testimonials = () => {
     ? allReviews || []
     : (allReviews || []).filter(review => review.property_id === selectedProperty);
 
-  // Sort reviews
+  // Sort reviews by newest first (default)
   const sortedReviews = [...filteredReviews].sort((a, b) => {
-    switch (sortBy) {
-      case "newest":
-        return new Date(b.review_date).getTime() - new Date(a.review_date).getTime();
-      case "oldest":
-        return new Date(a.review_date).getTime() - new Date(b.review_date).getTime();
-      case "highest":
-        return parseInt(b.rating) - parseInt(a.rating);
-      case "lowest":
-        return parseInt(a.rating) - parseInt(b.rating);
-      default:
-        return 0;
-    }
+    return new Date(b.review_date).getTime() - new Date(a.review_date).getTime();
   });
 
   // Set initial filter from URL params
@@ -109,7 +98,7 @@ const Testimonials = () => {
 
             {/* Filter Controls */}
             <div className="max-w-4xl mx-auto bg-card rounded-2xl p-6 shadow-soft border">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <div className="flex justify-center">
                 <div>
                   <label className="text-sm font-medium text-foreground mb-3 block">
                     <Filter className="w-4 h-4 inline mr-2" />
@@ -134,22 +123,6 @@ const Testimonials = () => {
                       </Button>
                     ))}
                   </div>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-3 block">
-                    Sort by
-                  </label>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full p-2 border border-input rounded-md bg-background text-foreground"
-                  >
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                    <option value="highest">Highest Rating</option>
-                    <option value="lowest">Lowest Rating</option>
-                  </select>
                 </div>
               </div>
             </div>
