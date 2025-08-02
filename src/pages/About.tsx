@@ -231,6 +231,7 @@ const About = () => {
                     <Button size="lg">
                       Contact Amelia
                     </Button>
+                  </Link>
                 </div>
               </div>
 
