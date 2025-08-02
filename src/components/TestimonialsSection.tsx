@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { CSSProperties } from "react";
 
 const TestimonialsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -84,14 +85,14 @@ const TestimonialsSection = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const getCardStyle = (index) => {
+  const getCardStyle = (index: number): CSSProperties => {
     const column = index % 3; // Which column (0, 1, 2)
     const layer = Math.floor(index / 3); // Which layer (0, 1, 2...)
     
     if (layer === 0) {
       // Base layer cards - always visible
       return {
-        position: 'relative',
+        position: 'relative' as const,
         zIndex: 1,
         transform: 'translateY(0)',
         opacity: 1
@@ -107,7 +108,7 @@ const TestimonialsSection = () => {
     const slideUpAmount = isVisible ? Math.max(0, 100 - stackProgress * 120) : 100;
     
     return {
-      position: 'absolute',
+      position: 'absolute' as const,
       top: 0,
       left: `${column * 33.333}%`,
       width: 'calc(33.333% - 2rem)',
