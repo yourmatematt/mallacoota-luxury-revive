@@ -37,7 +37,7 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
     const handleScroll = () => {
       if (titleRef.current && sectionRef.current) {
         const titleRect = titleRef.current.getBoundingClientRect();
-        const navbarHeight = 80; // Adjust based on your navbar height
+        const navbarHeight = 160; // Adjust based on your navbar height
         
         // Calculate when title hits the navbar
         const titleHitsNavbar = titleRect.top <= navbarHeight;
@@ -127,11 +127,6 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
               }}
             >
               <CardContent className="p-6 h-full flex flex-col">
-                {/* Stack Number Indicator */}
-                <div className="absolute -top-2 -right-2 bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-lg">
-                  {index + 1}
-                </div>
-                
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center">
                     {[...Array(parseInt(review.rating) || 5)].map((_, i) => (
