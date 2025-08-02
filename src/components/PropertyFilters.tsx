@@ -47,7 +47,7 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
     <div className="max-w-4xl mx-auto bg-card rounded-2xl p-6 shadow-soft border">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
         {/* Guest Count */}
-        <div className="space-y-2">
+        <div className="space-y-2 flex flex-col justify-end">
           <label className="text-sm font-medium text-foreground">Guests</label>
           <div className="flex items-center space-x-3">
             <Button
