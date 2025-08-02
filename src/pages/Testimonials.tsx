@@ -44,8 +44,8 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
         
         if (titleHitsNavbar) {
           const sectionRect = sectionRef.current.getBoundingClientRect();
-          // Calculate scroll progress within the section
-          const progress = Math.max(0, Math.min(1, (navbarHeight - titleRect.top) / (sectionRect.height * 0.3)));
+          // Calculate scroll progress within the section - more responsive
+          const progress = Math.max(0, Math.min(1, (navbarHeight - titleRect.top) / (sectionRect.height * 0.6)));
           setScrollProgress(progress);
         } else {
           setScrollProgress(0);
@@ -74,12 +74,12 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
     }
     
     // Stacking cards (4, 5, 6) with sequential delays
-    const cardDelay = (index - 3) * 0.2; // 0, 0.2, 0.4 delay for cards 4, 5, 6
+    const cardDelay = (index - 3) * 0.15; // Reduced delay: 0, 0.15, 0.30 for cards 4, 5, 6
     const adjustedProgress = Math.max(0, scrollProgress - cardDelay);
-    const stackProgress = Math.min(1, adjustedProgress * 3); // Speed up the animation
+    const stackProgress = Math.min(1, adjustedProgress * 4); // Faster animation
     
     const isVisible = adjustedProgress > 0;
-    const slideUpAmount = isVisible ? Math.max(0, 100 - stackProgress * 110) : 100;
+    const slideUpAmount = isVisible ? Math.max(-10, 100 - stackProgress * 115) : 100;
     
     return {
       position: 'absolute' as const,
@@ -116,15 +116,17 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
       </div>
       
       {/* Reviews Grid with Stacking */}
-      <div className="relative min-h-[600px]">
+      <div className="relative min-h-[800px]">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
           {reviewsToShow.map((review, index) => (
             <Card 
               key={review.id}
-              className="card-luxury h-full animate-fade-in"
+              className="card-luxury animate-fade-in"
               style={{
                 ...getCardStyle(index),
-                animationDelay: index < 3 ? `${index * 0.1}s` : '0s'
+                animationDelay: index < 3 ? `${index * 0.1}s` : '0s',
+                minHeight: 'fit-content',
+                height: 'auto'
               }}
             >
               <CardContent className="p-6 h-full flex flex-col">
