@@ -152,7 +152,7 @@ const Header = () => {
 
           {/* CTA Button */}
           <div className="hidden lg:block">
-            <Button className="btn-accent px-6 py-2 rounded-full">
+            <Button className="bg-accent-red hover:bg-accent-red/90 text-white px-6 py-2 rounded-full shadow-medium hover:shadow-strong transform hover:scale-105 transition-all duration-300 ease-out">
               <Link to="/properties">View Stays</Link>
             </Button>
           </div>
