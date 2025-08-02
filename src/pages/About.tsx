@@ -63,7 +63,7 @@ const About = () => {
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
                 "Amelia is more than just a property manager – she is your gateway to experiencing Mallacoota's magic. 
-                Her passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family." James - Past Property Owner"
+                Her passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family." James - Past Property Owner
               </p>
             </div>
           </div>
