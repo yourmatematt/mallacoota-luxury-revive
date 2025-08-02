@@ -99,7 +99,7 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
 
   return (
     <div ref={sectionRef} className="mb-16 min-h-screen">
-      <div ref={titleRef} className="flex items-center justify-between mb-8">
+      <div ref={titleRef} className="sticky top-20 z-30 bg-white/95 backdrop-blur-sm py-4 mb-8 flex items-center justify-between border-b border-border/20">
         <div>
           <h2 className="text-3xl font-serif font-bold text-primary mb-2">
             {property.title}
@@ -172,7 +172,7 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
       )}
       
       {/* Spacer for scroll effect */}
-      <div className="h-96"></div>
+      <div className="h-32"></div>
     </div>
   );
 };
