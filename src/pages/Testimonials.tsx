@@ -1,15 +1,16 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Filter } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useProperties } from "@/hooks/useProperties";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Review {
   id: string;
@@ -25,6 +26,7 @@ interface Review {
 const Testimonials = () => {
   const [searchParams] = useSearchParams();
   const [selectedProperty, setSelectedProperty] = useState<string>("All");
+  const isMobile = useIsMobile();
 
   // Fetch properties and reviews from Supabase
   const { data: properties, isLoading: propertiesLoading } = useProperties();
@@ -99,30 +101,51 @@ const Testimonials = () => {
             {/* Filter Controls */}
             <div className="max-w-4xl mx-auto bg-card rounded-2xl p-6 shadow-soft border">
               <div className="flex justify-center">
-                <div>
+                <div className="w-full max-w-md">
                   <label className="text-sm font-medium text-foreground mb-3 block">
                     <Filter className="w-4 h-4 inline mr-2" />
                     Filter by Property
                   </label>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      variant={selectedProperty === "All" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedProperty("All")}
-                    >
-                      All Properties ({allReviews?.length || 0})
-                    </Button>
-                    {reviewsByProperty.map((property) => (
+                  
+                  {/* Mobile: Dropdown Menu */}
+                  {isMobile ? (
+                    <Select value={selectedProperty} onValueChange={setSelectedProperty}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select property" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="All">
+                          All Properties ({allReviews?.length || 0})
+                        </SelectItem>
+                        {reviewsByProperty.map((property) => (
+                          <SelectItem key={property.id} value={property.id}>
+                            {property.title} ({property.reviewCount})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    /* Desktop: Button Layout */
+                    <div className="flex flex-wrap gap-2 justify-center">
                       <Button
-                        key={property.id}
-                        variant={selectedProperty === property.id ? "default" : "outline"}
+                        variant={selectedProperty === "All" ? "default" : "outline"}
                         size="sm"
-                        onClick={() => setSelectedProperty(property.id)}
+                        onClick={() => setSelectedProperty("All")}
                       >
-                        {property.title} ({property.reviewCount})
+                        All Properties ({allReviews?.length || 0})
                       </Button>
-                    ))}
-                  </div>
+                      {reviewsByProperty.map((property) => (
+                        <Button
+                          key={property.id}
+                          variant={selectedProperty === property.id ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setSelectedProperty(property.id)}
+                        >
+                          {property.title} ({property.reviewCount})
+                        </Button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
