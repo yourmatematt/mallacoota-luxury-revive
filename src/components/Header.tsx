@@ -1,7 +1,16 @@
+
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,21 +44,110 @@ const Header = () => {
             />
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`transition-colors duration-300 font-medium ${
-                  isActiveRoute(item.href) 
-                    ? "text-accent-red" 
-                    : "text-foreground hover:text-accent-red"
-                }`}
-              >
-                {item.name}
-              </Link>
-            ))}
+          {/* Desktop Navigation - Updated with NavigationMenu */}
+          <nav className="hidden lg:flex items-center">
+            <NavigationMenu>
+              <NavigationMenuList className="space-x-2">
+                {/* Primary Navigation Items */}
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/"
+                      className={`px-4 py-2 rounded-md transition-colors duration-300 font-medium ${
+                        isActiveRoute("/") 
+                          ? "text-accent-red bg-accent-red/10" 
+                          : "text-foreground hover:text-accent-red hover:bg-accent-red/5"
+                      }`}
+                    >
+                      Home
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/properties"
+                      className={`px-4 py-2 rounded-md transition-colors duration-300 font-medium ${
+                        isActiveRoute("/properties") 
+                          ? "text-accent-red bg-accent-red/10" 
+                          : "text-foreground hover:text-accent-red hover:bg-accent-red/5"
+                      }`}
+                    >
+                      Properties
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+
+                {/* Dropdown for secondary items */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="px-4 py-2 font-medium text-foreground hover:text-accent-red data-[state=open]:text-accent-red">
+                    More
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="grid w-[400px] gap-3 p-4">
+                      <div className="grid grid-cols-1 gap-2">
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/discover-mallacoota"
+                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
+                              isActiveRoute("/discover-mallacoota") ? "bg-accent text-accent-foreground" : ""
+                            }`}
+                          >
+                            <div className="text-sm font-medium leading-none">Discover Mallacoota</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Explore local attractions and activities
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/about"
+                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
+                              isActiveRoute("/about") ? "bg-accent text-accent-foreground" : ""
+                            }`}
+                          >
+                            <div className="text-sm font-medium leading-none">About</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Learn about Hammond Properties
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/testimonials"
+                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
+                              isActiveRoute("/testimonials") ? "bg-accent text-accent-foreground" : ""
+                            }`}
+                          >
+                            <div className="text-sm font-medium leading-none">Testimonials</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Read guest reviews and feedback
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to="/contact"
+                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
+                              isActiveRoute("/contact") ? "bg-accent text-accent-foreground" : ""
+                            }`}
+                          >
+                            <div className="text-sm font-medium leading-none">Contact</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Get in touch with our team
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
           </nav>
 
           {/* CTA Button */}
