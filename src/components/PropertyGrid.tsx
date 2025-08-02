@@ -149,7 +149,9 @@ const PropertyGrid = () => {
         </div>
 
         {/* Property Filters */}
-        <PropertyFilters onFiltersChange={setFilters} />
+<div className="mb-12">
+  <PropertyFilters onFiltersChange={setFilters} />
+</div>
 
         {/* Property Grid */}
         {isLoading ? (
