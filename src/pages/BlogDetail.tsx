@@ -8,19 +8,77 @@ import Footer from "@/components/Footer";
 import { useBlogPostBySlug } from "@/hooks/useBlogPosts";
 import { useCategories } from "@/hooks/useBlogFilters";
 import { useRandomProperties } from "@/hooks/useProperties";
+import { usePropertyCardImages } from "@/hooks/usePropertyImages";
 import PropertyImageCarousel from "@/components/PropertyImageCarousel";
 import propertyInterior1 from "@/assets/property-interior-1.jpg";
 import propertyInterior2 from "@/assets/property-interior-2.jpg";
 import propertyInterior3 from "@/assets/property-interior-3.jpg";
+
+// Component for individual property card with real image logic
+const PropertyCard = ({ property }: { property: any }) => {
+  const { data: realImages } = usePropertyCardImages(property.image_folder);
+  
+  // Stock images for fallback
+  const stockImages = [propertyInterior1, propertyInterior2, propertyInterior3];
+  
+  // Use real images if available, otherwise use stock images
+  const imagesToUse = realImages && realImages.length > 0 
+    ? realImages.map(img => img.url) 
+    : stockImages;
+
+  return (
+    <Card className="card-boutique overflow-hidden group">
+      <div className="relative">
+        <PropertyImageCarousel
+          images={imagesToUse}
+          propertyId={property.property_id}
+          propertyTitle={property.title || 'Property'}
+        />
+        {property.airbnb_rating && (
+          <div className="absolute top-3 right-3">
+            <Badge className="bg-white/95 text-primary flex items-center gap-1 shadow-lg backdrop-blur-sm">
+              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+              {property.airbnb_rating}
+            </Badge>
+          </div>
+        )}
+      </div>
+      
+      <CardContent className="p-4">
+        <h4 className="text-lg font-serif font-semibold mb-2 text-primary leading-tight">
+          {property.title}
+        </h4>
+        
+        <div className="grid grid-cols-3 gap-2 mb-3 py-2 border-t border-b border-border/50">
+          <div className="flex flex-col items-center space-y-1 text-center">
+            <Bed size={14} className="text-primary" />
+            <span className="text-sm font-semibold text-primary">{property.bedrooms}</span>
+          </div>
+          <div className="flex flex-col items-center space-y-1 text-center">
+            <Bath size={14} className="text-primary" />
+            <span className="text-sm font-semibold text-primary">{property.bathrooms}</span>
+          </div>
+          <div className="flex flex-col items-center space-y-1 text-center">
+            <Users size={14} className="text-primary" />
+            <span className="text-sm font-semibold text-primary">{property.guests}</span>
+          </div>
+        </div>
+        
+        <Button asChild className="w-full py-2 text-sm rounded-full">
+          <Link to={`/properties/${property.slug}`}>
+            View Details
+          </Link>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
 
 const BlogDetail = () => {
   const { slug } = useParams();
   const { data: blogPost, isLoading } = useBlogPostBySlug(slug || '');
   const { data: categories } = useCategories();
   const { data: randomProperties } = useRandomProperties(3);
-
-  // Stock images for property cards
-  const stockImages = [propertyInterior1, propertyInterior2, propertyInterior3];
 
   if (isLoading) {
     return (
@@ -138,51 +196,8 @@ const BlogDetail = () => {
                 {/* Property Cards */}
                 {randomProperties && randomProperties.length > 0 && (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    {randomProperties.map((property, index) => (
-                      <Card key={property.property_id} className="card-boutique overflow-hidden group">
-                        <div className="relative">
-                          <PropertyImageCarousel
-                            images={stockImages}
-                            propertyId={property.property_id}
-                            propertyTitle={property.title || 'Property'}
-                          />
-                          {property.airbnb_rating && (
-                            <div className="absolute top-3 right-3">
-                              <Badge className="bg-white/95 text-primary flex items-center gap-1 shadow-lg backdrop-blur-sm">
-                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                {property.airbnb_rating}
-                              </Badge>
-                            </div>
-                          )}
-                        </div>
-                        
-                        <CardContent className="p-4">
-                          <h4 className="text-lg font-serif font-semibold mb-2 text-primary leading-tight">
-                            {property.title}
-                          </h4>
-                          
-                          <div className="grid grid-cols-3 gap-2 mb-3 py-2 border-t border-b border-border/50">
-                            <div className="flex flex-col items-center space-y-1 text-center">
-                              <Bed size={14} className="text-primary" />
-                              <span className="text-sm font-semibold text-primary">{property.bedrooms}</span>
-                            </div>
-                            <div className="flex flex-col items-center space-y-1 text-center">
-                              <Bath size={14} className="text-primary" />
-                              <span className="text-sm font-semibold text-primary">{property.bathrooms}</span>
-                            </div>
-                            <div className="flex flex-col items-center space-y-1 text-center">
-                              <Users size={14} className="text-primary" />
-                              <span className="text-sm font-semibold text-primary">{property.guests}</span>
-                            </div>
-                          </div>
-                          
-                          <Button asChild className="w-full py-2 text-sm rounded-full">
-                            <Link to={`/properties/${property.slug}`}>
-                              View Details
-                            </Link>
-                          </Button>
-                        </CardContent>
-                      </Card>
+                    {randomProperties.map((property) => (
+                      <PropertyCard key={property.property_id} property={property} />
                     ))}
                   </div>
                 )}
