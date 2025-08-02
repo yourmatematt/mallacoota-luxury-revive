@@ -105,8 +105,6 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
     {isLoading ? "Searching..." : "Search Properties"}
   </Button>
 </div>
-      </div>
-    </div>
   );
 };
 
