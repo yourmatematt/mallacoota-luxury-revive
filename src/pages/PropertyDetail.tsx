@@ -253,7 +253,7 @@ const PropertyDetail = () => {
                 }}
                 className="w-full"
               >
-                <CarouselContent className="-ml-2 sm:-ml-4">
+                <CarouselContent className="-ml-4 sm:-ml-6">
                   {allImages.map((image, index) => (
                     <CarouselItem key={index} className="pl-2 sm:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
                       <div 
