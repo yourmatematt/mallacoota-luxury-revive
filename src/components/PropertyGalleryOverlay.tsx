@@ -36,9 +36,9 @@ const PropertyGalleryOverlay = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[95vw] h-[95vh] w-full p-0 bg-black/95 border-0">
-        <div className="w-full h-full flex flex-col">
+        <div className="relative w-full h-full flex flex-col">
           {/* Header */}
-          <div className="flex justify-between items-center p-4 bg-gradient-to-b from-black/50 to-transparent flex-shrink-0">
+          <div className="absolute top-0 left-0 right-0 z-10 flex justify-between items-center p-4 bg-gradient-to-b from-black/50 to-transparent">
             <div className="text-white">
               <h3 className="text-lg font-semibold">{propertyTitle}</h3>
               <p className="text-sm text-white/80">
@@ -56,14 +56,14 @@ const PropertyGalleryOverlay = ({
           </div>
 
           {/* Main Image */}
-          <div className="flex-1 flex items-center justify-center p-4 min-h-0">
+          <div className="flex-1 flex items-center justify-center p-4 pt-16 pb-20">
             <div className="relative w-full h-full flex items-center justify-center">
               <div className="relative max-w-full max-h-full overflow-hidden">
                 <img
                   src={images[currentIndex]}
                   alt={`${propertyTitle} - Image ${currentIndex + 1}`}
                   className="max-w-full max-h-full w-auto h-auto object-contain rounded-lg shadow-2xl transition-opacity duration-300 ease-in-out"
-                  style={{ maxWidth: '90vw', maxHeight: '100%' }}
+                  style={{ maxWidth: '90vw', maxHeight: 'calc(95vh - 160px)' }}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = '/placeholder-property.jpg';
@@ -98,8 +98,8 @@ const PropertyGalleryOverlay = ({
 
           {/* Thumbnail Strip */}
           {images.length > 1 && (
-            <div className="flex-shrink-0 p-6 bg-gradient-to-t from-black/50 to-transparent">
-              <div className="flex justify-center space-x-2 overflow-x-auto">
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/50 to-transparent">
+              <div className="flex justify-center space-x-2 overflow-x-auto pb-2">
                 {images.map((image, index) => (
                   <button
                     key={index}
