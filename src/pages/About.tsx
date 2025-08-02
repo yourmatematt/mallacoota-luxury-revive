@@ -62,8 +62,8 @@ const About = () => {
                 About Hammond Properties
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                We're more than just property managers – we're your gateway to experiencing Mallacoota's magic. 
-                Our passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family.
+                "Amelia is more than just a property manager – she is your gateway to experiencing Mallacoota's magic. 
+                Her passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family.
               </p>
             </div>
           </div>
@@ -85,12 +85,12 @@ const About = () => {
                   <p>
                     What started as a passion project to share our love for this coastal paradise has evolved into 
                     East Gippsland's premier luxury accommodation provider. We understand that a holiday is more than 
-                    just a place to stay – it's about creating memories that last a lifetime.
+                    just a getaway – it's a time to create memories that last a lifetime.
                   </p>
                   <p>
                     Our deep connection to Mallacoota, combined with our commitment to premium service, ensures that 
                     every guest experiences the very best our region has to offer. From sunrise walks on pristine beaches 
-                    to sunset dinners overlooking the inlet, we're here to make your coastal escape extraordinary.
+                    to sunset dinners overlooking the inlet, we're here to help make your coastal escape extraordinary.
                   </p>
                 </div>
               </div>
@@ -162,10 +162,10 @@ const About = () => {
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
-                Meet Our Team
+                Meet Amelia
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                The passionate people behind your perfect Mallacoota experience.
+                The passionate person behind your perfect Mallacoota experience.
               </p>
             </div>
 
@@ -229,12 +229,8 @@ const About = () => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link to="/contact">
                     <Button size="lg">
-                      Partner With Us
+                      Contact Amelia
                     </Button>
-                  </Link>
-                  <Button variant="outline" size="lg">
-                    Download Owner Guide
-                  </Button>
                 </div>
               </div>
 
