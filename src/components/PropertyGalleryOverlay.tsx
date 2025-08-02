@@ -35,7 +35,7 @@ const PropertyGalleryOverlay = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] max-h-[95vh] w-full h-full p-0 bg-black/95 border-0">
+      <DialogContent className="max-w-[95vw] h-[95vh] w-full p-0 bg-black/95 border-0">
         <div className="relative w-full h-full flex flex-col">
           {/* Header */}
           <div className="absolute top-0 left-0 right-0 z-10 flex justify-between items-center p-4 bg-gradient-to-b from-black/50 to-transparent">
@@ -56,14 +56,14 @@ const PropertyGalleryOverlay = ({
           </div>
 
           {/* Main Image */}
-          <div className="flex-1 flex items-center justify-center p-4 pt-20 pb-24">
+          <div className="flex-1 flex items-center justify-center p-4 pt-16 pb-20">
             <div className="relative w-full h-full flex items-center justify-center">
               <div className="relative max-w-full max-h-full overflow-hidden">
                 <img
                   src={images[currentIndex]}
                   alt={`${propertyTitle} - Image ${currentIndex + 1}`}
                   className="max-w-full max-h-full w-auto h-auto object-contain rounded-lg shadow-2xl transition-opacity duration-300 ease-in-out"
-                  style={{ maxWidth: '90vw', maxHeight: '70vh' }}
+                  style={{ maxWidth: '90vw', maxHeight: 'calc(95vh - 160px)' }}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = '/placeholder-property.jpg';
@@ -113,7 +113,7 @@ const PropertyGalleryOverlay = ({
                     <img
                       src={image}
                       alt={`Thumbnail ${index + 1}`}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-cover"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = '/placeholder-property.jpg';
