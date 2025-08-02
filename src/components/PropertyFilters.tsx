@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Star, Users, Car, Heart } from "lucide-react";
@@ -44,7 +45,7 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
 
   return (
     <div className="max-w-4xl mx-auto bg-card rounded-2xl p-6 shadow-soft border">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
         {/* Guest Count */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Guests</label>
@@ -95,16 +96,18 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
           </Button>
         </div>
 
-       {/* Action Button */}
-<div className="flex items-end">
-  <Button 
-    className="px-8 w-full" 
-    onClick={handleSearchClick}
-    disabled={isLoading}
-  >
-    {isLoading ? "Searching..." : "Search Properties"}
-  </Button>
-</div>
+        {/* Action Button */}
+        <div>
+          <Button 
+            className="px-8 w-full" 
+            onClick={handleSearchClick}
+            disabled={isLoading}
+          >
+            {isLoading ? "Searching..." : "Search Properties"}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 
