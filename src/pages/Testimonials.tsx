@@ -30,6 +30,7 @@ const Testimonials = () => {
   const [scrollProgresses, setScrollProgresses] = useState<Record<string, number>>({});
   const isMobile = useIsMobile();
   const titleRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Fetch properties and reviews from Supabase
   const { data: properties, isLoading: propertiesLoading } = useProperties();
@@ -76,17 +77,22 @@ const Testimonials = () => {
   useEffect(() => {
     const handleScroll = () => {
       const navbarHeight = 80;
+      const stickyOffset = 80; // Distance below navbar where title should stick
       const newProgresses: Record<string, number> = {};
 
       reviewsByProperty.forEach((property) => {
         if (property.reviews.length >= 3) {
           const titleRef = titleRefs.current[property.id];
-          if (titleRef) {
+          const sectionRef = sectionRefs.current[property.id];
+          
+          if (titleRef && sectionRef) {
             const titleRect = titleRef.getBoundingClientRect();
-            const titleHitsNavbar = titleRect.top <= navbarHeight;
+            const sectionRect = sectionRef.getBoundingClientRect();
+            const triggerPoint = navbarHeight + stickyOffset;
+            const titleHitsStickyPoint = titleRect.top <= triggerPoint;
             
-            if (titleHitsNavbar) {
-              const progress = Math.max(0, Math.min(1, (navbarHeight - titleRect.top) / 400));
+            if (titleHitsStickyPoint) {
+              const progress = Math.max(0, Math.min(1, (triggerPoint - titleRect.top) / (sectionRect.height * 0.5)));
               newProgresses[property.id] = progress;
             } else {
               newProgresses[property.id] = 0;
@@ -120,7 +126,7 @@ const Testimonials = () => {
       };
     }
     
-    const cardDelay = (index - 3) * 0.2;
+    const cardDelay = (index - 3) * 0.3;
     const adjustedProgress = Math.max(0, scrollProgress - cardDelay);
     const stackProgress = Math.min(1, adjustedProgress * 2);
     
@@ -228,11 +234,15 @@ const Testimonials = () => {
           <section className="py-16">
             <div className="container mx-auto px-4 lg:px-8">
               {reviewsByProperty.map((property) => (
-                <div key={property.id} className="mb-24">
+                <div 
+                  key={property.id} 
+                  ref={(el) => sectionRefs.current[property.id] = el}
+                  className="mb-24"
+                >
                   {/* Property Title - Triggers scroll effect */}
                   <div 
                     ref={(el) => titleRefs.current[property.id] = el}
-                    className="flex items-center justify-between mb-8"
+                    className="sticky top-20 z-30 bg-background/95 backdrop-blur-sm border-b border-border/50 pb-4 mb-8 flex items-center justify-between"
                   >
                     <div>
                       <h2 className="text-3xl font-serif font-bold text-primary mb-2">
