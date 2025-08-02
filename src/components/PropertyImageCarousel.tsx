@@ -21,15 +21,23 @@ const PropertyImageCarousel = ({ images, propertyId, propertyTitle }: PropertyIm
 
   return (
     <div className="relative aspect-[4/3] overflow-hidden rounded-xl group">
-      <img
-        src={images[currentIndex]}
-        alt={`${propertyTitle} - Image ${currentIndex + 1}`}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.src = '/placeholder-property.jpg';
-        }}
-      />
+      <div 
+        className="flex h-full transition-transform duration-500 ease-in-out"
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+      >
+        {images.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt={`${propertyTitle} - Image ${index + 1}`}
+            className="w-full h-full object-cover flex-shrink-0 group-hover:scale-105 transition-transform duration-700"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = '/placeholder-property.jpg';
+            }}
+          />
+        ))}
+      </div>
       
       {images.length > 1 && (
         <>
