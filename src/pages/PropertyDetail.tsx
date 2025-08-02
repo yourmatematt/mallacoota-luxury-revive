@@ -253,11 +253,11 @@ const PropertyDetail = () => {
                 }}
                 className="w-full"
               >
-                <CarouselContent className="-ml-4 sm:-ml-6">
+                <CarouselContent className="-ml-2 sm:-ml-4">
                   {allImages.map((image, index) => (
                     <CarouselItem key={index} className="pl-2 sm:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
                       <div 
-                        className="aspect-[4/3] overflow-hidden rounded-xl cursor-pointer group hover:scale-105 transition-all duration-300"
+                        className="aspect-square overflow-hidden rounded-xl cursor-pointer group hover:scale-105 transition-all duration-300 shadow-soft hover:shadow-elegant"
                         onClick={() => {
                           setGalleryIndex(index);
                           setShowGallery(true);
@@ -360,7 +360,7 @@ const PropertyDetail = () => {
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-8">
+              <Card className="sticky top-16">
                 <CardContent className="p-6">
                   <div className="text-center mb-6">
                     <h3 className="text-lg font-semibold mb-4">Make an Enquiry</h3>
