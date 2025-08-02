@@ -360,7 +360,7 @@ const PropertyDetail = () => {
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-26">
+              <Card className="sticky top-24">
                 <CardContent className="p-6">
                   <div className="text-center mb-6">
                     <h3 className="text-lg font-semibold mb-4">Make an Enquiry</h3>
