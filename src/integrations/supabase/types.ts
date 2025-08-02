@@ -256,6 +256,48 @@ export type Database = {
           },
         ]
       }
+      enquiries: {
+        Row: {
+          check_in: string | null
+          check_out: string | null
+          created_at: string
+          email: string
+          guests: number | null
+          id: string
+          message: string | null
+          name: string
+          phone: string | null
+          property_id: string
+          property_title: string | null
+        }
+        Insert: {
+          check_in?: string | null
+          check_out?: string | null
+          created_at?: string
+          email: string
+          guests?: number | null
+          id?: string
+          message?: string | null
+          name: string
+          phone?: string | null
+          property_id: string
+          property_title?: string | null
+        }
+        Update: {
+          check_in?: string | null
+          check_out?: string | null
+          created_at?: string
+          email?: string
+          guests?: number | null
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string | null
+          property_id?: string
+          property_title?: string | null
+        }
+        Relationships: []
+      }
       Properties: {
         Row: {
           airbnb_rating: string | null

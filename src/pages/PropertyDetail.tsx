@@ -14,6 +14,7 @@ import { usePropertyReviews, usePropertyBySlug } from "@/hooks/useProperties";
 import { usePropertyHeroImage, usePropertyGalleryImages } from "@/hooks/usePropertyImages";
 import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { supabase } from "@/integrations/supabase/client";
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
 import propertyHero2 from "@/assets/property-hero-2.jpg";
@@ -67,6 +68,8 @@ const PropertyDetail = () => {
     property: '',
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Get random review on each visit
   const [randomReview, setRandomReview] = useState<any>(null);
   
@@ -83,31 +86,58 @@ const PropertyDetail = () => {
     }
   }, [property]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Create mailto link with form data
-    const subject = `Property Enquiry - ${formData.property}`;
-    const body = `
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Property: ${formData.property}
-Check-in: ${formData.checkIn}
-Check-out: ${formData.checkOut}
-Guests: ${formData.guests}
+    if (!property) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const { error } = await supabase.functions.invoke('send-property-enquiry', {
+        body: {
+          propertyId: property.property_id,
+          propertyTitle: property.title,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          checkIn: formData.checkIn,
+          checkOut: formData.checkOut,
+          guests: formData.guests ? parseInt(formData.guests) : undefined,
+          message: formData.message,
+        }
+      });
 
-Message:
-${formData.message}
-    `.trim();
-    
-    const mailtoLink = `mailto:hello@discovermallacoota.com.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoLink;
-    
-    toast({
-      title: "Enquiry Sent",
-      description: "Your enquiry has been sent to our team. We'll get back to you soon!",
-    });
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        checkIn: '',
+        checkOut: '',
+        guests: '',
+        message: '',
+        property: property.title || '',
+      });
+
+      toast({
+        title: "Enquiry Sent Successfully!",
+        description: "Thank you for your enquiry. We'll get back to you soon!",
+      });
+    } catch (error) {
+      console.error('Error submitting enquiry:', error);
+      toast({
+        title: "Error Sending Enquiry",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -419,8 +449,8 @@ ${formData.message}
                       />
                     </div>
 
-                    <Button type="submit" className="w-full">
-                      Send Enquiry
+                    <Button type="submit" className="w-full" disabled={isSubmitting}>
+                      {isSubmitting ? "Sending..." : "Send Enquiry"}
                     </Button>
                   </form>
                 </CardContent>
