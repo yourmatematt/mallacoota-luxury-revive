@@ -257,7 +257,7 @@ const PropertyDetail = () => {
                   {allImages.map((image, index) => (
                     <CarouselItem key={index} className="pl-2 sm:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
                       <div 
-                        className="aspect-square overflow-hidden rounded-xl cursor-pointer group hover:scale-105 transition-all duration-300 shadow-soft hover:shadow-elegant"
+                        className="aspect-[4/3] overflow-hidden rounded-xl cursor-pointer group hover:scale-105 transition-all duration-300 shadow-soft hover:shadow-elegant"
                         onClick={() => {
                           setGalleryIndex(index);
                           setShowGallery(true);
