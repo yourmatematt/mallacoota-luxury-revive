@@ -63,7 +63,7 @@ const About = () => {
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
                 "Amelia is more than just a property manager – she is your gateway to experiencing Mallacoota's magic. 
-                Her passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family.
+                Her passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family." James - Past Property Owner"
               </p>
             </div>
           </div>
@@ -129,7 +129,7 @@ const About = () => {
                 What Drives Us
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Our core values shape every interaction and ensure that your experience exceeds expectations.
+                Our core values shape every interaction and ensure that your experience as both guest and owner, exceeds expectations.
               </p>
             </div>
 
@@ -162,10 +162,10 @@ const About = () => {
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
-                Meet Amelia
+                Meet Amelia & Terry
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                The passionate person behind your perfect Mallacoota experience.
+                The passionate duo behind your perfect Mallacoota experience.
               </p>
             </div>
 
