@@ -83,7 +83,7 @@ const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: P
     
     return {
       position: 'absolute' as const,
-      top: 0,
+      top: '6rem', // Position below the sticky title
       left: `${column * 33.333}%`,
       width: 'calc(33.333% - 2rem)',
       marginLeft: '1rem',
