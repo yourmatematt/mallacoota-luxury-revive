@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -65,12 +66,14 @@ const Footer = () => {
               </a>
             </div>
             
-            <Button 
-              variant="outline" 
-              className="rounded-full border-accent-red text-accent-red hover:bg-accent-red hover:text-white mt-4"
-            >
-              Book a Call
-            </Button>
+            <Link to="/contact">
+              <Button 
+                variant="outline" 
+                className="rounded-full border-accent-red text-accent-red hover:bg-accent-red hover:text-white mt-4"
+              >
+                Contact Amelia
+              </Button>
+            </Link>
           </div>
 
           {/* Attribution */}
