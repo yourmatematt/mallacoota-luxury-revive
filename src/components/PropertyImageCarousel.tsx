@@ -46,7 +46,7 @@ const PropertyImageCarousel = ({ images, propertyId, propertyTitle }: PropertyIm
   return (
     <div className="relative aspect-[4/3] overflow-hidden rounded-xl group hover:scale-105 transition-transform duration-700">
       <div 
-        className={`flex h-full ${!isTransitioning ? 'transition-transform duration-500 ease-in-out' : ''}`}
+        className={`flex h-full ${isTransitioning ? 'transition-transform duration-500 ease-in-out' : ''}`}
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {extendedImages.map((image, index) => (
