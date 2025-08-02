@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -9,28 +9,52 @@ interface PropertyImageCarouselProps {
 }
 
 const PropertyImageCarousel = ({ images, propertyId, propertyTitle }: PropertyImageCarouselProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(1); // Start at 1 because of duplicate at start
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Create extended array with duplicates for smooth infinite loop
+  const extendedImages = [images[images.length - 1], ...images, images[0]];
 
   const nextImage = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev + 1);
   };
 
   const prevImage = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev - 1);
   };
 
+  // Handle infinite loop transitions
+  useEffect(() => {
+    if (!isTransitioning) return;
+
+    const timer = setTimeout(() => {
+      if (currentIndex === 0) {
+        setCurrentIndex(images.length);
+      } else if (currentIndex === extendedImages.length - 1) {
+        setCurrentIndex(1);
+      }
+      setIsTransitioning(false);
+    }, 500); // Match transition duration
+
+    return () => clearTimeout(timer);
+  }, [currentIndex, isTransitioning, images.length, extendedImages.length]);
+
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-xl group">
+    <div className="relative aspect-[4/3] overflow-hidden rounded-xl group hover:scale-105 transition-transform duration-700">
       <div 
-        className="flex h-full transition-transform duration-500 ease-in-out"
+        className={`flex h-full ${!isTransitioning ? 'transition-transform duration-500 ease-in-out' : ''}`}
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
-        {images.map((image, index) => (
+        {extendedImages.map((image, index) => (
           <img
             key={index}
             src={image}
-            alt={`${propertyTitle} - Image ${index + 1}`}
-            className="w-full h-full object-cover flex-shrink-0 group-hover:scale-105 transition-transform duration-700"
+            alt={`${propertyTitle} - Image ${((index - 1 + images.length) % images.length) + 1}`}
+            className="w-full h-full object-cover flex-shrink-0"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.src = '/placeholder-property.jpg';
@@ -64,7 +88,7 @@ const PropertyImageCarousel = ({ images, propertyId, propertyTitle }: PropertyIm
               <div
                 key={index}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === currentIndex ? 'bg-white shadow-lg' : 'bg-white/50'
+                  index === (currentIndex - 1 + images.length) % images.length ? 'bg-white shadow-lg' : 'bg-white/50'
                 }`}
               />
             ))}
