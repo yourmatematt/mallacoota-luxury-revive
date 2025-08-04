@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, Users, Bed, Bath, Wifi } from "lucide-react";
+import { Star, Users, Bed, Bath, Wifi, Car, Utensils, Home, Heart, ChefHat, Sun, StarIcon } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
@@ -15,6 +15,7 @@ import { usePropertyHeroImage, usePropertyGalleryImages } from "@/hooks/usePrope
 import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { supabase } from "@/integrations/supabase/client";
+
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
 import propertyHero2 from "@/assets/property-hero-2.jpg";
@@ -24,6 +25,29 @@ import propertyInterior2 from "@/assets/property-interior-2.jpg";
 import propertyInterior3 from "@/assets/property-interior-3.jpg";
 import propertyInterior4 from "@/assets/property-interior-4.jpg";
 import propertyInterior5 from "@/assets/property-interior-5.jpg";
+
+// Icon mapping for categories
+const categoryIcons = {
+  'Essential Infrastructure': Home,
+  'Guest Comfort': Heart,
+  'Kitchen Facilities': ChefHat,
+  'Outdoor & Entertainment': Sun,
+  'Premium Features': StarIcon,
+};
+
+interface PropertyAmenity {
+  amenity: {
+    id: string;
+    name: string;
+    description: string;
+    is_premium: boolean;
+    category: {
+      name: string;
+      icon: string;
+      display_order: number;
+    };
+  };
+}
 
 const PropertyDetail = () => {
   const { slug } = useParams();
@@ -35,6 +59,10 @@ const PropertyDetail = () => {
   const { data: heroImage } = usePropertyHeroImage(property?.image_folder || '');
   const { data: galleryImages } = usePropertyGalleryImages(property?.image_folder || '');
   
+  // New state for amenities
+  const [amenities, setAmenities] = useState<PropertyAmenity[]>([]);
+  const [amenitiesLoading, setAmenitiesLoading] = useState(true);
+  
   const [showGallery, setShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
 
@@ -42,6 +70,62 @@ const PropertyDetail = () => {
   const heroImages = [propertyHero1, propertyHero2, propertyHero3];
   const stockGalleryImages = [propertyInterior1, propertyInterior2, propertyInterior3, propertyInterior4, propertyInterior5];
   
+  // Fetch amenities for this property
+  useEffect(() => {
+    const fetchAmenities = async () => {
+      if (!property?.property_id) return;
+      
+      setAmenitiesLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('property_amenities')
+          .select(`
+            amenity:amenities(
+              id,
+              name,
+              description,
+              is_premium,
+              category:amenity_categories(
+                name,
+                icon,
+                display_order
+              )
+            )
+          `)
+          .eq('property_id', property.property_id);
+
+        if (error) {
+          console.error('Error fetching amenities:', error);
+        } else {
+          // Sort by category display order, then by name
+          const sortedAmenities = data?.sort((a, b) => {
+            const categoryOrder = (a.amenity?.category?.display_order || 0) - (b.amenity?.category?.display_order || 0);
+            if (categoryOrder !== 0) return categoryOrder;
+            return (a.amenity?.name || '').localeCompare(b.amenity?.name || '');
+          }) || [];
+          
+          setAmenities(sortedAmenities);
+        }
+      } catch (error) {
+        console.error('Error fetching amenities:', error);
+      } finally {
+        setAmenitiesLoading(false);
+      }
+    };
+
+    fetchAmenities();
+  }, [property?.property_id]);
+
+  // Group amenities by category
+  const groupedAmenities = amenities.reduce((acc, item) => {
+    const categoryName = item.amenity?.category?.name || 'Other';
+    if (!acc[categoryName]) {
+      acc[categoryName] = [];
+    }
+    acc[categoryName].push(item.amenity);
+    return acc;
+  }, {} as Record<string, any[]>);
+
   // Get hero image - use real image if available, otherwise fallback to stock
   const getHeroImage = (propertyId: string) => {
     if (heroImage?.url) {
@@ -174,6 +258,9 @@ const PropertyDetail = () => {
     );
   }
 
+  // Get key amenities for hero badges (show top 4)
+  const keyAmenities = amenities.slice(0, 4).map(item => item.amenity?.name).filter(Boolean);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -222,8 +309,12 @@ const PropertyDetail = () => {
                 {property.boat_parking && (
                   <Badge className="bg-white/90 text-primary shadow-lg text-xs">Boat Parking</Badge>
                 )}
-                <Badge className="bg-white/90 text-primary shadow-lg text-xs">WiFi</Badge>
-                <Badge className="bg-white/90 text-primary shadow-lg text-xs">Kitchen</Badge>
+                {/* Show first few amenities from database */}
+                {keyAmenities.slice(0, 2).map((amenity, index) => (
+                  <Badge key={index} className="bg-white/90 text-primary shadow-lg text-xs">
+                    {amenity}
+                  </Badge>
+                ))}
               </div>
               
               <Button 
@@ -295,38 +386,36 @@ const PropertyDetail = () => {
                 </div>
               </div>
 
+              {/* Enhanced Amenities Section */}
               <div>
-                <h3 className="text-xl font-bold mb-4">Amenities</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {property.pet_friendly && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
-                      <span className="text-sm">Pet Friendly</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-primary rounded-full"></div>
-                    <span className="text-sm">WiFi</span>
+                <h3 className="text-xl font-bold mb-6">Property Amenities</h3>
+                {amenitiesLoading ? (
+                  <div className="animate-pulse">Loading amenities...</div>
+                ) : (
+                  <div className="space-y-6">
+                    {Object.entries(groupedAmenities).map(([categoryName, categoryAmenities]) => {
+                      const IconComponent = categoryIcons[categoryName as keyof typeof categoryIcons] || Home;
+                      return (
+                        <div key={categoryName} className="border rounded-lg p-4">
+                          <div className="flex items-center gap-2 mb-3">
+                            <IconComponent className="h-5 w-5 text-primary" />
+                            <h4 className="font-semibold text-lg">{categoryName}</h4>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {categoryAmenities.map((amenity) => (
+                              <div key={amenity.id} className="flex items-center gap-2">
+                                <div className={`w-2 h-2 rounded-full ${amenity.is_premium ? 'bg-yellow-400' : 'bg-primary'}`}></div>
+                                <span className={`text-sm ${amenity.is_premium ? 'font-medium text-yellow-700' : ''}`}>
+                                  {amenity.name}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-primary rounded-full"></div>
-                    <span className="text-sm">Kitchen</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-primary rounded-full"></div>
-                    <span className="text-sm">Air Conditioning</span>
-                  </div>
-                  {property.boat_parking && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
-                      <span className="text-sm">Boat Parking</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-primary rounded-full"></div>
-                    <span className="text-sm">Parking</span>
-                  </div>
-                </div>
+                )}
               </div>
 
               {randomReview && (
