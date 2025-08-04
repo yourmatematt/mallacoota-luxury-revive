@@ -30,7 +30,19 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const enquiry: EnquiryRequest = await req.json();
-    console.log("Received enquiry:", enquiry);
+    
+    // Input validation
+    if (!enquiry.propertyId || !enquiry.name || !enquiry.email) {
+      throw new Error("Missing required fields: propertyId, name, and email are required");
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(enquiry.email)) {
+      throw new Error("Invalid email format");
+    }
+    
+    console.log("Enquiry received for property:", enquiry.propertyId);
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -97,7 +109,7 @@ const handler = async (req: Request): Promise<Response> => {
       html: managerEmailHtml,
     });
 
-    console.log("Manager email sent:", managerEmailResponse);
+    console.log("Manager email sent successfully");
 
     // Send confirmation email to guest
     const guestEmailHtml = `
@@ -129,7 +141,7 @@ const handler = async (req: Request): Promise<Response> => {
       html: guestEmailHtml,
     });
 
-    console.log("Guest confirmation email sent:", guestEmailResponse);
+    console.log("Guest confirmation email sent successfully");
 
     return new Response(
       JSON.stringify({ 
@@ -145,11 +157,11 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
   } catch (error: any) {
-    console.error("Error in send-property-enquiry function:", error);
+    console.error("Error in send-property-enquiry function:", error.message);
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error.message || "Failed to submit enquiry" 
+        error: "Failed to submit enquiry. Please try again or contact us directly." 
       }),
       {
         status: 500,

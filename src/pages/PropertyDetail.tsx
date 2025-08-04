@@ -16,6 +16,7 @@ import { usePropertyHeroImage, usePropertyGalleryImages } from "@/hooks/usePrope
 import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { supabase } from "@/integrations/supabase/client";
+import { SafeHtmlContent } from "@/components/SafeHtmlContent";
 
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
@@ -302,7 +303,10 @@ const PropertyDetail = () => {
                 <h2 className="text-2xl font-bold mb-4">About This Property</h2>
                 <div className="content-html">
                   {property.description ? (
-                    <div dangerouslySetInnerHTML={{ __html: property.description }} />
+                    <SafeHtmlContent 
+                      htmlContent={property.description} 
+                      className="prose max-w-none" 
+                    />
                   ) : (
                     <p className="text-muted-foreground leading-relaxed">{property.excerpt}</p>
                   )}

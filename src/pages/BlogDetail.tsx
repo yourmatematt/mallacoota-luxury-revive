@@ -10,6 +10,7 @@ import { useCategories } from "@/hooks/useBlogFilters";
 import { useRandomProperties } from "@/hooks/useProperties";
 import { usePropertyCardImages } from "@/hooks/usePropertyImages";
 import PropertyImageCarousel from "@/components/PropertyImageCarousel";
+import { SafeHtmlContent } from "@/components/SafeHtmlContent";
 import propertyInterior1 from "@/assets/property-interior-1.jpg";
 import propertyInterior2 from "@/assets/property-interior-2.jpg";
 import propertyInterior3 from "@/assets/property-interior-3.jpg";
@@ -179,7 +180,10 @@ const BlogDetail = () => {
             <div className="max-w-4xl mx-auto">
               {/* Article Body */}
               <div className="content-html">
-                <div dangerouslySetInnerHTML={{ __html: blogPost.content || blogPost.excerpt || '' }} />
+                <SafeHtmlContent 
+                  htmlContent={blogPost.content || blogPost.excerpt || ''} 
+                  className="prose prose-lg max-w-none" 
+                />
               </div>
 
               {/* CTA Section with Property Cards */}
