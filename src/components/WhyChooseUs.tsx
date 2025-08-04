@@ -6,19 +6,19 @@ const WhyChooseUs = () => {
     {
       icon: MapPin,
       title: "Local Expertise",
-      description: "We live and work in Mallacoola, and believe that makes a real difference. We don't just rent out places - we care about your experience, and we want your holiday to be about memories with family and friends. From booking to check-out, we provide personalized service to ensure your stay is as comfortable as possible.",
+      description: "We live and work in Mallacoota. That means we know the area, the people, and what makes a holiday special. From booking to check-out, we make sure your stay is smooth and memorable.",
       image: "/api/placeholder/400/300"
     },
     {
       icon: Home,
       title: "Premium Properties",
-      description: "We only manage properties we would happily let our own family stay at - it's how we recommend a genuinely relaxing and relaxing place to unwind. We know what it's like to travel with kids, pets, and elderly relatives, so all our properties are modern, spacious, well-maintained with outstanding views. Every feature, every fitting, every finish has been thoughtfully selected.",
+      description: "We only list homes we’d happily stay in ourselves. Modern, spacious, family-friendly, and thoughtfully styled — every stay is designed for comfort and relaxation.",
       image: "/api/placeholder/400/300"
     },
     {
       icon: Heart,
       title: "Genuine Care",
-      description: "The little things matter. We don't need five or five thousand reviews saying 'we offer clean, comfortable accommodation with fair prices and personal service.' We know that holidays are about making memories with people you care about. So we look out for our guests - whether it's stocking your favorite wine or tea, or we're like the locals do and give you local recommendations that others might have missed.",
+      description: "We care about the little things. Whether it's local tips, your favourite tea, or just a friendly chat, we go the extra mile to make you feel at home.",
       image: "/api/placeholder/400/300"
     }
   ];
