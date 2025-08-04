@@ -300,6 +300,52 @@ const PropertyDetail = () => {
                 </div>
             </div>
 
+            {/* All Reviews Section */}
+            {reviews && reviews.length > 0 && (
+              <div className="lg:col-span-2 mt-8" id="all-reviews">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-2xl font-bold">All Guest Reviews</h3>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                        <span className="font-medium">{property.airbnb_rating}</span>
+                      </div>
+                      <span className="text-muted-foreground">
+                        ({reviews.length} review{reviews.length !== 1 ? 's' : ''})
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="grid gap-4 max-h-96 overflow-y-auto pr-2">
+                    {reviews.map((review: any, index: number) => (
+                      <Card key={review.id || index}>
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <h4 className="font-semibold">{review.reviewer}</h4>
+                              <p className="text-sm text-muted-foreground">{review.review_date}</p>
+                            </div>
+                            <div className="flex">
+                              {review.rating && [...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`h-4 w-4 ${
+                                    i < parseInt(review.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-sm leading-relaxed">{review.review}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Amenities and gallery button - stacked on mobile */}
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div className="flex flex-wrap gap-2 sm:gap-3">
@@ -420,8 +466,20 @@ const PropertyDetail = () => {
 
               {randomReview && (
                 <div>
-                  <h3 className="text-xl font-bold mb-4">Featured Guest Review</h3>
-                  <Card>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-bold">Guest Reviews</h3>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-medium">{property.airbnb_rating}</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        ({reviews?.length || 0} review{reviews?.length !== 1 ? 's' : ''})
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <Card className="mb-4">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -442,6 +500,23 @@ const PropertyDetail = () => {
                       <p className="text-sm">{randomReview.review}</p>
                     </CardContent>
                   </Card>
+
+                  {reviews && reviews.length > 1 && (
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => {
+                        // Scroll to reviews section or open modal
+                        // You can implement this based on your preference
+                        const reviewsSection = document.getElementById('all-reviews');
+                        if (reviewsSection) {
+                          reviewsSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                    >
+                      View All {reviews.length} Reviews
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
