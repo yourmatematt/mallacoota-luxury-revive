@@ -27,7 +27,7 @@ const PropertyAmenities = ({ propertyId }: PropertyAmenitiesProps) => {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Property Amenities</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {[1, 2, 3, 4].map((i) => (
             <Card key={i} className="animate-pulse">
               <CardHeader>
@@ -63,7 +63,7 @@ const PropertyAmenities = ({ propertyId }: PropertyAmenitiesProps) => {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Property Amenities</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {Object.entries(groupedAmenities).map(([categoryName, { category, amenities }]) => {
           const IconComponent = getIconForCategory(category.name);
           
