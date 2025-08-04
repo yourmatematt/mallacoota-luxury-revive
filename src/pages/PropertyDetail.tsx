@@ -59,72 +59,20 @@ const PropertyDetail = () => {
   const { data: heroImage } = usePropertyHeroImage(property?.image_folder || '');
   const { data: galleryImages } = usePropertyGalleryImages(property?.image_folder || '');
   
-  // New state for amenities
-  const [amenities, setAmenities] = useState<PropertyAmenity[]>([]);
-  const [amenitiesLoading, setAmenitiesLoading] = useState(true);
-  
   const [showGallery, setShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [showAllReviews, setShowAllReviews] = useState(false);
 
   // Stock images for fallbacks
   const heroImages = [propertyHero1, propertyHero2, propertyHero3];
   const stockGalleryImages = [propertyInterior1, propertyInterior2, propertyInterior3, propertyInterior4, propertyInterior5];
   
-  // Fetch amenities for this property
-  useEffect(() => {
-    const fetchAmenities = async () => {
-      if (!property?.property_id) return;
-      
-      setAmenitiesLoading(true);
-      try {
-        const { data, error } = await supabase
-          .from('property_amenities')
-          .select(`
-            amenity:amenities(
-              id,
-              name,
-              description,
-              is_premium,
-              category:amenity_categories(
-                name,
-                icon,
-                display_order
-              )
-            )
-          `)
-          .eq('property_id', property.property_id);
-
-        if (error) {
-          console.error('Error fetching amenities:', error);
-        } else {
-          // Sort by category display order, then by name
-          const sortedAmenities = data?.sort((a, b) => {
-            const categoryOrder = (a.amenity?.category?.display_order || 0) - (b.amenity?.category?.display_order || 0);
-            if (categoryOrder !== 0) return categoryOrder;
-            return (a.amenity?.name || '').localeCompare(b.amenity?.name || '');
-          }) || [];
-          
-          setAmenities(sortedAmenities);
-        }
-      } catch (error) {
-        console.error('Error fetching amenities:', error);
-      } finally {
-        setAmenitiesLoading(false);
-      }
-    };
-
-    fetchAmenities();
-  }, [property?.property_id]);
-
-  // Group amenities by category
-  const groupedAmenities = amenities.reduce((acc, item) => {
-    const categoryName = item.amenity?.category?.name || 'Other';
-    if (!acc[categoryName]) {
-      acc[categoryName] = [];
-    }
-    acc[categoryName].push(item.amenity);
-    return acc;
-  }, {} as Record<string, any[]>);
+  // Basic amenities from property data
+  const basicAmenities = [
+    ...(property?.pet_friendly ? ['Pet Friendly'] : []),
+    ...(property?.boat_parking ? ['Boat Parking'] : []),
+    'WiFi', 'Kitchen', 'Parking'
+  ];
 
   // Get hero image - use real image if available, otherwise fallback to stock
   const getHeroImage = (propertyId: string) => {
@@ -259,7 +207,7 @@ const PropertyDetail = () => {
   }
 
   // Get key amenities for hero badges (show top 4)
-  const keyAmenities = amenities.slice(0, 4).map(item => item.amenity?.name).filter(Boolean);
+  const keyAmenities = basicAmenities.slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background">
@@ -300,52 +248,6 @@ const PropertyDetail = () => {
                 </div>
             </div>
 
-            {/* All Reviews Section */}
-            {reviews && reviews.length > 0 && (
-              <div className="lg:col-span-2 mt-8" id="all-reviews">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-bold">All Guest Reviews</h3>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                        <span className="font-medium">{property.airbnb_rating}</span>
-                      </div>
-                      <span className="text-muted-foreground">
-                        ({reviews.length} review{reviews.length !== 1 ? 's' : ''})
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="grid gap-4 max-h-96 overflow-y-auto pr-2">
-                    {reviews.map((review: any, index: number) => (
-                      <Card key={review.id || index}>
-                        <CardContent className="p-4">
-                          <div className="flex items-start justify-between mb-2">
-                            <div>
-                              <h4 className="font-semibold">{review.reviewer}</h4>
-                              <p className="text-sm text-muted-foreground">{review.review_date}</p>
-                            </div>
-                            <div className="flex">
-                              {review.rating && [...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className={`h-4 w-4 ${
-                                    i < parseInt(review.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                          <p className="text-sm leading-relaxed">{review.review}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Amenities and gallery button - stacked on mobile */}
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div className="flex flex-wrap gap-2 sm:gap-3">
@@ -355,7 +257,7 @@ const PropertyDetail = () => {
                 {property.boat_parking && (
                   <Badge className="bg-white/90 text-primary shadow-lg text-xs">Boat Parking</Badge>
                 )}
-                {/* Show first few amenities from database */}
+                {/* Show first few amenities */}
                 {keyAmenities.slice(0, 2).map((amenity, index) => (
                   <Badge key={index} className="bg-white/90 text-primary shadow-lg text-xs">
                     {amenity}
@@ -432,41 +334,23 @@ const PropertyDetail = () => {
                 </div>
               </div>
 
-              {/* Enhanced Amenities Section */}
+              {/* Basic Amenities Section */}
               <div>
                 <h3 className="text-xl font-bold mb-6">Property Amenities</h3>
-                {amenitiesLoading ? (
-                  <div className="animate-pulse">Loading amenities...</div>
-                ) : (
-                  <div className="space-y-6">
-                    {Object.entries(groupedAmenities).map(([categoryName, categoryAmenities]) => {
-                      const IconComponent = categoryIcons[categoryName as keyof typeof categoryIcons] || Home;
-                      return (
-                        <div key={categoryName} className="border rounded-lg p-4">
-                          <div className="flex items-center gap-2 mb-3">
-                            <IconComponent className="h-5 w-5 text-primary" />
-                            <h4 className="font-semibold text-lg">{categoryName}</h4>
-                          </div>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {categoryAmenities.map((amenity) => (
-                              <div key={amenity.id} className="flex items-center gap-2">
-                                <div className={`w-2 h-2 rounded-full ${amenity.is_premium ? 'bg-yellow-400' : 'bg-primary'}`}></div>
-                                <span className={`text-sm ${amenity.is_premium ? 'font-medium text-yellow-700' : ''}`}>
-                                  {amenity.name}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {basicAmenities.map((amenity, index) => (
+                    <div key={index} className="flex items-center gap-2 p-3 border rounded-lg">
+                      <Wifi className="h-4 w-4 text-primary" />
+                      <span className="text-sm">{amenity}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {randomReview && (
+              {/* Guest Reviews Section */}
+              {reviews && reviews.length > 0 && (
                 <div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-bold">Guest Reviews</h3>
                     <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1">
@@ -474,48 +358,74 @@ const PropertyDetail = () => {
                         <span className="text-sm font-medium">{property.airbnb_rating}</span>
                       </div>
                       <span className="text-sm text-muted-foreground">
-                        ({reviews?.length || 0} review{reviews?.length !== 1 ? 's' : ''})
+                        ({reviews.length} review{reviews.length !== 1 ? 's' : ''})
                       </span>
                     </div>
                   </div>
                   
-                  <Card className="mb-4">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h4 className="font-semibold">{randomReview.reviewer}</h4>
-                          <p className="text-sm text-muted-foreground">{randomReview.review_date}</p>
+                  {/* Featured Review */}
+                  {randomReview && (
+                    <Card className="mb-4">
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <h4 className="font-semibold">{randomReview.reviewer}</h4>
+                            <p className="text-sm text-muted-foreground">{randomReview.review_date}</p>
+                          </div>
+                          <div className="flex">
+                            {randomReview.rating && [...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-4 w-4 ${
+                                  i < parseInt(randomReview.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                                }`}
+                              />
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex">
-                          {randomReview.rating && [...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < parseInt(randomReview.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-sm">{randomReview.review}</p>
-                    </CardContent>
-                  </Card>
+                        <p className="text-sm leading-relaxed">{randomReview.review}</p>
+                      </CardContent>
+                    </Card>
+                  )}
 
-                  {reviews && reviews.length > 1 && (
+                  {/* View All Reviews Button */}
+                  {reviews.length > 1 && (
                     <Button 
                       variant="outline" 
-                      className="w-full"
-                      onClick={() => {
-                        // Scroll to reviews section or open modal
-                        // You can implement this based on your preference
-                        const reviewsSection = document.getElementById('all-reviews');
-                        if (reviewsSection) {
-                          reviewsSection.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
+                      className="w-full mb-4"
+                      onClick={() => setShowAllReviews(!showAllReviews)}
                     >
-                      View All {reviews.length} Reviews
+                      {showAllReviews ? 'Show Less' : `View All ${reviews.length} Reviews`}
                     </Button>
+                  )}
+
+                  {/* All Reviews (Expandable) */}
+                  {showAllReviews && (
+                    <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+                      {reviews.map((review: any, index: number) => (
+                        <Card key={review.id || index}>
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between mb-2">
+                              <div>
+                                <h4 className="font-semibold">{review.reviewer}</h4>
+                                <p className="text-sm text-muted-foreground">{review.review_date}</p>
+                              </div>
+                              <div className="flex">
+                                {review.rating && [...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`h-4 w-4 ${
+                                      i < parseInt(review.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            <p className="text-sm leading-relaxed">{review.review}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   )}
                 </div>
               )}
