@@ -81,7 +81,7 @@ const Header = () => {
 
                 {/* Dropdown for secondary items */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="px-4 py-2 rounded-md transition-colors duration-300 font-medium text-foreground !bg-transparent !hover:bg-accent-red/5 !hover:text-accent-red !data-[state=open]:bg-accent-red/10 !data-[state=open]:text-accent-red">
+                  <NavigationMenuTrigger className="!h-auto px-4 py-2 rounded-md transition-colors duration-300 font-medium text-foreground !bg-transparent !hover:bg-accent-red/5 !hover:text-accent-red !data-[state=open]:bg-accent-red/10 !data-[state=open]:text-accent-red">
                     More
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
@@ -90,8 +90,8 @@ const Header = () => {
                         <NavigationMenuLink asChild>
                           <Link
                             to="/discover-mallacoota"
-                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
-                              isActiveRoute("/discover-mallacoota") ? "bg-accent text-accent-foreground" : ""
+                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent-red/5 hover:text-accent-red focus:bg-accent-red/5 focus:text-accent-red ${
+                              isActiveRoute("/discover-mallacoota") ? "bg-accent-red/10 text-accent-red" : ""
                             }`}
                           >
                             <div className="text-sm font-medium leading-none">Discover Mallacoota</div>
@@ -104,8 +104,8 @@ const Header = () => {
                         <NavigationMenuLink asChild>
                           <Link
                             to="/about"
-                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
-                              isActiveRoute("/about") ? "bg-accent text-accent-foreground" : ""
+                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent-red/5 hover:text-accent-red focus:bg-accent-red/5 focus:text-accent-red ${
+                              isActiveRoute("/about") ? "bg-accent-red/10 text-accent-red" : ""
                             }`}
                           >
                             <div className="text-sm font-medium leading-none">About</div>
@@ -118,8 +118,8 @@ const Header = () => {
                         <NavigationMenuLink asChild>
                           <Link
                             to="/testimonials"
-                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
-                              isActiveRoute("/testimonials") ? "bg-accent text-accent-foreground" : ""
+                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent-red/5 hover:text-accent-red focus:bg-accent-red/5 focus:text-accent-red ${
+                              isActiveRoute("/testimonials") ? "bg-accent-red/10 text-accent-red" : ""
                             }`}
                           >
                             <div className="text-sm font-medium leading-none">Testimonials</div>
@@ -132,8 +132,8 @@ const Header = () => {
                         <NavigationMenuLink asChild>
                           <Link
                             to="/contact"
-                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
-                              isActiveRoute("/contact") ? "bg-accent text-accent-foreground" : ""
+                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent-red/5 hover:text-accent-red focus:bg-accent-red/5 focus:text-accent-red ${
+                              isActiveRoute("/contact") ? "bg-accent-red/10 text-accent-red" : ""
                             }`}
                           >
                             <div className="text-sm font-medium leading-none">Contact</div>
