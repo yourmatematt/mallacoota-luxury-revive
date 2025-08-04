@@ -65,6 +65,68 @@ export type Database = {
         }
         Relationships: []
       }
+      amenities: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_premium: boolean | null
+          name: string
+          searchable_terms: string[] | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_premium?: boolean | null
+          name: string
+          searchable_terms?: string[] | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_premium?: boolean | null
+          name?: string
+          searchable_terms?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "amenities_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "amenity_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      amenity_categories: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       Audiences: {
         Row: {
           id: string
@@ -209,6 +271,51 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_enquiries: {
+        Row: {
+          created_at: string
+          email: string
+          enquiry_type: string
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          responded_at: string | null
+          response_notes: string | null
+          status: string | null
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          enquiry_type?: string
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          responded_at?: string | null
+          response_notes?: string | null
+          status?: string | null
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          enquiry_type?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          responded_at?: string | null
+          response_notes?: string | null
+          status?: string | null
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       "Discover Mallacoota Blogs": {
         Row: {
           Categories_id: string | null
@@ -346,6 +453,45 @@ export type Database = {
         }
         Relationships: []
       }
+      property_amenities: {
+        Row: {
+          amenity_id: string | null
+          created_at: string | null
+          custom_description: string | null
+          id: string
+          property_id: string | null
+        }
+        Insert: {
+          amenity_id?: string | null
+          created_at?: string | null
+          custom_description?: string | null
+          id?: string
+          property_id?: string | null
+        }
+        Update: {
+          amenity_id?: string | null
+          created_at?: string | null
+          custom_description?: string | null
+          id?: string
+          property_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_amenities_amenity_id_fkey"
+            columns: ["amenity_id"]
+            isOneToOne: false
+            referencedRelation: "amenities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_amenities_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "Properties"
+            referencedColumns: ["property_id"]
+          },
+        ]
+      }
       Seasons: {
         Row: {
           id: string
@@ -366,7 +512,16 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      contact_enquiries_summary: {
+        Row: {
+          count: number | null
+          earliest_enquiry: string | null
+          enquiry_type: string | null
+          latest_enquiry: string | null
+          status: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       filter_blogs_advanced: {
@@ -416,6 +571,22 @@ export type Database = {
           value: string
           label: string
           count: number
+        }[]
+      }
+      get_property_amenities: {
+        Args: { p_property_id: string }
+        Returns: {
+          id: string
+          amenity_id: string
+          property_id: string
+          custom_description: string
+          amenity_name: string
+          amenity_description: string
+          is_premium: boolean
+          category_id: string
+          category_name: string
+          category_icon: string
+          category_display_order: number
         }[]
       }
     }

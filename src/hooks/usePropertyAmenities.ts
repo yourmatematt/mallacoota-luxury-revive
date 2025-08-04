@@ -1,6 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
+interface PropertyAmenityFlat {
+  id: string;
+  amenity_id: string; 
+  property_id: string;
+  custom_description?: string;
+  amenity_name: string;
+  amenity_description?: string;
+  is_premium: boolean;
+  category_id?: string;
+  category_name?: string;
+  category_icon?: string;
+  category_display_order?: number;
+}
+
 export interface PropertyAmenityWithDetails {
   id: string;
   amenity_id: string;
@@ -11,7 +25,6 @@ export interface PropertyAmenityWithDetails {
     name: string;
     description?: string;
     is_premium: boolean;
-    searchable_terms?: string[];
     category: {
       id: string;
       name: string;
@@ -27,13 +40,35 @@ export const usePropertyAmenities = (propertyId?: string) => {
     queryFn: async () => {
       if (!propertyId) return [];
 
+      // Use the SQL function we created
       const { data, error } = await supabase.rpc('get_property_amenities', {
         p_property_id: propertyId
-      });
+      }) as { data: PropertyAmenityFlat[] | null, error: any };
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching property amenities:', error);
+        return [];
+      }
       
-      return (data || []) as PropertyAmenityWithDetails[];
+      // Transform flat data into structured format
+      return (data || []).map(item => ({
+        id: item.id,
+        amenity_id: item.amenity_id,
+        property_id: item.property_id,
+        custom_description: item.custom_description,
+        amenity: {
+          id: item.amenity_id,
+          name: item.amenity_name,
+          description: item.amenity_description,
+          is_premium: item.is_premium,
+          category: {
+            id: item.category_id || 'other',
+            name: item.category_name || 'Other',
+            icon: item.category_icon,
+            display_order: item.category_display_order || 999,
+          }
+        }
+      })) as PropertyAmenityWithDetails[];
     },
     enabled: !!propertyId,
   });
@@ -47,11 +82,7 @@ export const useGroupedPropertyAmenities = (propertyId?: string) => {
     
     if (!acc[categoryName]) {
       acc[categoryName] = {
-        category: item.amenity.category || { 
-          id: 'other', 
-          name: 'Other', 
-          display_order: 999 
-        },
+        category: item.amenity.category,
         amenities: []
       };
     }

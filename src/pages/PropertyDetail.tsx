@@ -6,9 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, Users, Bed, Bath, Wifi, Car, Utensils, Home, Heart, ChefHat, Sun, StarIcon } from "lucide-react";
+import { Star, Users, Bed, Bath, StarIcon, Wifi } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PropertyAmenities from "@/components/PropertyAmenities";
 import { useToast } from "@/hooks/use-toast";
 import { usePropertyReviews, usePropertyBySlug } from "@/hooks/useProperties";
 import { usePropertyHeroImage, usePropertyGalleryImages } from "@/hooks/usePropertyImages";
@@ -25,29 +26,6 @@ import propertyInterior2 from "@/assets/property-interior-2.jpg";
 import propertyInterior3 from "@/assets/property-interior-3.jpg";
 import propertyInterior4 from "@/assets/property-interior-4.jpg";
 import propertyInterior5 from "@/assets/property-interior-5.jpg";
-
-// Icon mapping for categories
-const categoryIcons = {
-  'Essential Infrastructure': Home,
-  'Guest Comfort': Heart,
-  'Kitchen Facilities': ChefHat,
-  'Outdoor & Entertainment': Sun,
-  'Premium Features': StarIcon,
-};
-
-interface PropertyAmenity {
-  amenity: {
-    id: string;
-    name: string;
-    description: string;
-    is_premium: boolean;
-    category: {
-      name: string;
-      icon: string;
-      display_order: number;
-    };
-  };
-}
 
 const PropertyDetail = () => {
   const { slug } = useParams();
@@ -67,11 +45,11 @@ const PropertyDetail = () => {
   const heroImages = [propertyHero1, propertyHero2, propertyHero3];
   const stockGalleryImages = [propertyInterior1, propertyInterior2, propertyInterior3, propertyInterior4, propertyInterior5];
   
-  // Basic amenities from property data
-  const basicAmenities = [
+  // Basic amenities for key display in hero
+  const keyAmenities = [
     ...(property?.pet_friendly ? ['Pet Friendly'] : []),
     ...(property?.boat_parking ? ['Boat Parking'] : []),
-    'WiFi', 'Kitchen', 'Parking'
+    'WiFi', 'Kitchen'
   ];
 
   // Get hero image - use real image if available, otherwise fallback to stock
@@ -206,9 +184,6 @@ const PropertyDetail = () => {
     );
   }
 
-  // Get key amenities for hero badges (show top 4)
-  const keyAmenities = basicAmenities.slice(0, 4);
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -334,18 +309,8 @@ const PropertyDetail = () => {
                 </div>
               </div>
 
-              {/* Basic Amenities Section */}
-              <div>
-                <h3 className="text-xl font-bold mb-6">Property Amenities</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {basicAmenities.map((amenity, index) => (
-                    <div key={index} className="flex items-center gap-2 p-3 border rounded-lg">
-                      <Wifi className="h-4 w-4 text-primary" />
-                      <span className="text-sm">{amenity}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Property Amenities Section */}
+              <PropertyAmenities propertyId={property.property_id} />
 
               {/* Guest Reviews Section */}
               {reviews && reviews.length > 0 && (
