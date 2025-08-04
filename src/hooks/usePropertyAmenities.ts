@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useMemo } from "react";
 
 interface PropertyAmenityFlat {
   id: string;
@@ -74,36 +75,65 @@ export const usePropertyAmenities = (propertyId?: string) => {
   });
 };
 
+export const useAllAmenityCategories = () => {
+  return useQuery({
+    queryKey: ['all-amenity-categories'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('amenity_categories')
+        .select('*')
+        .order('display_order', { ascending: true });
+      
+      if (error) {
+        console.error('Error fetching amenity categories:', error);
+        return [];
+      }
+      
+      return data || [];
+    },
+  });
+};
+
 export const useGroupedPropertyAmenities = (propertyId?: string) => {
-  const { data: amenities, ...rest } = usePropertyAmenities(propertyId);
+  const { data: amenities, isLoading: amenitiesLoading, error: amenitiesError } = usePropertyAmenities(propertyId);
+  const { data: allCategories, isLoading: categoriesLoading, error: categoriesError } = useAllAmenityCategories();
   
-  const groupedAmenities = amenities?.reduce((acc, item) => {
-    const categoryName = item.amenity.category?.name || 'Other';
+  const groupedAmenities = useMemo(() => {
+    if (!allCategories) return {};
     
-    if (!acc[categoryName]) {
-      acc[categoryName] = {
-        category: item.amenity.category,
+    // Start with all categories
+    const grouped = allCategories.reduce((acc, category) => {
+      acc[category.name] = {
+        category: {
+          id: category.id,
+          name: category.name,
+          icon: category.icon,
+          display_order: category.display_order,
+        },
         amenities: []
       };
-    }
-    
-    acc[categoryName].amenities.push(item);
-    return acc;
-  }, {} as Record<string, { 
-    category: { id: string; name: string; icon?: string; display_order: number }, 
-    amenities: PropertyAmenityWithDetails[] 
-  }>);
-
-  // Sort categories by display_order
-  const sortedGroupedAmenities = Object.entries(groupedAmenities || {})
-    .sort(([, a], [, b]) => a.category.display_order - b.category.display_order)
-    .reduce((acc, [key, value]) => {
-      acc[key] = value;
       return acc;
-    }, {} as typeof groupedAmenities);
+    }, {} as Record<string, { 
+      category: { id: string; name: string; icon?: string; display_order: number }, 
+      amenities: PropertyAmenityWithDetails[] 
+    }>);
+
+    // Overlay property amenities
+    if (amenities) {
+      amenities.forEach(item => {
+        const categoryName = item.amenity.category?.name || 'Other';
+        if (grouped[categoryName]) {
+          grouped[categoryName].amenities.push(item);
+        }
+      });
+    }
+
+    return grouped;
+  }, [allCategories, amenities]);
 
   return {
-    data: sortedGroupedAmenities,
-    ...rest
+    data: groupedAmenities,
+    isLoading: amenitiesLoading || categoriesLoading,
+    error: amenitiesError || categoriesError
   };
 };
