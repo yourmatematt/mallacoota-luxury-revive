@@ -72,7 +72,7 @@ const PropertyAmenities = ({ propertyId }: PropertyAmenitiesProps) => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <IconComponent className="h-5 w-5 text-primary" />
-                  {category.name}
+                  Stay Essentials
                 </CardTitle>
               </CardHeader>
               <CardContent>
