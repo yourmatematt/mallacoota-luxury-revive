@@ -81,7 +81,7 @@ const Header = () => {
 
                 {/* Dropdown for secondary items */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="!h-auto px-4 py-2 rounded-md transition-colors duration-300 font-medium text-foreground !bg-transparent !hover:bg-accent-red/5 !hover:text-accent-red !data-[state=open]:bg-accent-red/10 !data-[state=open]:text-accent-red">
+                  <NavigationMenuTrigger className="!h-auto !w-auto !min-w-0 !p-0 !m-0 !border-0 !outline-0 !ring-0 !shadow-none px-4 py-2 rounded-md transition-colors duration-300 font-medium text-foreground !bg-transparent !hover:bg-accent-red/5 !hover:text-accent-red !data-[state=open]:bg-accent-red/10 !data-[state=open]:text-accent-red">
                     More
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
