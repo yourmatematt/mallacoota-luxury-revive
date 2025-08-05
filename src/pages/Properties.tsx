@@ -46,7 +46,7 @@ const Properties = () => {
         {/* Hero Section */}
         <section 
           className="py-16 bg-cover bg-center bg-no-repeat relative"
-          style={{ backgroundImage: `url(/lovable-uploads/c9a2ae98-6199-443e-acc3-09e8b4bd6a1c.png)` }}
+          style={{ backgroundImage: `url(/lovable-uploads/64bb9439-76d4-443d-80ff-383b69527155.png)` }}
         >
           
           <div className="container mx-auto px-4 lg:px-8 relative z-10">
