@@ -43,20 +43,14 @@ const Header = () => {
     return false;
   };
 
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
-      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <div className="flex items-center">
-            <div className="h-12 lg:h-14 w-32 bg-gradient-to-r from-red-500 to-red-600 rounded-md flex items-center justify-center text-white font-bold">
-              <img 
-                src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=128&h=56&q=80" 
-                alt="Hammond Properties Logo" 
-                className="h-8 lg:h-10 w-auto object-contain"
-              />
-            </div>
-          </div>
+  {/* Logo */}
+<div className="flex items-center">
+  <img 
+    src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=128&h=56&q=80" 
+    alt="Hammond Properties Logo" 
+    className="h-12 lg:h-14 w-auto object-contain"
+  />
+</div>
 
           {/* Desktop Navigation - Cleaned up and simplified */}
           <nav className="hidden lg:flex items-center space-x-2">
