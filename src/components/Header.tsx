@@ -50,7 +50,11 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center">
             <div className="h-12 lg:h-14 w-32 bg-gradient-to-r from-red-500 to-red-600 rounded-md flex items-center justify-center text-white font-bold">
-              Hammond
+              <img 
+                src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=128&h=56&q=80" 
+                alt="Hammond Properties Logo" 
+                className="h-8 lg:h-10 w-auto object-contain"
+              />
             </div>
           </div>
 
