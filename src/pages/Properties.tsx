@@ -44,13 +44,19 @@ const Properties = () => {
       
       <main className="pt-20">
         {/* Hero Section */}
-        <section className="py-16 bg-gradient-subtle">
-          <div className="container mx-auto px-4 lg:px-8">
+        <section 
+          className="py-16 bg-cover bg-center bg-no-repeat relative"
+          style={{ backgroundImage: `url(/lovable-uploads/63562446-a542-45ef-b669-4d5e18288494.png)` }}
+        >
+          {/* Overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/20"></div>
+          
+          <div className="container mx-auto px-4 lg:px-8 relative z-10">
             <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-6">
+              <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6">
                 Our Properties
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-xl text-white/90 max-w-3xl mx-auto">
                 Discover your perfect Mallacoota retreat from our collection of luxury vacation rentals
               </p>
             </div>
@@ -63,7 +69,7 @@ const Properties = () => {
             
             {/* Results Count */}
             <div className="text-center mt-8">
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-white/80">
                 {isLoading ? "Loading properties..." : `${properties?.length || 0} propert${properties?.length === 1 ? 'y' : 'ies'} found`}
               </p>
             </div>
