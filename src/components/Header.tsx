@@ -43,14 +43,18 @@ const Header = () => {
     return false;
   };
 
-  {/* Logo */}
-<div className="flex items-center">
-  <img 
-    src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=128&h=56&q=80" 
-    alt="Hammond Properties Logo" 
-    className="h-12 lg:h-14 w-auto object-contain"
-  />
-</div>
+  return (
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          {/* Logo */}
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
+              alt="Hammond Properties" 
+              className="h-12 lg:h-14 w-auto object-contain"
+            />
+          </div>
 
           {/* Desktop Navigation - Cleaned up and simplified */}
           <nav className="hidden lg:flex items-center space-x-2">
@@ -143,7 +147,7 @@ const Header = () => {
           {/* CTA Button - Improved styling */}
           <div className="hidden lg:block">
             <Button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200 ease-out">
-              <Link to="/properties">View Stays</Link>
+              <Link to="/properties" className="">View Stays</Link>
             </Button>
           </div>
 
@@ -175,7 +179,7 @@ const Header = () => {
                 </Link>
               ))}
               <Button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full mt-4">
-                <Link to="/properties">View Stays</Link>
+                <Link to="/properties" className="">View Stays</Link>
               </Button>
             </nav>
           </div>
