@@ -56,29 +56,28 @@ const Properties = () => {
   
   {/* Content */}
   <div className="container mx-auto px-4 lg:px-8 relative z-10">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-6">
-                Our Properties
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Discover your perfect Mallacoota retreat from our collection of luxury vacation rentals
-              </p>
-            </div>
+    <div className="text-center mb-12">
+      <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-6">
+        Our Properties
+      </h1>
+      <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+        Discover your perfect Mallacoota retreat from our collection of luxury vacation rentals
+      </p>
+    </div>
 
-            {/* Filters */}
-            <PropertyFilters 
-              onFiltersChange={setFilters}
-              isLoading={isLoading}
-            />
-            
-            {/* Results Count */}
-            <div className="text-center mt-8">
-              <p className="text-lg text-muted-foreground">
-                {isLoading ? "Loading properties..." : `${properties?.length || 0} propert${properties?.length === 1 ? 'y' : 'ies'} found`}
-              </p>
-            </div>
-          </div>
+    {/* Filters */}
+    <PropertyFilters 
+      onFiltersChange={setFilters}
+      isLoading={isLoading}
+    />
+    
+    {/* Results Count */}
+    <div className="text-center mt-8">
+      <p className="text-lg text-muted-foreground">
+        {isLoading ? "Loading properties..." : `${properties?.length || 0} propert${properties?.length === 1 ? 'y' : 'ies'} found`}
+      </p>
+    </div>
+  </div>
         </section>
 
         {/* Properties Grid */}
