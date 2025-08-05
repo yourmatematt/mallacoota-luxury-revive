@@ -42,9 +42,9 @@ const Properties = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20">
+      <main>
         {/* Hero Section with Background Image */}
-        <section className="py-16 relative overflow-hidden">
+        <section className="pt-20 py-16 relative overflow-hidden min-h-[600px]">
           {/* Background Image */}
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
