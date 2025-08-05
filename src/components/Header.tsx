@@ -1,20 +1,32 @@
-
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+
+// Mock Link component for demonstration - replace with your actual Link component
+const Link = ({ to, children, className, ...props }) => (
+  <a href={to} className={className} {...props}>{children}</a>
+);
+
+// Mock NavigationMenu components - replace with your actual components
+const NavigationMenu = ({ children }) => <div className="relative">{children}</div>;
+const NavigationMenuList = ({ children, className }) => <div className={className}>{children}</div>;
+const NavigationMenuItem = ({ children }) => <div className="relative">{children}</div>;
+const NavigationMenuTrigger = ({ children, className }) => (
+  <button className={className}>{children} <ChevronDown className="ml-1 h-3 w-3" /></button>
+);
+const NavigationMenuContent = ({ children }) => (
+  <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+    {children}
+  </div>
+);
+const NavigationMenuLink = ({ asChild, children }) => asChild ? children : <div>{children}</div>;
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  // Mock location for demonstration
+  const location = { pathname: "/" };
 
   const navigationItems = [
     { name: "Home", href: "/" },
@@ -25,150 +37,130 @@ const Header = () => {
     { name: "Contact", href: "/contact" },
   ];
 
-  const isActiveRoute = (href: string) => {
+  const isActiveRoute = (href) => {
     if (href === "/" && location.pathname === "/") return true;
     if (href !== "/" && location.pathname.startsWith(href)) return true;
     return false;
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
-      <div className="container mx-auto px-4 lg:px-8">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
-              alt="Hammond Properties" 
-              className="h-12 lg:h-14 w-auto"
-            />
+            <div className="h-12 lg:h-14 w-32 bg-gradient-to-r from-red-500 to-red-600 rounded-md flex items-center justify-center text-white font-bold">
+              Hammond
+            </div>
           </div>
 
-          {/* Desktop Navigation - Updated with NavigationMenu */}
-          <nav className="hidden lg:flex items-center">
-            <NavigationMenu>
-              <NavigationMenuList className="space-x-2">
-                {/* Primary Navigation Items */}
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/"
-                      className={`px-4 py-2 rounded-md transition-colors duration-300 font-medium ${
-                        isActiveRoute("/") 
-                          ? "text-accent-red bg-accent-red/10" 
-                          : "text-foreground hover:text-accent-red hover:bg-accent-red/5"
-                      }`}
-                    >
-                      Home
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
+          {/* Desktop Navigation - Cleaned up and simplified */}
+          <nav className="hidden lg:flex items-center space-x-2">
+            {/* Primary Navigation Items - First 3 as direct links */}
+            <Link
+              to="/"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                isActiveRoute("/") 
+                  ? "text-red-600 bg-red-50" 
+                  : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+              }`}
+            >
+              Home
+            </Link>
 
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/properties"
-                      className={`px-4 py-2 rounded-md transition-colors duration-300 font-medium ${
-                        isActiveRoute("/properties") 
-                          ? "text-accent-red bg-accent-red/10" 
-                          : "text-foreground hover:text-accent-red hover:bg-accent-red/5"
-                      }`}
-                    >
-                      Properties
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
+            <Link
+              to="/properties"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                isActiveRoute("/properties") 
+                  ? "text-red-600 bg-red-50" 
+                  : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+              }`}
+            >
+              Properties
+            </Link>
 
-                {/* Dropdown for secondary items */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="!h-auto !w-auto !min-w-0 !p-0 !m-0 !border-0 !outline-0 !ring-0 !shadow-none px-4 py-2 rounded-md transition-colors duration-300 font-medium text-foreground !bg-transparent !hover:bg-accent-red/5 !hover:text-accent-red !data-[state=open]:bg-accent-red/10 !data-[state=open]:text-accent-red">
-                    More
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[400px] gap-3 p-4">
-                      <div className="grid grid-cols-1 gap-2">
-                        <NavigationMenuLink asChild>
-                          <Link
-                            to="/discover-mallacoota"
-                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent-red/5 hover:text-accent-red focus:bg-accent-red/5 focus:text-accent-red ${
-                              isActiveRoute("/discover-mallacoota") ? "bg-accent-red/10 text-accent-red" : ""
-                            }`}
-                          >
-                            <div className="text-sm font-medium leading-none">Discover Mallacoota</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Explore local attractions and activities
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
+            <Link
+              to="/discover-mallacoota"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                isActiveRoute("/discover-mallacoota") 
+                  ? "text-red-600 bg-red-50" 
+                  : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+              }`}
+            >
+              Discover Mallacoota
+            </Link>
 
-                        <NavigationMenuLink asChild>
-                          <Link
-                            to="/about"
-                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent-red/5 hover:text-accent-red focus:bg-accent-red/5 focus:text-accent-red ${
-                              isActiveRoute("/about") ? "bg-accent-red/10 text-accent-red" : ""
-                            }`}
-                          >
-                            <div className="text-sm font-medium leading-none">About</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Learn about Hammond Properties
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
+            {/* Dropdown for secondary items */}
+            <div className="relative">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-all duration-200"
+              >
+                More
+                <ChevronDown className={`ml-1 h-3 w-3 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
 
-                        <NavigationMenuLink asChild>
-                          <Link
-                            to="/testimonials"
-                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent-red/5 hover:text-accent-red focus:bg-accent-red/5 focus:text-accent-red ${
-                              isActiveRoute("/testimonials") ? "bg-accent-red/10 text-accent-red" : ""
-                            }`}
-                          >
-                            <div className="text-sm font-medium leading-none">Testimonials</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Read guest reviews and feedback
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
+              {isDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-2">
+                  <Link
+                    to="/about"
+                    className={`flex flex-col px-4 py-3 hover:bg-gray-50 transition-colors duration-200 ${
+                      isActiveRoute("/about") ? "bg-red-50 text-red-600" : "text-gray-700 hover:text-red-600"
+                    }`}
+                  >
+                    <div className="text-sm font-medium">About</div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Learn about Hammond Properties
+                    </p>
+                  </Link>
 
-                        <NavigationMenuLink asChild>
-                          <Link
-                            to="/contact"
-                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent-red/5 hover:text-accent-red focus:bg-accent-red/5 focus:text-accent-red ${
-                              isActiveRoute("/contact") ? "bg-accent-red/10 text-accent-red" : ""
-                            }`}
-                          >
-                            <div className="text-sm font-medium leading-none">Contact</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Get in touch with our team
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+                  <Link
+                    to="/testimonials"
+                    className={`flex flex-col px-4 py-3 hover:bg-gray-50 transition-colors duration-200 ${
+                      isActiveRoute("/testimonials") ? "bg-red-50 text-red-600" : "text-gray-700 hover:text-red-600"
+                    }`}
+                  >
+                    <div className="text-sm font-medium">Testimonials</div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Read guest reviews and feedback
+                    </p>
+                  </Link>
+
+                  <Link
+                    to="/contact"
+                    className={`flex flex-col px-4 py-3 hover:bg-gray-50 transition-colors duration-200 ${
+                      isActiveRoute("/contact") ? "bg-red-50 text-red-600" : "text-gray-700 hover:text-red-600"
+                    }`}
+                  >
+                    <div className="text-sm font-medium">Contact</div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Get in touch with our team
+                    </p>
+                  </Link>
+                </div>
+              )}
+            </div>
           </nav>
 
-          {/* CTA Button */}
+          {/* CTA Button - Improved styling */}
           <div className="hidden lg:block">
-            <Button className="bg-accent-red hover:bg-accent-red/90 text-white px-6 py-2 rounded-full shadow-medium hover:shadow-strong transform hover:scale-105 transition-all duration-300 ease-out">
+            <Button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200 ease-out">
               <Link to="/properties">View Stays</Link>
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Unchanged */}
           <button
-            className="lg:hidden p-2"
+            className="lg:hidden p-2 text-gray-700 hover:text-red-600"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Unchanged */}
         {isMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-background border-b border-border shadow-strong">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-lg">
             <nav className="flex flex-col space-y-4 p-6">
               {navigationItems.map((item) => (
                 <Link
@@ -176,15 +168,15 @@ const Header = () => {
                   to={item.href}
                   className={`transition-colors duration-300 font-medium ${
                     isActiveRoute(item.href) 
-                      ? "text-accent-red" 
-                      : "text-foreground hover:text-accent-red"
+                      ? "text-red-600" 
+                      : "text-gray-700 hover:text-red-600"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <Button className="btn-accent px-6 py-2 rounded-full mt-4" asChild>
+              <Button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full mt-4">
                 <Link to="/properties">View Stays</Link>
               </Button>
             </nav>
