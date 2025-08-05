@@ -43,18 +43,24 @@ const Properties = () => {
       <Header />
       
       <main className="pt-20">
-        {/* Hero Section */}
-        <section 
-          className="py-16 bg-cover bg-center bg-no-repeat relative"
-          style={{ backgroundImage: `url(/lovable-uploads/64bb9439-76d4-443d-80ff-383b69527155.png)` }}
-        >
+        {/* Hero Section with Background Image */}
+        <section className="py-16 relative overflow-hidden">
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: 'url("/lovable-uploads/64bb9439-76d4-443d-80ff-383b69527155.png")' }}
+          >
+            {/* Overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
           
+          {/* Content */}
           <div className="container mx-auto px-4 lg:px-8 relative z-10">
             <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6">
+              <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 drop-shadow-lg">
                 Our Properties
               </h1>
-              <p className="text-xl text-white/90 max-w-3xl mx-auto">
+              <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow-md">
                 Discover your perfect Mallacoota retreat from our collection of luxury vacation rentals
               </p>
             </div>
@@ -67,7 +73,7 @@ const Properties = () => {
             
             {/* Results Count */}
             <div className="text-center mt-8">
-              <p className="text-lg text-white/80">
+              <p className="text-lg text-white/90 drop-shadow-md">
                 {isLoading ? "Loading properties..." : `${properties?.length || 0} propert${properties?.length === 1 ? 'y' : 'ies'} found`}
               </p>
             </div>
