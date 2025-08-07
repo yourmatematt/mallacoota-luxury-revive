@@ -529,8 +529,8 @@ Property URL: ${window.location.href}
                 From pristine beaches to local hotspots - get the insider's guide.
               </p>
               
-              <Button asChild size="lg" className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-4 text-lg rounded-full shadow-strong hover:shadow-medium transition-all duration-300">
-                <Link to="/discover-mallacoota">
+<Button asChild variant="accent" size="default" rounded="full">
+                  <Link to="/discover-mallacoota">
                   Explore Local Guides
                 </Link>
               </Button>
