@@ -45,7 +45,7 @@ const About = () => {
       name: "Amelia Hammond",
       role: "Founder & Managing Director",
       description: "A Mallacoota local with over 15 years in hospitality and property management. Amelia's passion for exceptional guest experiences drives our commitment to excellence.",
-      image: "/api/placeholder/300/400"
+      image: "/images/amelia-about-page.jpg"
     }
   ];
 
@@ -53,21 +53,34 @@ const About = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20">
-        {/* Hero Section */}
-        <section className="py-16 bg-gradient-subtle">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-6">
-                About Hammond Properties
-              </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                "Amelia is more than just a property manager – she is your gateway to experiencing Mallacoota's magic. 
-                Her passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family." James - Past Property Owner
-              </p>
-            </div>
-          </div>
-        </section>
+  <main>
+  {/* Hero Section with Background Image */}
+  <section className="pt-20 py-16 relative overflow-hidden min-h-[600px] flex items-center">
+    {/* Background Image */}
+    <div 
+      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: 'url("/images/about-hero-background.jpg")' }}
+    />
+    
+    {/* Overlay for better text readability */}
+    <div className="absolute inset-0 bg-black/40"></div>
+    
+    {/* Content */}
+    <div className="relative z-10 container mx-auto px-4 lg:px-8">
+      <div className="max-w-4xl mx-auto text-center text-white">
+        <h1 className="text-4xl md:text-6xl font-serif font-bold mb-8 drop-shadow-lg">
+          About Hammond Properties
+        </h1>
+        <blockquote className="text-xl md:text-2xl leading-relaxed italic drop-shadow-md mb-6">
+          "Amelia is more than just a property manager – she is your gateway to experiencing Mallacoota's magic. 
+          Her passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family."
+        </blockquote>
+        <cite className="block text-lg font-medium text-white/90 drop-shadow-md">
+          — James, Past Property Owner
+        </cite>
+      </div>
+    </div>
+  </section>
 
         {/* Our Story Section */}
         <section className="py-16">
@@ -96,10 +109,10 @@ const About = () => {
               </div>
               <div className="relative">
                 <img
-                  src="/api/placeholder/600/500"
-                  alt="Mallacoota coastal view"
-                  className="w-full h-96 object-cover rounded-2xl shadow-medium"
-                />
+  src="/images/luxury-property-management.jpg"
+  alt="Mallacoota coastal view"
+  className="w-full h-96 object-cover rounded-2xl shadow-medium"
+/>
                 <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-soft border">
                   <div className="flex items-center space-x-4">
                     <div className="text-center">
@@ -122,7 +135,7 @@ const About = () => {
         </section>
 
         {/* Our Values Section */}
-        <section className="py-16 bg-accent/10">
+        <section className="py-16 bg-primary/5">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
@@ -162,10 +175,10 @@ const About = () => {
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
-                Meet Amelia & Terry
+                Meet Amelia
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                The passionate duo behind your perfect Mallacoota experience.
+                The passionate host behind your perfect Mallacoota experience.
               </p>
             </div>
 
@@ -237,7 +250,7 @@ const About = () => {
 
               <div className="relative">
                 <img
-                  src="/api/placeholder/600/500"
+                  src="/images/about-property-owners.jpg"
                   alt="Luxury property management"
                   className="w-full h-96 object-cover rounded-2xl shadow-medium"
                 />
@@ -253,30 +266,27 @@ const About = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 bg-gradient-subtle">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl font-serif font-bold text-primary mb-4">
-                Ready to Experience Mallacoota?
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Join our family of happy guests and discover why we're the trusted choice for luxury coastal accommodation.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/properties">
-                  <Button size="lg">
-                    Browse Properties
-                  </Button>
-                </Link>
-                <Link to="/contact">
-                  <Button variant="outline" size="lg">
-                    Contact Us
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+         <section className="py-20 bg-primary text-primary-foreground">
+      <div className="container mx-auto px-4 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto">
+          {/* Main CTA */}
+          <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
+            Ready to Plan Your Stay?
+          </h2>
+          
+          <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+            Discover your perfect Mallacoota retreat. Browse our collection of premium vacation rentals.
+          </p>
+          
+          {/* CTA Button */}
+          <Button asChild size="lg" className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-4 text-lg rounded-full shadow-strong hover:shadow-medium transition-all duration-300">
+            <Link to="/properties">
+              View All Properties
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </section>
       </main>
 
       <Footer />

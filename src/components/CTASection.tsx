@@ -16,8 +16,8 @@ const CTASection = () => {
           </p>
           
           {/* CTA Button */}
-          <Button asChild size="lg" className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-4 text-lg rounded-full shadow-strong hover:shadow-medium transition-all duration-300">
-            <Link to="/properties">
+<Button asChild variant="accent" size="default" rounded="full">
+              <Link to="/properties">
               View All Properties
             </Link>
           </Button>

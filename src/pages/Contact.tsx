@@ -8,6 +8,7 @@ import { Mail, Phone, MapPin, Clock, MessageCircle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -102,21 +103,31 @@ ${formData.message}
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20">
-        {/* Hero Section */}
-        <section className="py-16 bg-gradient-subtle">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-6">
-                Contact Us
-              </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                We're here to help make your Mallacoota experience extraordinary. 
-                Get in touch with any questions about our properties, bookings, or the local area.
-              </p>
-            </div>
-          </div>
-        </section>
+      <main>
+      {/* Hero Section with Background Image */}
+<section className="pt-20 py-16 relative overflow-hidden min-h-[600px] flex items-center">
+  {/* Background Image */}
+  <div 
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+    style={{ backgroundImage: 'url("/images/contact-hero-background.jpg")' }}
+  >
+    {/* Overlay for better text readability */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 to-black/70"></div>
+  </div>
+  
+  {/* Content */}
+  <div className="container mx-auto px-4 lg:px-8 relative z-10">
+    <div className="max-w-4xl mx-auto text-center">
+      <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 drop-shadow-lg">
+        Contact Us
+      </h1>
+      <p className="text-xl text-white/90 leading-relaxed drop-shadow-md">
+        We're here to help make your Mallacoota experience extraordinary. 
+        Get in touch with any questions about our properties, bookings, or the local area.
+      </p>
+    </div>
+  </div>
+</section>
 
         {/* Contact Form & Info Section */}
         <section className="py-16">
@@ -402,6 +413,28 @@ ${formData.message}
             </div>
           </div>
         </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-primary text-primary-foreground">
+          <div className="container mx-auto px-4 lg:px-8 text-center">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
+                Uncover Mallacoota's best-kept secrets
+              </h2>
+              
+              <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+                From pristine beaches to local hotspots - get the insider's guide.
+              </p>
+              
+              <Button asChild size="lg" className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-4 text-lg rounded-full shadow-strong hover:shadow-medium transition-all duration-300">
+                <Link to="/discover-mallacoota">
+                  Explore Local Guides
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <Footer />

@@ -1,77 +1,38 @@
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Clock, User, ArrowLeft, Star, Bed, Bath, Users } from "lucide-react";
+import { Calendar, Clock, User, ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useBlogPostBySlug } from "@/hooks/useBlogPosts";
 import { useCategories } from "@/hooks/useBlogFilters";
-import { useRandomProperties } from "@/hooks/useProperties";
-import { usePropertyCardImages } from "@/hooks/usePropertyImages";
-import PropertyImageCarousel from "@/components/PropertyImageCarousel";
 import { SafeHtmlContent } from "@/components/SafeHtmlContent";
-import propertyInterior1 from "@/assets/property-interior-1.jpg";
-import propertyInterior2 from "@/assets/property-interior-2.jpg";
-import propertyInterior3 from "@/assets/property-interior-3.jpg";
+import { getBlogImage } from "@/lib/utils";
 
-// Component for individual property card with real image logic
-const PropertyCard = ({ property }: { property: any }) => {
-  const { data: realImages } = usePropertyCardImages(property.image_folder);
-  
-  // Stock images for fallback
-  const stockImages = [propertyInterior1, propertyInterior2, propertyInterior3];
-  
-  // Use real images if available, otherwise use stock images
-  const imagesToUse = realImages && realImages.length > 0 
-    ? realImages.map(img => img.url) 
-    : stockImages;
-
+// Simple CTA Section Component
+const CTASection = () => {
   return (
-    <Card className="card-boutique overflow-hidden group">
-      <div className="relative">
-        <PropertyImageCarousel
-          images={imagesToUse}
-          propertyId={property.property_id}
-          propertyTitle={property.title || 'Property'}
-        />
-        {property.airbnb_rating && (
-          <div className="absolute top-3 right-3">
-            <Badge className="bg-white/95 text-primary flex items-center gap-1 shadow-lg backdrop-blur-sm">
-              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-              {property.airbnb_rating}
-            </Badge>
-          </div>
-        )}
-      </div>
-      
-      <CardContent className="p-4">
-        <h4 className="text-lg font-serif font-semibold mb-2 text-primary leading-tight">
-          {property.title}
-        </h4>
-        
-        <div className="grid grid-cols-3 gap-2 mb-3 py-2 border-t border-b border-border/50">
-          <div className="flex flex-col items-center space-y-1 text-center">
-            <Bed size={14} className="text-primary" />
-            <span className="text-sm font-semibold text-primary">{property.bedrooms}</span>
-          </div>
-          <div className="flex flex-col items-center space-y-1 text-center">
-            <Bath size={14} className="text-primary" />
-            <span className="text-sm font-semibold text-primary">{property.bathrooms}</span>
-          </div>
-          <div className="flex flex-col items-center space-y-1 text-center">
-            <Users size={14} className="text-primary" />
-            <span className="text-sm font-semibold text-primary">{property.guests}</span>
-          </div>
+    <section className="py-20 bg-primary text-primary-foreground">
+      <div className="container mx-auto px-4 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto">
+          {/* Main CTA */}
+          <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
+            Ready to Plan Your Stay?
+          </h2>
+          
+          <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+            Discover your perfect Mallacoota retreat. Browse our collection of premium vacation rentals.
+          </p>
+          
+          {/* CTA Button */}
+          <Button asChild variant="accent" size="default" rounded="full">
+            <Link to="/properties">
+              View All Properties
+            </Link>
+          </Button>
         </div>
-        
-        <Button asChild className="w-full py-2 text-sm rounded-full">
-          <Link to={`/properties/${property.slug}`}>
-            View Details
-          </Link>
-        </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 };
 
@@ -79,7 +40,6 @@ const BlogDetail = () => {
   const { slug } = useParams();
   const { data: blogPost, isLoading } = useBlogPostBySlug(slug || '');
   const { data: categories } = useCategories();
-  const { data: randomProperties } = useRandomProperties(3);
 
   if (isLoading) {
     return (
@@ -117,11 +77,11 @@ const BlogDetail = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20">
+      <main>
         {/* Hero Section */}
         <section className="relative h-[50vh] overflow-hidden">
           <img
-            src={blogPost.hero_image_url || '/placeholder-blog.jpg'}
+            src={getBlogImage(blogPost.slug)}
             alt={blogPost.title}
             className="w-full h-full object-cover"
             onError={(e) => {
@@ -185,35 +145,6 @@ const BlogDetail = () => {
                   className="prose prose-lg max-w-none" 
                 />
               </div>
-
-              {/* CTA Section with Property Cards */}
-              <div className="bg-gradient-subtle rounded-2xl p-8 mb-12">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-serif font-bold text-primary mb-4">
-                    Looking for places to stay in Mallacoota?
-                  </h3>
-                  <p className="text-lg text-muted-foreground mb-6">
-                    Discover our collection of luxury vacation rentals, perfect for exploring all that Mallacoota has to offer.
-                  </p>
-                </div>
-
-                {/* Property Cards */}
-                {randomProperties && randomProperties.length > 0 && (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    {randomProperties.map((property) => (
-                      <PropertyCard key={property.property_id} property={property} />
-                    ))}
-                  </div>
-                )}
-
-                <div className="text-center">
-                  <Link to="/properties">
-                    <Button size="lg">
-                      View All Properties
-                    </Button>
-                  </Link>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -233,7 +164,7 @@ const BlogDetail = () => {
                       <div className="group">
                         <div className="relative overflow-hidden rounded-xl mb-4">
                           <img
-                            src={post.hero_image_url || '/placeholder-blog.jpg'}
+                            src={getBlogImage(post.slug)}
                             alt={post.title}
                             className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
                           />
@@ -252,6 +183,9 @@ const BlogDetail = () => {
             </div>
           </section>
         )}
+
+        {/* CTA Section - Above Footer */}
+        <CTASection />
       </main>
 
       <Footer />

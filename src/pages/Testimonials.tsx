@@ -177,53 +177,63 @@ const Testimonials = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20">
-        {/* Hero Section */}
-        <section className="py-16 bg-gradient-subtle">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-6">
-                Guest Testimonials
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Real experiences from families who've made our properties their home away from home. Come as guests. Leave as family.
-              </p>
-            </div>
+   <main>
+  {/* Hero Section with Background Image */}
+  <section className="pt-20 py-16 relative overflow-hidden min-h-[600px]">
+    {/* Background Image */}
+    <div 
+      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: 'url("/images/testimonials-hero-background.jpg")' }}
+    >
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/40"></div>
+    </div>
+    
+    {/* Content */}
+    <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 drop-shadow-lg">
+          Guest Testimonials
+        </h1>
+        <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow-md">
+          Real experiences from families who've made our properties their home away from home. Come as guests. Leave as family.
+        </p>
+      </div>
 
-            {/* Filter Controls */}
-            <div className="max-w-4xl mx-auto bg-card rounded-2xl p-8 shadow-soft border">
-              <div className="flex flex-col space-y-6">
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-4 flex items-center">
-                    <Filter className="w-4 h-4 mr-2" />
-                    Filter by Property
-                  </label>
-                  <div className="flex flex-wrap gap-3">
-                    <Button
-                      variant={selectedProperty === "All" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedProperty("All")}
-                      className="font-medium"
-                    >
-                      All Properties ({allReviews?.length || 0})
-                    </Button>
-                    {reviewsByProperty.map((property) => (
-                      <Button
-                        key={property.id}
-                        variant={selectedProperty === property.id ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSelectedProperty(property.id)}
-                        className="font-medium"
-                      >
-                        {property.title} ({property.reviewCount})
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </div>
+      {/* Filter Controls */}
+            <div className="bg-white/95 backdrop-blur-sm p-6 rounded-lg border max-w-4xl mx-auto shadow-lg">
+        <div className="flex flex-col space-y-6">
+          <div>
+            <label className="text-sm font-medium text-foreground mb-4 flex items-center">
+              <Filter className="w-4 h-4 mr-2" />
+              Filter by Property
+            </label>
+            <div className="flex flex-wrap gap-3">
+              <Button
+                variant={selectedProperty === "All" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedProperty("All")}
+                className="font-medium"
+              >
+                All Properties ({allReviews?.length || 0})
+              </Button>
+              {reviewsByProperty.map((property) => (
+                <Button
+                  key={property.id}
+                  variant={selectedProperty === property.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedProperty(property.id)}
+                  className="font-medium"
+                >
+                  {property.title} ({property.reviewCount})
+                </Button>
+              ))}
             </div>
           </div>
-        </section>
+        </div>
+      </div>
+    </div>
+  </section>
 
         {/* Reviews Section */}
         {selectedProperty === "All" ? (

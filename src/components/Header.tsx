@@ -1,32 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
-
-// Mock Link component for demonstration - replace with your actual Link component
-const Link = ({ to, children, className, ...props }) => (
-  <a href={to} className={className} {...props}>{children}</a>
-);
-
-// Mock NavigationMenu components - replace with your actual components
-const NavigationMenu = ({ children }) => <div className="relative">{children}</div>;
-const NavigationMenuList = ({ children, className }) => <div className={className}>{children}</div>;
-const NavigationMenuItem = ({ children }) => <div className="relative">{children}</div>;
-const NavigationMenuTrigger = ({ children, className }) => (
-  <button className={className}>{children} <ChevronDown className="ml-1 h-3 w-3" /></button>
-);
-const NavigationMenuContent = ({ children }) => (
-  <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-    {children}
-  </div>
-);
-const NavigationMenuLink = ({ asChild, children }) => asChild ? children : <div>{children}</div>;
+import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
-  // Mock location for demonstration
-  const location = { pathname: "/" };
+  // Use actual location from React Router
+  const location = useLocation();
 
   const navigationItems = [
     { name: "Home", href: "/" },
@@ -92,10 +74,13 @@ const Header = () => {
               Discover Mallacoota
             </Link>
 
-            {/* Dropdown for secondary items */}
-            <div className="relative">
+            {/* Dropdown for secondary items - HOVER instead of CLICK */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
               <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-all duration-200"
               >
                 More
@@ -103,7 +88,7 @@ const Header = () => {
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-2">
+                <div className="absolute top-full left-0 mt-0 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-2">
                   <Link
                     to="/about"
                     className={`flex flex-col px-4 py-3 hover:bg-gray-50 transition-colors duration-200 ${
@@ -146,8 +131,8 @@ const Header = () => {
 
           {/* CTA Button - Improved styling */}
           <div className="hidden lg:block">
-            <Button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200 ease-out">
-              <Link to="/properties" className="">View Stays</Link>
+<Button asChild variant="accent" size="default" rounded="full">             
+   <Link to="/properties">View Stays</Link>
             </Button>
           </div>
 
@@ -178,8 +163,8 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              <Button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full mt-4">
-                <Link to="/properties" className="">View Stays</Link>
+<Button asChild variant="accent" size="default" rounded="full">
+                  <Link to="/properties">View Stays</Link>
               </Button>
             </nav>
           </div>

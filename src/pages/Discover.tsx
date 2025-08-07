@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useCategories, useSeasons, useActivityLevels, useAudiences } from "@/hooks/useBlogFilters";
 import BlogCategoryBadge from "@/components/BlogCategoryBadge";
+import { getBlogImage } from "@/lib/utils";
 
 const Discover = () => {
   const [filters, setFilters] = useState({
@@ -53,21 +54,31 @@ const Discover = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20">
-        {/* Hero Section */}
-        <section className="py-16 bg-gradient-subtle">
-          <div className="container mx-auto px-4 lg:px-8">
+      <main>
+        {/* Hero Section with Background Image */}
+        <section className="pt-20 py-16 relative overflow-hidden min-h-[600px]">
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: 'url("/images/discover-mallacoota-hero-background.jpg")' }}
+          >
+            {/* Overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+          
+          {/* Content */}
+          <div className="container mx-auto px-4 lg:px-8 relative z-1">
             <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-6">
+              <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 drop-shadow-lg">
                 Discover Mallacoota
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow-md">
                 Explore the hidden gems, local attractions, and unique experiences that make Mallacoota special
               </p>
             </div>
             
             {/* Filter Controls */}
-            <div className="bg-card p-6 rounded-lg border max-w-4xl mx-auto">
+            <div className="bg-white/95 backdrop-blur-sm p-6 rounded-lg border max-w-4xl mx-auto shadow-lg">
               <div className="flex items-center gap-4 mb-4">
                 <Filter className="h-5 w-5" />
                 <h3 className="text-lg font-semibold">Filter Articles</h3>
@@ -136,7 +147,7 @@ const Discover = () => {
             
             {/* Results Count */}
             <div className="text-center mt-8">
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-white/90 drop-shadow-md">
                 {isLoading ? "Loading articles..." : `${blogPosts?.length || 0} article${blogPosts?.length === 1 ? '' : 's'} found`}
               </p>
             </div>
@@ -168,7 +179,7 @@ const Discover = () => {
                     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                       <div className="aspect-video overflow-hidden">
                         <img
-                          src={post.hero_image_url || '/placeholder-blog.jpg'}
+                          src={getBlogImage(post.slug)}
                           alt={post.title || 'Blog post'}
                           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                           onError={(e) => {

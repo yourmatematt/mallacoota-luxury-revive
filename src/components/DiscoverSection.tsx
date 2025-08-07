@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useCategories } from "@/hooks/useBlogFilters";
+import { getBlogImage } from "@/lib/utils";
 
 const DiscoverSection = () => {
   const [activeFilter, setActiveFilter] = useState("");
@@ -76,7 +77,7 @@ const DiscoverSection = () => {
                 <Card className="card-luxury overflow-hidden group cursor-pointer">
                   <div className="relative h-64 overflow-hidden">
                     <img
-                      src={post.hero_image_url || '/placeholder-blog.jpg'}
+                      src={getBlogImage(post.slug)}
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       onError={(e) => {

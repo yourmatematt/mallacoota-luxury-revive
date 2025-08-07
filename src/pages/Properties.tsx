@@ -42,13 +42,13 @@ const Properties = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20">
+      <main>
         {/* Hero Section with Background Image */}
-        <section className="py-16 relative overflow-hidden min-h-[600px]">
+<section className="pt-20 py-16 relative overflow-hidden min-h-[600px]">
           {/* Background Image */}
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: 'url("/lovable-uploads/64bb9439-76d4-443d-80ff-383b69527155.png")' }}
+            style={{ backgroundImage: 'url("/images/properties-hero-background.jpg")' }}
           >
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 bg-black/40"></div>
@@ -116,6 +116,28 @@ const Properties = () => {
             )}
           </div>
         </section>
+                {/* CTA Section */}
+                 <section className="py-20 bg-primary text-primary-foreground">
+              <div className="container mx-auto px-4 lg:px-8 text-center">
+                <div className="max-w-4xl mx-auto">
+                  {/* Main CTA */}
+                  <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
+                    Uncover Mallacoota's best-kept secrets
+                  </h2>
+                  
+                  <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+                    From pristine beaches to local hotspots - get the insider's guide.
+                  </p>
+                  
+                  {/* CTA Button */}
+                  <Button asChild size="lg" className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-4 text-lg rounded-full shadow-strong hover:shadow-medium transition-all duration-300">
+                    <Link to="/discover-mallacoota">
+                      Explore Local Guides
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </section>
       </main>
 
       <Footer />
