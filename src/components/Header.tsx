@@ -30,13 +30,15 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
-              alt="Hammond Properties" 
-              className="h-12 lg:h-14 w-auto object-contain"
-            />
-          </div>
+<div className="flex items-center">
+  <Link to="/" className="transition-opacity hover:opacity-80">
+    <img 
+      src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
+      alt="Hammond Properties" 
+      className="h-12 lg:h-14 w-auto object-contain"
+    />
+  </Link>
+</div>
 
           {/* Desktop Navigation - Cleaned up and simplified */}
           <nav className="hidden lg:flex items-center space-x-2">

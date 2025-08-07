@@ -304,16 +304,33 @@
   @apply text-foreground/90 leading-relaxed mb-4;
 }
 
+/* Enhanced bullet points for property descriptions */
 .content-html ul {
-  @apply list-disc list-inside mb-4 space-y-2 text-foreground/90;
-}
-
-.content-html ol {
-  @apply list-decimal list-inside mb-4 space-y-2 text-foreground/90;
+  @apply list-none pl-0 mb-6 space-y-1;
 }
 
 .content-html li {
-  @apply leading-relaxed;
+  @apply text-muted-foreground leading-relaxed relative pl-8 py-0;
+}
+
+.content-html li::before {
+  content: "•";
+  @apply absolute left-0 top-0 text-primary font-bold text-lg;
+}
+
+/* Enhanced styling for nested lists */
+.content-html li ul {
+  @apply mt-2 mb-2 pl-4;
+}
+
+.content-html li ul li::before {
+  content: "◦";
+  @apply text-primary/70 text-base;
+}
+
+/* Strong text in lists should stand out more */
+.content-html li strong {
+  @apply font-semibold text-primary;
 }
 
 .content-html blockquote {

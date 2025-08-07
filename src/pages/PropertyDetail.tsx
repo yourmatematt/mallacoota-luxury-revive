@@ -15,7 +15,6 @@ import { usePropertyReviews, usePropertyBySlug } from "@/hooks/useProperties";
 import { usePropertyHeroImage, usePropertyGalleryImages } from "@/hooks/usePropertyImages";
 import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { supabase } from "@/integrations/supabase/client";
 import { SafeHtmlContent } from "@/components/SafeHtmlContent";
 
 // Keep stock images as fallbacks
@@ -97,59 +96,68 @@ const PropertyDetail = () => {
     }
   }, [property]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  if (!property) return;
+  
+  setIsSubmitting(true);
+  
+  try {
+    // Create mailto link with property enquiry data
+    const subject = `Property Enquiry: ${property.title}`;
+    const checkInDate = formData.checkIn ? new Date(formData.checkIn).toLocaleDateString('en-AU') : 'Not specified';
+    const checkOutDate = formData.checkOut ? new Date(formData.checkOut).toLocaleDateString('en-AU') : 'Not specified';
     
-    if (!property) return;
+    const body = `
+Property Enquiry Details:
+
+Property: ${property.title}
+Name: ${formData.name}
+Email: ${formData.email}
+Phone: ${formData.phone || 'Not provided'}
+Check-in: ${checkInDate}
+Check-out: ${checkOutDate}
+Guests: ${formData.guests || 'Not specified'}
+
+Message:
+${formData.message}
+
+---
+Property URL: ${window.location.href}
+    `.trim();
     
-    setIsSubmitting(true);
+    const mailtoLink = `mailto:amelia@hammondproperties.com.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoLink;
     
-    try {
-      const { error } = await supabase.functions.invoke('send-property-enquiry', {
-        body: {
-          propertyId: property.property_id,
-          propertyTitle: property.title,
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          checkIn: formData.checkIn,
-          checkOut: formData.checkOut,
-          guests: formData.guests ? parseInt(formData.guests) : undefined,
-          message: formData.message,
-        }
-      });
+    // Reset form
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      checkIn: '',
+      checkOut: '',
+      guests: '',
+      message: '',
+      property: property.title || '',
+    });
 
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        checkIn: '',
-        checkOut: '',
-        guests: '',
-        message: '',
-        property: property.title || '',
-      });
-
-      toast({
-        title: "Enquiry Sent Successfully!",
-        description: "Thank you for your enquiry. We'll get back to you soon!",
-      });
-    } catch (error) {
-      console.error('Error submitting enquiry:', error);
-      toast({
-        title: "Error Sending Enquiry",
-        description: "Please try again or contact us directly.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    toast({
+      title: "Enquiry Sent Successfully!",
+      description: "Thank you for your enquiry. We'll get back to you soon!",
+    });
+    
+  } catch (error) {
+    console.error('Error submitting enquiry:', error);
+    toast({
+      title: "Error Sending Enquiry",
+      description: "Please try again or contact us directly.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({

@@ -34,7 +34,6 @@ const About = () => {
     "Dynamic pricing optimization to maximize revenue",
     "24/7 guest support and communication",
     "Comprehensive property maintenance and cleaning",
-    "Insurance and risk management",
     "Detailed revenue reporting and analytics",
     "Local market expertise and guidance",
     "Hassle-free booking management"
