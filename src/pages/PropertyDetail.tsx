@@ -500,9 +500,9 @@ Property URL: ${window.location.href}
                       />
                     </div>
 
-                    <Button type="submit" className="w-full" disabled={isSubmitting}>
-                      {isSubmitting ? "Sending..." : "Send Enquiry"}
-                    </Button>
+                    <Button type="submit" variant="accent" size="default" rounded="full" className="w-full" disabled={isSubmitting}>
+  {isSubmitting ? "Sending..." : "Send Enquiry"}
+</Button>
                   </form>
                 </CardContent>
               </Card>

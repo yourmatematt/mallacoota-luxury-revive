@@ -27,81 +27,81 @@ const HomePropertyCard = ({ property, index }: { property: any; index: number })
     : stockImages;
 
   return (
-    <Card 
-      className="card-boutique overflow-hidden group fade-in-up"
-      style={{ animationDelay: `${index * 0.1}s` }}
-    >
-      <div className="relative">
-        {isLoading ? (
-          <div className="h-72 bg-gray-200 animate-pulse flex items-center justify-center">
-            <span className="text-gray-500">Loading images...</span>
-          </div>
-        ) : (
-          <PropertyImageCarousel
-            images={displayImages}
-            propertyId={property.property_id}
-            propertyTitle={property.title || 'Property'}
-          />
+  <Card 
+    className="card-boutique overflow-hidden group fade-in-up"
+    style={{ animationDelay: `${index * 0.1}s` }}
+  >
+    <div className="relative">
+      {isLoading ? (
+        <div className="h-72 bg-gray-200 animate-pulse flex items-center justify-center">
+          <span className="text-gray-500">Loading images...</span>
+        </div>
+      ) : (
+        <PropertyImageCarousel
+          images={displayImages}
+          propertyId={property.property_id}
+          propertyTitle={property.title || 'Property'}
+        />
+      )}
+    </div>
+         
+    <CardContent className="p-6">
+      <div className="mb-4">
+        <h3 className="text-xl font-serif font-semibold mb-2 text-primary leading-tight">
+          {property.title}
+        </h3>
+        {property.subtitle && (
+          <p className="text-sm text-muted-foreground leading-relaxed">{property.subtitle}</p>
         )}
       </div>
-      
-      <CardContent className="p-6">
-        <div className="mb-4">
-          <h3 className="text-xl font-serif font-semibold mb-2 text-primary leading-tight">
-            {property.title}
-          </h3>
-          {property.subtitle && (
-            <p className="text-sm text-muted-foreground leading-relaxed">{property.subtitle}</p>
-          )}
+              
+      {/* Property Details with improved responsive layout */}
+      <div className="flex justify-between items-center mb-4 py-3 border-t border-b border-border/50 gap-2">
+        <div className="flex flex-col items-center space-y-1 text-center min-w-0 flex-1">
+          <Bed size={16} className="text-primary flex-shrink-0" />
+          <span className="text-sm font-semibold text-primary">{property.bedrooms}</span>
+          <span className="text-xs text-muted-foreground uppercase tracking-wide truncate">Beds</span>
         </div>
-        
-        {/* Property Details with improved responsive layout */}
-        <div className="flex justify-between items-center mb-4 py-3 border-t border-b border-border/50 gap-2">
-          <div className="flex flex-col items-center space-y-1 text-center min-w-0 flex-1">
-            <Bed size={16} className="text-primary flex-shrink-0" />
-            <span className="text-sm font-semibold text-primary">{property.bedrooms}</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-wide truncate">Beds</span>
-          </div>
-          <div className="flex flex-col items-center space-y-1 text-center min-w-0 flex-1">
-            <Bath size={16} className="text-primary flex-shrink-0" />
-            <span className="text-sm font-semibold text-primary">{property.bathrooms}</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-wide truncate">Baths</span>
-          </div>
-          <div className="flex flex-col items-center space-y-1 text-center min-w-0 flex-1">
-            <Users size={16} className="text-primary flex-shrink-0" />
-            <span className="text-sm font-semibold text-primary">{property.guests}</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-wide truncate">Guests</span>
-          </div>
+        <div className="flex flex-col items-center space-y-1 text-center min-w-0 flex-1">
+          <Bath size={16} className="text-primary flex-shrink-0" />
+          <span className="text-sm font-semibold text-primary">{property.bathrooms}</span>
+          <span className="text-xs text-muted-foreground uppercase tracking-wide truncate">Baths</span>
         </div>
-        
-        {/* Amenities with better spacing */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {property.pet_friendly && (
-            <div className="flex items-center space-x-1 text-xs bg-success/10 text-success px-2 py-1 rounded-full">
-              <PawPrint size={12} />
-              <span>Pet Friendly</span>
-            </div>
-          )}
-          {property.boat_parking && (
-            <div className="flex items-center space-x-1 text-xs bg-ocean-blue/10 text-ocean-blue px-2 py-1 rounded-full">
-              <Car size={12} />
-              <span>Boat Parking</span>
-            </div>
-          )}
-          <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-            <Wifi size={12} />
-            <span>WiFi</span>
-          </div>
+        <div className="flex flex-col items-center space-y-1 text-center min-w-0 flex-1">
+          <Users size={16} className="text-primary flex-shrink-0" />
+          <span className="text-sm font-semibold text-primary">{property.guests}</span>
+          <span className="text-xs text-muted-foreground uppercase tracking-wide truncate">Guests</span>
         </div>
-        
-        <Button asChild className="w-full py-3 text-sm rounded-full font-semibold tracking-wide hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-          <Link to={`/properties/${property.slug}`}>
-            View Details
-          </Link>
-        </Button>
-      </CardContent>
-    </Card>
-  );
+      </div>
+              
+      {/* Amenities with better spacing */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {property.pet_friendly && (
+          <div className="flex items-center space-x-1 text-xs bg-success/10 text-success px-2 py-1 rounded-full">
+            <PawPrint size={12} />
+            <span>Pet Friendly</span>
+          </div>
+        )}
+        {property.boat_parking && (
+          <div className="flex items-center space-x-1 text-xs bg-ocean-blue/10 text-ocean-blue px-2 py-1 rounded-full">
+            <Car size={12} />
+            <span>Boat Parking</span>
+          </div>
+        )}
+        <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+          <Wifi size={12} />
+          <span>WiFi</span>
+        </div>
+      </div>
+              
+      <Button asChild variant="secondary" size="default" rounded="full" className="w-full">
+        <Link to={`/properties/${property.slug}`}>
+          View Details
+        </Link>
+      </Button>
+    </CardContent>
+  </Card>
+);
 };
 
 const PropertyGrid = () => {
@@ -175,14 +175,14 @@ const PropertyGrid = () => {
 
         {/* Enhanced View All Properties Link */}
         <div className="text-center mt-20 fade-in-up">
-          <Button asChild variant="outline" size="lg" className="px-12 py-6 text-lg rounded-full border-2 border-primary hover:bg-primary hover:text-primary-foreground hover:scale-105 transition-all duration-500 shadow-lg hover:shadow-xl">
-            <Link to="/properties">
-              View All Properties
-            </Link>
-          </Button>
+          <Button asChild variant="accent" size="lg" rounded="full" className="px-12 py-6 text-lg">
+  <Link to="/properties">
+    View All Properties
+  </Link>
+</Button>
         </div>
       </div>
-    </section>
+   </section>
   );
 };
 

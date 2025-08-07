@@ -97,15 +97,19 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
         </div>
 
         {/* Action Button */}
-        <div>
-          <Button 
-            className="px-8 w-full" 
-            onClick={handleSearchClick}
-            disabled={isLoading}
-          >
-            {isLoading ? "Searching..." : "Search Properties"}
-          </Button>
-        </div>
+        {/* Action Button */}
+<div>
+  <Button 
+    variant="accent"
+    size="default"
+    rounded="full"
+    className="px-8 w-full" 
+    onClick={handleSearchClick}
+    disabled={isLoading}
+  >
+    {isLoading ? "Searching..." : "Search Properties"}
+  </Button>
+</div>
       </div>
     </div>
   );

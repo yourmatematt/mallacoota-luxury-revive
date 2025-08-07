@@ -109,22 +109,22 @@ const DiscoverSection = () => {
                       {post.excerpt}
                     </p>
                     
-                    <div className="text-primary font-medium group-hover:underline">
-                      Read More →
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        )}
+                    <Button variant="link" className="p-0 h-auto text-primary font-medium group-hover:underline">
+  Read More →
+</Button>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
+    )}
 
         {/* View All Button */}
         <div className="text-center">
           <Link to="/discover-mallacoota">
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              View All Articles
-            </Button>
+            <Button variant="accent" size="lg" rounded="full">
+  View All Articles
+</Button>
           </Link>
         </div>
       </div>

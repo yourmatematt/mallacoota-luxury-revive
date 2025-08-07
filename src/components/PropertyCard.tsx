@@ -138,11 +138,11 @@ const PropertyCard = ({ property }: { property: Property }) => {
           </div>
         </div>
         
-        <Button asChild className="w-full py-3 text-sm rounded-full font-semibold tracking-wide hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-          <Link to={`/properties/${property.slug}`}>
-            View Details
-          </Link>
-        </Button>
+        <Button asChild variant="secondary" size="default" rounded="full" className="w-full">
+  <Link to={`/properties/${property.slug}`}>
+    View Details
+  </Link>
+</Button>
       </CardContent>
     </Card>
   );

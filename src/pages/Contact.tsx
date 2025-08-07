@@ -222,9 +222,9 @@ ${formData.message}
                         />
                       </div>
 
-                      <Button type="submit" className="w-full" size="lg">
-                        Send Message
-                      </Button>
+                     <Button type="submit" variant="accent" size="lg" rounded="full" className="w-full">
+  Send Message
+</Button>
 
                       <p className="text-sm text-muted-foreground text-center">
                         We typically respond within 24 hours. For urgent matters, please call us directly.

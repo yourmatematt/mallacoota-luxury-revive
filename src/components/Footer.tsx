@@ -67,12 +67,11 @@ const Footer = () => {
             </div>
             
             <Link to="/contact">
-              <Button 
-                variant="outline" 
-                className="rounded-full border-accent-red text-accent-red hover:bg-accent-red hover:text-white mt-4"
-              >
-                Contact Amelia
-              </Button>
+              <Button asChild variant="outline" size="default" rounded="full" className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white">
+  <Link to="/contact">
+    Contact Amelia
+  </Link>
+</Button>
             </Link>
           </div>
 
