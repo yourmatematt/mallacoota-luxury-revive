@@ -23,15 +23,13 @@ const HeroSection = () => {
     };
   }, []);
 
-  return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Enhanced Background Image with parallax effect */}
-      <div 
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 ${
-          isLoaded ? 'scale-100' : 'scale-110'
-        }`}
-        style={{ backgroundImage: `url(/lovable-uploads/cdbaf109-97df-45fa-9df9-9d08463fa265.png)` }}
-      />
+return (
+  <section id="home" className="relative flex items-center justify-center overflow-hidden" style={{ height: 'calc(100vh - 80px)' }}>
+    {/* Enhanced Background Image with parallax effect */}
+    <div 
+      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(/lovable-uploads/cdbaf109-97df-45fa-9df9-9d08463fa265.png)` }}
+    />
       
       {/* Enhanced Overlay with boutique gradient */}
       <div className="hero-overlay" />

@@ -16,6 +16,7 @@ import { usePropertyHeroImage, usePropertyGalleryImages } from "@/hooks/usePrope
 import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { SafeHtmlContent } from "@/components/SafeHtmlContent";
+import PageTransition from "@/components/PageTransition";
 
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
@@ -168,380 +169,386 @@ Property URL: ${window.location.href}
 
   if (propertyLoading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="container mx-auto px-4 py-16 text-center">
-          <div className="animate-pulse">Loading property details...</div>
+      <PageTransition>
+        <div className="min-h-screen bg-background">
+          <Header />
+          <div className="container mx-auto px-4 py-16 text-center">
+            <div className="animate-pulse">Loading property details...</div>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </PageTransition>
     );
   }
 
   if (!property) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-bold mb-4">Property not found</h1>
-          <Button asChild>
-            <Link to="/properties">View All Properties</Link>
-          </Button>
+      <PageTransition>
+        <div className="min-h-screen bg-background">
+          <Header />
+          <div className="container mx-auto px-4 py-16 text-center">
+            <h1 className="text-2xl font-bold mb-4">Property not found</h1>
+            <Button asChild>
+              <Link to="/properties">View All Properties</Link>
+            </Button>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </PageTransition>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main>
-        {/* Hero Section */}
-        <section className="relative h-[calc(100vh-5rem)] overflow-hidden">
-          <div className="relative h-full">
-            <img
-              src={getHeroImage(property.property_id)}
-              alt={property.title || 'Property'}
-              className="w-full h-full object-cover"
-            />
-            <div className="hero-overlay"></div>
-          </div>
-          
-          {/* Mobile-first responsive layout */}
-          <div className="absolute bottom-4 sm:bottom-8 md:bottom-12 left-4 sm:left-8 md:left-12 right-4 sm:right-8 md:right-12 text-white">
-            <div className="max-w-2xl">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6 fade-in-up">{property.title}</h1>
-              <p className="text-lg sm:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed fade-in-up stagger-1">{property.subtitle}</p>
-              
-              {/* Stats row - responsive stacking */}
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-8 text-sm sm:text-base md:text-lg fade-in-up stagger-2 mb-6">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 sm:h-5 sm:w-5" />
-                    <span>{property.guests} guests</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Bed className="h-4 w-4 sm:h-5 sm:w-5" />
-                    <span>{property.bedrooms} bedrooms</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Bath className="h-4 w-4 sm:h-5 sm:w-5" />
-                    <span>{property.bathrooms} bathrooms</span>
-                  </div>
-                </div>
+    <PageTransition>
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        <main>
+          {/* Hero Section */}
+          <section className="relative h-[calc(100vh-5rem)] overflow-hidden">
+            <div className="relative h-full">
+              <img
+                src={getHeroImage(property.property_id)}
+                alt={property.title || 'Property'}
+                className="w-full h-full object-cover"
+              />
+              <div className="hero-overlay"></div>
             </div>
-
-            {/* Amenities and gallery button - stacked on mobile */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-              <div className="flex flex-wrap gap-2 sm:gap-3">
-                {property.pet_friendly && (
-                  <Badge className="bg-white/90 text-primary shadow-lg text-xs">Pet Friendly</Badge>
-                )}
-                {property.boat_parking && (
-                  <Badge className="bg-white/90 text-primary shadow-lg text-xs">Boat Parking</Badge>
-                )}
-                {/* Show first few amenities */}
-                {keyAmenities.slice(0, 2).map((amenity, index) => (
-                  <Badge key={index} className="bg-white/90 text-primary shadow-lg text-xs">
-                    {amenity}
-                  </Badge>
-                ))}
-              </div>
-              
-              <Button 
-                onClick={() => {
-                  setGalleryIndex(0);
-                  setShowGallery(true);
-                }}
-                className="bg-white/95 text-primary hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg w-full sm:w-auto"
-                size="sm"
-              >
-                View All {allImages.length} Photos
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Property Images Gallery */}
-        <section className="py-6 sm:py-8 bg-gradient-subtle">
-          <div className="container mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-primary mb-6 sm:mb-8 text-center">Property Gallery</h2>
-            <div className="relative">
-              <Carousel
-                opts={{
-                  align: "start",
-                  slidesToScroll: 1,
-                  loop: true,
-                }}
-                className="w-full"
-              >
-                <CarouselContent className="-ml-2 sm:-ml-4">
-                  {allImages.map((image, index) => (
-                    <CarouselItem key={index} className="pl-2 sm:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
-                      <div 
-                        className="aspect-square overflow-hidden rounded-xl cursor-pointer group hover:scale-105 transition-all duration-300 shadow-soft hover:shadow-elegant"
-                        onClick={() => {
-                          setGalleryIndex(index);
-                          setShowGallery(true);
-                        }}
-                      >
-                        <img
-                          src={image}
-                          alt={`${property.title} - Image ${index + 1}`}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="left-1 sm:left-2 hover:bg-background h-8 w-8 sm:h-10 sm:w-10" />
-                <CarouselNext className="right-1 sm:right-2 hover:bg-background h-8 w-8 sm:h-10 sm:w-10" />
-              </Carousel>
-            </div>
-          </div>
-        </section>
-
-        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold mb-4">About This Property</h2>
-                <div className="content-html">
-                  {property.description ? (
-                    <SafeHtmlContent 
-                      htmlContent={property.description} 
-                      className="prose max-w-none" 
-                    />
-                  ) : (
-                    <p className="text-muted-foreground leading-relaxed">{property.excerpt}</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Property Amenities Section */}
-              <PropertyAmenities propertyId={property.property_id} />
-
-              {/* Guest Reviews Section */}
-              {reviews && reviews.length > 0 && (
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold">Guest Reviews</h3>
+            
+            {/* Mobile-first responsive layout */}
+            <div className="absolute bottom-4 sm:bottom-8 md:bottom-12 left-4 sm:left-8 md:left-12 right-4 sm:right-8 md:right-12 text-white">
+              <div className="max-w-2xl">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6 fade-in-up">{property.title}</h1>
+                <p className="text-lg sm:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed fade-in-up stagger-1">{property.subtitle}</p>
+                
+                {/* Stats row - responsive stacking */}
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-8 text-sm sm:text-base md:text-lg fade-in-up stagger-2 mb-6">
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium">{property.airbnb_rating}</span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        ({reviews.length} review{reviews.length !== 1 ? 's' : ''})
-                      </span>
+                      <Users className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span>{property.guests} guests</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Bed className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span>{property.bedrooms} bedrooms</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Bath className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span>{property.bathrooms} bathrooms</span>
                     </div>
                   </div>
-                  
-                  {/* Featured Review */}
-                  {randomReview && (
-                    <Card className="mb-4">
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <h4 className="font-semibold">{randomReview.reviewer}</h4>
-                            <p className="text-sm text-muted-foreground">{randomReview.review_date}</p>
-                          </div>
-                          <div className="flex">
-                            {randomReview.rating && [...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`h-4 w-4 ${
-                                  i < parseInt(randomReview.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <p className="text-sm leading-relaxed">{randomReview.review}</p>
-                      </CardContent>
-                    </Card>
-                  )}
+              </div>
 
-                  {/* View All Reviews Button */}
-                  {reviews.length > 1 && (
-                    <Button 
-                      variant="outline" 
-                      className="w-full mb-4"
-                      onClick={() => setShowAllReviews(!showAllReviews)}
-                    >
-                      {showAllReviews ? 'Show Less' : `View All ${reviews.length} Reviews`}
-                    </Button>
+              {/* Amenities and gallery button - stacked on mobile */}
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  {property.pet_friendly && (
+                    <Badge className="bg-white/90 text-primary shadow-lg text-xs">Pet Friendly</Badge>
                   )}
-
-                  {/* All Reviews (Expandable) */}
-                  {showAllReviews && (
-                    <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
-                      {reviews.map((review: any, index: number) => (
-                        <Card key={review.id || index}>
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between mb-2">
-                              <div>
-                                <h4 className="font-semibold">{review.reviewer}</h4>
-                                <p className="text-sm text-muted-foreground">{review.review_date}</p>
-                              </div>
-                              <div className="flex">
-                                {review.rating && [...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`h-4 w-4 ${
-                                      i < parseInt(review.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                            <p className="text-sm leading-relaxed">{review.review}</p>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+                  {property.boat_parking && (
+                    <Badge className="bg-white/90 text-primary shadow-lg text-xs">Boat Parking</Badge>
                   )}
+                  {/* Show first few amenities */}
+                  {keyAmenities.slice(0, 2).map((amenity, index) => (
+                    <Badge key={index} className="bg-white/90 text-primary shadow-lg text-xs">
+                      {amenity}
+                    </Badge>
+                  ))}
                 </div>
-              )}
+                
+                <Button 
+                  onClick={() => {
+                    setGalleryIndex(0);
+                    setShowGallery(true);
+                  }}
+                  className="bg-white/95 text-primary hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg w-full sm:w-auto"
+                  size="sm"
+                >
+                  View All {allImages.length} Photos
+                </Button>
+              </div>
             </div>
-            </div>
+          </section>
 
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-24">
-                <CardContent className="p-6">
-                  <div className="text-center mb-6">
-                    <h3 className="text-lg font-semibold mb-4">Make an Enquiry</h3>
+          {/* Property Images Gallery */}
+          <section className="py-6 sm:py-8 bg-gradient-subtle">
+            <div className="container mx-auto px-4 sm:px-6">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-primary mb-6 sm:mb-8 text-center">Property Gallery</h2>
+              <div className="relative">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    slidesToScroll: 1,
+                    loop: true,
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2 sm:-ml-4">
+                    {allImages.map((image, index) => (
+                      <CarouselItem key={index} className="pl-2 sm:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
+                        <div 
+                          className="aspect-square overflow-hidden rounded-xl cursor-pointer group hover:scale-105 transition-all duration-300 shadow-soft hover:shadow-elegant"
+                          onClick={() => {
+                            setGalleryIndex(index);
+                            setShowGallery(true);
+                          }}
+                        >
+                          <img
+                            src={image}
+                            alt={`${property.title} - Image ${index + 1}`}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-1 sm:left-2 hover:bg-background h-8 w-8 sm:h-10 sm:w-10" />
+                  <CarouselNext className="right-1 sm:right-2 hover:bg-background h-8 w-8 sm:h-10 sm:w-10" />
+                </Carousel>
+              </div>
+            </div>
+          </section>
+
+          <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-8">
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-2xl font-bold mb-4">About This Property</h2>
+                  <div className="content-html">
+                    {property.description ? (
+                      <SafeHtmlContent 
+                        htmlContent={property.description} 
+                        className="prose max-w-none" 
+                      />
+                    ) : (
+                      <p className="text-muted-foreground leading-relaxed">{property.excerpt}</p>
+                    )}
                   </div>
+                </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                      <Label htmlFor="name">Name *</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
+                {/* Property Amenities Section */}
+                <PropertyAmenities propertyId={property.property_id} />
+
+                {/* Guest Reviews Section */}
+                {reviews && reviews.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-xl font-bold">Guest Reviews</h3>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <span className="text-sm font-medium">{property.airbnb_rating}</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          ({reviews.length} review{reviews.length !== 1 ? 's' : ''})
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* Featured Review */}
+                    {randomReview && (
+                      <Card className="mb-4">
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <h4 className="font-semibold">{randomReview.reviewer}</h4>
+                              <p className="text-sm text-muted-foreground">{randomReview.review_date}</p>
+                            </div>
+                            <div className="flex">
+                              {randomReview.rating && [...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`h-4 w-4 ${
+                                    i < parseInt(randomReview.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-sm leading-relaxed">{randomReview.review}</p>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* View All Reviews Button */}
+                    {reviews.length > 1 && (
+                      <Button 
+                        variant="outline" 
+                        className="w-full mb-4"
+                        onClick={() => setShowAllReviews(!showAllReviews)}
+                      >
+                        {showAllReviews ? 'Show Less' : `View All ${reviews.length} Reviews`}
+                      </Button>
+                    )}
+
+                    {/* All Reviews (Expandable) */}
+                    {showAllReviews && (
+                      <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+                        {reviews.map((review: any, index: number) => (
+                          <Card key={review.id || index}>
+                            <CardContent className="p-4">
+                              <div className="flex items-start justify-between mb-2">
+                                <div>
+                                  <h4 className="font-semibold">{review.reviewer}</h4>
+                                  <p className="text-sm text-muted-foreground">{review.review_date}</p>
+                                </div>
+                                <div className="flex">
+                                  {review.rating && [...Array(5)].map((_, i) => (
+                                    <Star
+                                      key={i}
+                                      className={`h-4 w-4 ${
+                                        i < parseInt(review.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                              <p className="text-sm leading-relaxed">{review.review}</p>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              </div>
+
+              {/* Sidebar */}
+              <div className="lg:col-span-1">
+                <Card className="sticky top-24">
+                  <CardContent className="p-6">
+                    <div className="text-center mb-6">
+                      <h3 className="text-lg font-semibold mb-4">Make an Enquiry</h3>
                     </div>
 
-                    <div>
-                      <Label htmlFor="email">Email *</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                       <div>
-                        <Label htmlFor="checkIn">Check-in</Label>
+                        <Label htmlFor="name">Name *</Label>
                         <Input
-                          id="checkIn"
-                          name="checkIn"
-                          type="date"
-                          value={formData.checkIn}
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="email">Email *</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="phone">Phone</Label>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
                           onChange={handleInputChange}
                         />
                       </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="checkIn">Check-in</Label>
+                          <Input
+                            id="checkIn"
+                            name="checkIn"
+                            type="date"
+                            value={formData.checkIn}
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="checkOut">Check-out</Label>
+                          <Input
+                            id="checkOut"
+                            name="checkOut"
+                            type="date"
+                            value={formData.checkOut}
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+
                       <div>
-                        <Label htmlFor="checkOut">Check-out</Label>
+                        <Label htmlFor="guests">Guests</Label>
                         <Input
-                          id="checkOut"
-                          name="checkOut"
-                          type="date"
-                          value={formData.checkOut}
+                          id="guests"
+                          name="guests"
+                          type="number"
+                          min="1"
+                          max={property.guests}
+                          value={formData.guests}
                           onChange={handleInputChange}
                         />
                       </div>
-                    </div>
 
-                    <div>
-                      <Label htmlFor="guests">Guests</Label>
-                      <Input
-                        id="guests"
-                        name="guests"
-                        type="number"
-                        min="1"
-                        max={property.guests}
-                        value={formData.guests}
-                        onChange={handleInputChange}
-                      />
-                    </div>
+                      <div>
+                        <Label htmlFor="message">Message</Label>
+                        <Textarea
+                          id="message"
+                          name="message"
+                          rows={3}
+                          placeholder="Tell us about your stay..."
+                          value={formData.message}
+                          onChange={handleInputChange}
+                        />
+                      </div>
 
-                    <div>
-                      <Label htmlFor="message">Message</Label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        rows={3}
-                        placeholder="Tell us about your stay..."
-                        value={formData.message}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <Button type="submit" variant="accent" size="default" rounded="full" className="w-full" disabled={isSubmitting}>
-  {isSubmitting ? "Sending..." : "Send Enquiry"}
-</Button>
-                  </form>
-                </CardContent>
-              </Card>
+                      <Button type="submit" variant="accent" size="default" rounded="full" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? "Sending..." : "Send Enquiry"}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
-        </div>
 
-        <PropertyGalleryOverlay
-          images={allImages}
-          isOpen={showGallery}
-          onClose={() => setShowGallery(false)}
-          initialIndex={galleryIndex}
-          propertyTitle={property.title || 'Property'}
-        />
-         {/* CTA Section */}
-        <section className="py-20 bg-primary text-primary-foreground">
-          <div className="container mx-auto px-4 lg:px-8 text-center">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
-                Uncover Mallacoota's best-kept secrets
-              </h2>
-              
-              <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
-                From pristine beaches to local hotspots - get the insider's guide.
-              </p>
-              
-<Button asChild variant="accent" size="default" rounded="full">
+          <PropertyGalleryOverlay
+            images={allImages}
+            isOpen={showGallery}
+            onClose={() => setShowGallery(false)}
+            initialIndex={galleryIndex}
+            propertyTitle={property.title || 'Property'}
+          />
+           {/* CTA Section */}
+          <section className="py-20 bg-primary text-primary-foreground">
+            <div className="container mx-auto px-4 lg:px-8 text-center">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
+                  Uncover Mallacoota's best-kept secrets
+                </h2>
+                
+                <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+                  From pristine beaches to local hotspots - get the insider's guide.
+                </p>
+                
+                <Button asChild variant="accent" size="default" rounded="full">
                   <Link to="/discover-mallacoota">
-                  Explore Local Guides
-                </Link>
-              </Button>
+                    Explore Local Guides
+                  </Link>
+                </Button>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-      </main>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </PageTransition>
   );
 };
 

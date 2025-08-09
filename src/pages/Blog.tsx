@@ -7,6 +7,7 @@ import { Calendar, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageTransition from "@/components/PageTransition";
 
 interface BlogPost {
   id: string;
@@ -143,241 +144,247 @@ const Blog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="pt-20">
-{/* Hero Section */}
-        <section className="py-16 bg-gradient-subtle">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-6">
-                Discover Mallacoota
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Explore the hidden gems, local attractions, and unique experiences that make Mallacoota special
-              </p>
-            </div>
-
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mb-8">
-              <Input
-                type="text"
-                placeholder="Search articles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="text-lg py-6"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Filter Bar */}
-        <section className="py-8 bg-card border-b">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="space-y-6">
-              {/* Categories */}
-              <div>
-                <h3 className="text-sm font-semibold text-foreground mb-3">Category</h3>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((category) => (
-                    <Button
-                      key={category}
-                      variant={activeCategory === category ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setActiveCategory(category)}
-                    >
-                      {category}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Season */}
-              <div>
-                <h3 className="text-sm font-semibold text-foreground mb-3">Season</h3>
-                <div className="flex flex-wrap gap-2">
-                  {seasons.map((season) => (
-                    <Button
-                      key={season}
-                      variant={activeSeason === season ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setActiveSeason(season)}
-                    >
-                      {season}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Audience */}
-              <div>
-                <h3 className="text-sm font-semibold text-foreground mb-3">Audience</h3>
-                <div className="flex flex-wrap gap-2">
-                  {audiences.map((audience) => (
-                    <Button
-                      key={audience}
-                      variant={activeAudience === audience ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setActiveAudience(audience)}
-                    >
-                      {audience}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Activity Level */}
-              <div>
-                <h3 className="text-sm font-semibold text-foreground mb-3">Activity Level</h3>
-                <div className="flex flex-wrap gap-2">
-                  {activityLevels.map((level) => (
-                    <Button
-                      key={level}
-                      variant={activeActivityLevel === level ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setActiveActivityLevel(level)}
-                    >
-                      {level}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Results Count & Reset */}
-              <div className="flex items-center justify-between pt-4 border-t border-border">
-                <p className="text-sm text-muted-foreground">
-                  {filteredPosts.length} article{filteredPosts.length === 1 ? '' : 's'} found
+    <PageTransition>
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        <main className="pt-20">
+          {/* Hero Section */}
+          <section className="py-16 bg-gradient-subtle">
+            <div className="container mx-auto px-4 lg:px-8">
+              <div className="text-center mb-12">
+                <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary mb-6">
+                  Discover Mallacoota
+                </h1>
+                <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                  Explore the hidden gems, local attractions, and unique experiences that make Mallacoota special
                 </p>
-                <Button variant="ghost" size="sm" onClick={resetFilters}>
-                  Reset Filters
-                </Button>
+              </div>
+
+              {/* Search Bar */}
+              <div className="max-w-2xl mx-auto mb-8">
+                <Input
+                  type="text"
+                  placeholder="Search articles..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="text-lg py-6"
+                />
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Blog Posts Grid */}
-        <section className="py-16">
-          <div className="container mx-auto px-4 lg:px-8">
-            {filteredPosts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredPosts.map((post, index) => (
-                  <Link key={post.id} to={`/blog/${post.slug}`}>
-                    <Card 
-                      className="card-luxury h-full group animate-fade-in"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <div className="relative overflow-hidden rounded-t-xl">
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                        />
-                        <div className="absolute top-4 left-4">
-                          <Badge variant="secondary" className="bg-background/90 text-foreground">
-                            {post.category}
-                          </Badge>
-                        </div>
-                      </div>
-                      
-                      <CardContent className="p-6 flex flex-col h-full">
-                        <div className="flex-grow">
-                          <h3 className="text-xl font-serif font-semibold text-primary mb-3 line-clamp-2">
-                            {post.title}
-                          </h3>
-                          <p className="text-muted-foreground mb-4 line-clamp-3">
-                            {post.excerpt}
-                          </p>
+          {/* Filter Bar */}
+          <section className="py-8 bg-card border-b">
+            <div className="container mx-auto px-4 lg:px-8">
+              <div className="space-y-6">
+                {/* Categories */}
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground mb-3">Category</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {categories.map((category) => (
+                      <Button
+                        key={category}
+                        variant={activeCategory === category ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setActiveCategory(category)}
+                      >
+                        {category}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Season */}
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground mb-3">Season</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {seasons.map((season) => (
+                      <Button
+                        key={season}
+                        variant={activeSeason === season ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setActiveSeason(season)}
+                      >
+                        {season}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Audience */}
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground mb-3">Audience</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {audiences.map((audience) => (
+                      <Button
+                        key={audience}
+                        variant={activeAudience === audience ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setActiveAudience(audience)}
+                      >
+                        {audience}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Activity Level */}
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground mb-3">Activity Level</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {activityLevels.map((level) => (
+                      <Button
+                        key={level}
+                        variant={activeActivityLevel === level ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setActiveActivityLevel(level)}
+                      >
+                        {level}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Results Count & Reset */}
+                <div className="flex items-center justify-between pt-4 border-t border-border">
+                  <p className="text-sm text-muted-foreground">
+                    {filteredPosts.length} article{filteredPosts.length === 1 ? '' : 's'} found
+                  </p>
+                  <Button variant="ghost" size="sm" onClick={resetFilters}>
+                    Reset Filters
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Blog Posts Grid */}
+          <section className="py-16">
+            <div className="container mx-auto px-4 lg:px-8">
+              {filteredPosts.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredPosts.map((post, index) => (
+                    <Link key={post.id} to={`/blog/${post.slug}`}>
+                      <Card 
+                        className="card-luxury h-full group animate-fade-in"
+                        style={{ animationDelay: `${index * 0.1}s` }}
+                      >
+                        <div className="relative overflow-hidden rounded-t-xl">
+                          <img
+                            src={post.image}
+                            alt={post.title}
+                            className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                          />
+                          <div className="absolute top-4 left-4">
+                            <Badge variant="secondary" className="bg-background/90 text-foreground">
+                              {post.category}
+                            </Badge>
+                          </div>
                         </div>
                         
-                        {/* Meta Information */}
-                        <div className="border-t border-border pt-4 space-y-3">
-                          <div className="flex items-center text-sm text-muted-foreground space-x-4">
-                            <div className="flex items-center">
-                              <User className="w-3 h-3 mr-1" />
-                              {post.author}
-                            </div>
-                            <div className="flex items-center">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {post.readTime}
-                            </div>
+                        <CardContent className="p-6 flex flex-col h-full">
+                          <div className="flex-grow">
+                            <h3 className="text-xl font-serif font-semibold text-primary mb-3 line-clamp-2">
+                              {post.title}
+                            </h3>
+                            <p className="text-muted-foreground mb-4 line-clamp-3">
+                              {post.excerpt}
+                            </p>
                           </div>
                           
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center text-sm text-muted-foreground">
-                              <Calendar className="w-3 h-3 mr-1" />
-                              {new Date(post.date).toLocaleDateString('en-AU', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                              })}
+                          {/* Meta Information */}
+                          <div className="border-t border-border pt-4 space-y-3">
+                            <div className="flex items-center text-sm text-muted-foreground space-x-4">
+                              <div className="flex items-center">
+                                <User className="w-3 h-3 mr-1" />
+                                {post.author}
+                              </div>
+                              <div className="flex items-center">
+                                <Clock className="w-3 h-3 mr-1" />
+                                {post.readTime}
+                              </div>
                             </div>
                             
-                            <div className="flex space-x-1">
-                              <Badge variant="outline" className="text-xs">
-                                {post.audience}
-                              </Badge>
-                              <Badge variant="outline" className="text-xs">
-                                {post.activityLevel}
-                              </Badge>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center text-sm text-muted-foreground">
+                                <Calendar className="w-3 h-3 mr-1" />
+                                {new Date(post.date).toLocaleDateString('en-AU', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric'
+                                })}
+                              </div>
+                              
+                              <div className="flex space-x-1">
+                                <Badge variant="outline" className="text-xs">
+                                  {post.audience}
+                                </Badge>
+                                <Badge variant="outline" className="text-xs">
+                                  {post.activityLevel}
+                                </Badge>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <h3 className="text-2xl font-serif font-bold text-primary mb-4">
-                  No articles found
-                </h3>
-                <p className="text-lg text-muted-foreground mb-6">
-                  Try adjusting your search terms or filters to find what you're looking for.
-                </p>
-                <Button onClick={resetFilters}>
-                  Reset All Filters
-                </Button>
-              </div>
-            )}
-          </div>
-        </section>
 
-        {/* Newsletter Signup */}
-        <section className="py-16 bg-primary/5">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl font-serif font-bold text-primary mb-4">
-                Stay Updated
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Get the latest Mallacoota insights and travel tips delivered to your inbox.
-              </p>
-              
-              <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1"
-                  required
-                />
-                <Button type="submit">
-                  Subscribe
-                </Button>
-              </form>
-              
-              <p className="text-sm text-muted-foreground mt-4">
-                We respect your privacy. Unsubscribe at any time.
-              </p>
+                          <Button variant="link" className="p-0 h-auto text-primary font-medium group-hover:underline mt-4 self-start">
+                            Read More →
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <h3 className="text-2xl font-serif font-bold text-primary mb-4">
+                    No articles found
+                  </h3>
+                  <p className="text-lg text-muted-foreground mb-6">
+                    Try adjusting your search terms or filters to find what you're looking for.
+                  </p>
+                  <Button onClick={resetFilters}>
+                    Reset All Filters
+                  </Button>
+                </div>
+              )}
             </div>
-          </div>
-        </section>
-      </main>
+          </section>
 
-      <Footer />
-    </div>
+          {/* Newsletter Signup */}
+          <section className="py-16 bg-primary/5">
+            <div className="container mx-auto px-4 lg:px-8">
+              <div className="max-w-2xl mx-auto text-center">
+                <h2 className="text-3xl font-serif font-bold text-primary mb-4">
+                  Stay Updated
+                </h2>
+                <p className="text-lg text-muted-foreground mb-8">
+                  Get the latest Mallacoota insights and travel tips delivered to your inbox.
+                </p>
+                
+                <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="flex-1"
+                    required
+                  />
+                  <Button type="submit">
+                    Subscribe
+                  </Button>
+                </form>
+                
+                <p className="text-sm text-muted-foreground mt-4">
+                  We respect your privacy. Unsubscribe at any time.
+                </p>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <Footer />
+      </div>
+    </PageTransition>
   );
 };
 

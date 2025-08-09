@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useProperties } from "@/hooks/useProperties";
 import { CSSProperties } from "react";
+import PageTransition from "@/components/PageTransition";
 
 interface Review {
   id: string;
@@ -163,194 +164,198 @@ const Testimonials = () => {
 
   if (propertiesLoading || reviewsLoading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="container mx-auto px-4 py-16 text-center">
-          <div className="animate-pulse">Loading testimonials...</div>
+      <PageTransition>
+        <div className="min-h-screen bg-background">
+          <Header />
+          <div className="container mx-auto px-4 py-16 text-center">
+            <div className="animate-pulse">Loading testimonials...</div>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </PageTransition>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-   <main>
-  {/* Hero Section with Background Image */}
-  <section className="pt-20 py-16 relative overflow-hidden min-h-[600px]">
-    {/* Background Image */}
-    <div 
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: 'url("/images/testimonials-hero-background.jpg")' }}
-    >
-      {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/40"></div>
-    </div>
-    
-    {/* Content */}
-    <div className="container mx-auto px-4 lg:px-8 relative z-10">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 drop-shadow-lg">
-          Guest Testimonials
-        </h1>
-        <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow-md">
-          Real experiences from families who've made our properties their home away from home. Come as guests. Leave as family.
-        </p>
+    <PageTransition>
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+     <main>
+    {/* Hero Section with Background Image */}
+    <section className="pt-20 py-16 relative overflow-hidden min-h-[600px]">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: 'url("/images/testimonials-hero-background.jpg")' }}
+      >
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
+      
+      {/* Content */}
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 drop-shadow-lg">
+            Guest Testimonials
+          </h1>
+          <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow-md">
+            Real experiences from families who've made our properties their home away from home. Come as guests. Leave as family.
+          </p>
+        </div>
 
-      {/* Filter Controls */}
-            <div className="bg-white/95 backdrop-blur-sm p-6 rounded-lg border max-w-4xl mx-auto shadow-lg">
-        <div className="flex flex-col space-y-6">
-          <div>
-            <label className="text-sm font-medium text-foreground mb-4 flex items-center">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter by Property
-            </label>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                variant={selectedProperty === "All" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedProperty("All")}
-                className="font-medium"
-              >
-                All Properties ({allReviews?.length || 0})
-              </Button>
-              {reviewsByProperty.map((property) => (
+        {/* Filter Controls */}
+              <div className="bg-white/95 backdrop-blur-sm p-6 rounded-lg border max-w-4xl mx-auto shadow-lg">
+          <div className="flex flex-col space-y-6">
+            <div>
+              <label className="text-sm font-medium text-foreground mb-4 flex items-center">
+                <Filter className="w-4 h-4 mr-2" />
+                Filter by Property
+              </label>
+              <div className="flex flex-wrap gap-3">
                 <Button
-                  key={property.id}
-                  variant={selectedProperty === property.id ? "default" : "outline"}
+                  variant={selectedProperty === "All" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedProperty(property.id)}
+                  onClick={() => setSelectedProperty("All")}
                   className="font-medium"
                 >
-                  {property.title} ({property.reviewCount})
+                  All Properties ({allReviews?.length || 0})
                 </Button>
-              ))}
+                {reviewsByProperty.map((property) => (
+                  <Button
+                    key={property.id}
+                    variant={selectedProperty === property.id ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedProperty(property.id)}
+                    className="font-medium"
+                  >
+                    {property.title} ({property.reviewCount})
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-        {/* Reviews Section */}
-        {selectedProperty === "All" ? (
-          // Show reviews grouped by property with stacking effect
-          <section className="py-16">
-            <div className="container mx-auto px-4 lg:px-8">
-              {reviewsByProperty.map((property) => (
-                <PropertyReviewsSection 
-                  key={property.id} 
-                  property={property} 
-                  allReviews={property.reviews}
-                  setSelectedProperty={setSelectedProperty}
-                />
-              ))}
-            </div>
-          </section>
-        ) : (
-          // Show filtered reviews (existing code)
-          <section className="py-16">
-            <div className="container mx-auto px-4 lg:px-8">
-              {sortedReviews.length > 0 ? (
-                <>
-                  <div className="mb-8">
-                    <h2 className="text-2xl font-serif font-bold text-primary mb-2">
-                      {selectedProperty === "All" 
-                        ? "All Reviews" 
-                        : `${reviewsByProperty.find(p => p.id === selectedProperty)?.title} Reviews`
-                      }
-                    </h2>
-                    <p className="text-muted-foreground">
-                      {sortedReviews.length} review{sortedReviews.length === 1 ? '' : 's'} found
-                    </p>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {sortedReviews.map((review, index) => (
-                      <Card 
-                        key={review.id}
-                        className="card-luxury h-full animate-fade-in"
-                        style={{ animationDelay: `${index * 0.1}s` }}
-                      >
-                        <CardContent className="p-6 h-full flex flex-col">
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center">
-                              {[...Array(parseInt(review.rating) || 5)].map((_, i) => (
-                                <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
-                              ))}
-                            </div>
-                            <Badge variant="secondary" className="text-xs">
-                              {review.source}
-                            </Badge>
-                          </div>
-                          
-                          <p className="text-muted-foreground mb-6 flex-grow leading-relaxed">
-                            "{review.review}"
-                          </p>
-                          
-                          <div className="border-t border-border pt-4">
-                            <p className="font-semibold text-primary">
-                              {review.reviewer}
-                            </p>
-                            <div className="flex items-center text-sm text-muted-foreground space-x-2 mb-2">
-                              <span>{new Date(review.review_date).toLocaleDateString('en-AU', {
-                                year: 'numeric',
-                                month: 'long'
-                              })}</span>
-                            </div>
-                            {selectedProperty === "All" && (
-                              <div className="text-sm text-primary">
-                                {review.property_name}
+          {/* Reviews Section */}
+          {selectedProperty === "All" ? (
+            // Show reviews grouped by property with stacking effect
+            <section className="py-16">
+              <div className="container mx-auto px-4 lg:px-8">
+                {reviewsByProperty.map((property) => (
+                  <PropertyReviewsSection 
+                    key={property.id} 
+                    property={property} 
+                    allReviews={property.reviews}
+                    setSelectedProperty={setSelectedProperty}
+                  />
+                ))}
+              </div>
+            </section>
+          ) : (
+            // Show filtered reviews (existing code)
+            <section className="py-16">
+              <div className="container mx-auto px-4 lg:px-8">
+                {sortedReviews.length > 0 ? (
+                  <>
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-serif font-bold text-primary mb-2">
+                        {selectedProperty === "All" 
+                          ? "All Reviews" 
+                          : `${reviewsByProperty.find(p => p.id === selectedProperty)?.title} Reviews`
+                        }
+                      </h2>
+                      <p className="text-muted-foreground">
+                        {sortedReviews.length} review{sortedReviews.length === 1 ? '' : 's'} found
+                      </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {sortedReviews.map((review, index) => (
+                        <Card 
+                          key={review.id}
+                          className="card-luxury h-full animate-fade-in"
+                          style={{ animationDelay: `${index * 0.1}s` }}
+                        >
+                          <CardContent className="p-6 h-full flex flex-col">
+                            <div className="flex items-center justify-between mb-4">
+                              <div className="flex items-center">
+                                {[...Array(parseInt(review.rating) || 5)].map((_, i) => (
+                                  <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
+                                ))}
                               </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                              <Badge variant="secondary" className="text-xs">
+                                {review.source}
+                              </Badge>
+                            </div>
+                            
+                            <p className="text-muted-foreground mb-6 flex-grow leading-relaxed">
+                              "{review.review}"
+                            </p>
+                            
+                            <div className="border-t border-border pt-4">
+                              <p className="font-semibold text-primary">
+                                {review.reviewer}
+                              </p>
+                              <div className="flex items-center text-sm text-muted-foreground space-x-2 mb-2">
+                                <span>{new Date(review.review_date).toLocaleDateString('en-AU', {
+                                  year: 'numeric',
+                                  month: 'long'
+                                })}</span>
+                              </div>
+                              {selectedProperty === "All" && (
+                                <div className="text-sm text-primary">
+                                  {review.property_name}
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-12">
+                    <h3 className="text-2xl font-serif font-bold text-primary mb-4">
+                      No reviews found
+                    </h3>
+                    <p className="text-lg text-muted-foreground mb-6">
+                      Try selecting a different property or check back later for new reviews.
+                    </p>
+                    <Button onClick={() => setSelectedProperty("All")}>
+                      View All Reviews
+                    </Button>
                   </div>
-                </>
-              ) : (
-                <div className="text-center py-12">
-                  <h3 className="text-2xl font-serif font-bold text-primary mb-4">
-                    No reviews found
-                  </h3>
-                  <p className="text-lg text-muted-foreground mb-6">
-                    Try selecting a different property or check back later for new reviews.
-                  </p>
-                  <Button onClick={() => setSelectedProperty("All")}>
-                    View All Reviews
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* CTA Section */}
+          <section className="py-16 bg-primary/5">
+            <div className="container mx-auto px-4 lg:px-8">
+              <div className="max-w-2xl mx-auto text-center">
+                <h2 className="text-3xl font-serif font-bold text-primary mb-4">
+                  Ready to Create Your Own Story?
+                </h2>
+                <p className="text-lg text-muted-foreground mb-8">
+                  Join our family of happy guests and discover why Mallacoota is the perfect destination for your next getaway.
+                </p>
+                <Link to="/properties">
+                  <Button size="lg">
+                    Book Your Stay
                   </Button>
-                </div>
-              )}
+                </Link>
+              </div>
             </div>
           </section>
-        )}
+        </main>
 
-        {/* CTA Section */}
-        <section className="py-16 bg-primary/5">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl font-serif font-bold text-primary mb-4">
-                Ready to Create Your Own Story?
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Join our family of happy guests and discover why Mallacoota is the perfect destination for your next getaway.
-              </p>
-              <Link to="/properties">
-                <Button size="lg">
-                  Book Your Stay
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </PageTransition>
   );
 };
 
