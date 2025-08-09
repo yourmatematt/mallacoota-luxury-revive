@@ -14,6 +14,7 @@ export interface Property {
   guests: number;
   pet_friendly: boolean;
   boat_parking: boolean;
+  view?: string;  // 👈 Add this line
   airbnb_rating?: string;
   image_folder?: string;
 }

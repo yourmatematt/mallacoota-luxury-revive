@@ -136,9 +136,40 @@
     font-family: var(--font-sans);
     @apply text-accent-red font-semibold tracking-wider uppercase;
   }
-  
-/* Hero Animation Keyframes */
-@keyframes fade-in-up {
+
+  /* Hero Animation Keyframes */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Animation Classes */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
+  }
+
+  @keyframes animate-fade-in-up {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -149,43 +180,84 @@
   }
 }
 
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Animation Classes */
 .animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
+  animation: animate-fade-in-up 0.6s ease-out;
 }
 
-.animate-slide-up {
-  animation: slide-up 0.6s ease-out forwards;
+/* Enhanced background scale transition */
+.hero-bg-scale {
+  transition: transform 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Smooth button hover effects */
+.btn-hero {
+  transition: all 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.btn-hero:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Enhanced card animations */
+.card-animate {
+  transition: all 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card-animate:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Backdrop blur for better text readability */
+.text-backdrop {
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+/* Staggered animation utilities */
+.stagger-children > * {
+  animation-fill-mode: both;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 600ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 800ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 1000ms; }
+
+/* Smooth scale animation for images */
+.image-scale-smooth {
+  transition: transform 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* Performance optimizations */
+.animate-entrance {
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
   /* CTA Button Consistency */
-.btn-cta-primary {
-  @apply bg-accent-red hover:bg-accent-red/90 text-white px-8 py-3 rounded-full font-medium shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200;
-}
+  .btn-cta-primary {
+    @apply bg-accent-red hover:bg-accent-red/90 text-white px-8 py-3 rounded-full font-medium shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200;
+  }
 
-.btn-cta-secondary {
-  @apply bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-full font-medium shadow-sm hover:shadow-md transition-all duration-200;
-}
+  .btn-cta-secondary {
+    @apply bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-full font-medium shadow-sm hover:shadow-md transition-all duration-200;
+  }
 
-.btn-cta-outline {
-  @apply border-2 border-accent-red text-accent-red hover:bg-accent-red hover:text-white px-6 py-2.5 rounded-full font-medium transition-all duration-200;
-}
+  .btn-cta-outline {
+    @apply border-2 border-accent-red text-accent-red hover:bg-accent-red hover:text-white px-6 py-2.5 rounded-full font-medium transition-all duration-200;
+  }
 
-.btn-cta-link {
-  @apply text-primary hover:text-primary/80 font-medium inline-flex items-center gap-2 transition-colors duration-200;
-}
-  
+  .btn-cta-link {
+    @apply text-primary hover:text-primary/80 font-medium inline-flex items-center gap-2 transition-colors duration-200;
+  }
+    
   /* Card Styles */
   .card-luxury {
     @apply bg-card border-border rounded-xl p-6 transition-all duration-300 hover:shadow-strong hover:bg-card-hover;
@@ -236,9 +308,11 @@
 
   /* Testimonials Ticker Animations */
   .ticker-container {
-    @apply relative overflow-hidden;
+    @apply relative;
+    overflow: visible; /* Changed from overflow-hidden to allow hover scaling */
     mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    padding: 2rem 0; /* Add vertical padding to accommodate scale transform */
   }
 
   .ticker-track {
@@ -255,14 +329,16 @@
     width: 400px;
     max-width: 400px;
     height: 350px; /* Fixed height for consistency */
+    padding: 0 1rem; /* Add horizontal padding to prevent cards touching */
   }
 
   /* Enhanced testimonial card styling */
   .testimonial-card {
-    @apply bg-white/95 backdrop-blur-md border border-white/20 shadow-strong hover:shadow-xl;
+    @apply bg-white/95 backdrop-blur-md border border-white/20 shadow-strong;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(12px);
     height: 100%; /* Fill the ticker-item height */
+    transform-origin: center; /* Ensure scaling happens from center */
     box-shadow: 
       0 8px 32px -8px hsl(215 25% 15% / 0.15),
       0 0 0 1px hsl(0 0% 100% / 0.1),
@@ -270,10 +346,11 @@
   }
 
   .testimonial-card:hover {
-    transform: translateY(-4px) scale(1.02);
+    transform: translateY(-8px) scale(1.05); /* Increased scale and vertical lift */
+    z-index: 10; /* Bring hovered card to front */
     box-shadow: 
-      0 20px 40px -12px hsl(215 25% 15% / 0.25),
-      0 0 0 1px hsl(0 0% 100% / 0.15),
+      0 25px 50px -12px hsl(215 25% 15% / 0.35),
+      0 0 0 1px hsl(0 0% 100% / 0.2),
       inset 0 1px 0 hsl(0 0% 100% / 0.3);
   }
 
@@ -301,128 +378,139 @@
   .ticker-container:hover .ticker-track {
     animation-play-state: paused;
   }
-}
 
-/* Content HTML Styling - For blog posts and property descriptions */
-.content-html {
-  @apply max-w-none mb-8;
-}
+  /* Alternative approach - if the above doesn't work, use this container setup */
+  .ticker-section {
+    padding: 4rem 0; /* Extra padding for the entire section */
+    overflow: visible; /* Allow overflow at section level */
+  }
 
-.content-html h1 {
-  @apply text-3xl md:text-4xl font-serif font-bold text-primary mb-6 mt-8 first:mt-0;
-}
+  .ticker-wrapper {
+    position: relative;
+    margin: 2rem 0; /* Extra margin around ticker */
+  }
 
-.content-html h2 {
-  @apply text-2xl md:text-3xl font-serif font-bold text-primary mb-4 mt-6;
-}
+  /* Content HTML Styling - For blog posts and property descriptions */
+  .content-html {
+    @apply max-w-none mb-8;
+  }
 
-.content-html h3 {
-  @apply text-xl md:text-2xl font-serif font-semibold text-primary mb-3 mt-5;
-}
+  .content-html h1 {
+    @apply text-3xl md:text-4xl font-serif font-bold text-primary mb-6 mt-8 first:mt-0;
+  }
 
-.content-html h4 {
-  @apply text-lg md:text-xl font-serif font-semibold text-primary mb-3 mt-4;
-}
+  .content-html h2 {
+    @apply text-2xl md:text-3xl font-serif font-bold text-primary mb-4 mt-6;
+  }
 
-.content-html h5 {
-  @apply text-base md:text-lg font-serif font-semibold text-primary mb-2 mt-3;
-}
+  .content-html h3 {
+    @apply text-xl md:text-2xl font-serif font-semibold text-primary mb-3 mt-5;
+  }
 
-.content-html h6 {
-  @apply text-sm md:text-base font-serif font-semibold text-primary mb-2 mt-3;
-}
+  .content-html h4 {
+    @apply text-lg md:text-xl font-serif font-semibold text-primary mb-3 mt-4;
+  }
 
-.content-html p {
-  @apply text-foreground/90 leading-relaxed mb-4;
-}
+  .content-html h5 {
+    @apply text-base md:text-lg font-serif font-semibold text-primary mb-2 mt-3;
+  }
 
-/* Enhanced bullet points for property descriptions */
-.content-html ul {
-  @apply list-none pl-0 mb-6 space-y-1;
-}
+  .content-html h6 {
+    @apply text-sm md:text-base font-serif font-semibold text-primary mb-2 mt-3;
+  }
 
-.content-html li {
-  @apply text-muted-foreground leading-relaxed relative pl-8 py-0;
-}
+  .content-html p {
+    @apply text-foreground/90 leading-relaxed mb-4;
+  }
 
-.content-html li::before {
-  content: "•";
-  @apply absolute left-0 top-0 text-primary font-bold text-lg;
-}
+  /* Enhanced bullet points for property descriptions */
+  .content-html ul {
+    @apply list-none pl-0 mb-6 space-y-1;
+  }
 
-/* Enhanced styling for nested lists */
-.content-html li ul {
-  @apply mt-2 mb-2 pl-4;
-}
+  .content-html li {
+    @apply text-muted-foreground leading-relaxed relative pl-8 py-0;
+  }
 
-.content-html li ul li::before {
-  content: "◦";
-  @apply text-primary/70 text-base;
-}
+  .content-html li::before {
+    content: "•";
+    @apply absolute left-0 top-0 text-primary font-bold text-lg;
+  }
 
-/* Strong text in lists should stand out more */
-.content-html li strong {
-  @apply font-semibold text-primary;
-}
+  /* Enhanced styling for nested lists */
+  .content-html li ul {
+    @apply mt-2 mb-2 pl-4;
+  }
 
-.content-html blockquote {
-  @apply border-l-4 border-primary/30 pl-4 italic text-foreground/80 bg-muted/50 p-4 rounded-r-lg mb-4;
-}
+  .content-html li ul li::before {
+    content: "◦";
+    @apply text-primary/70 text-base;
+  }
 
-.content-html code {
-  @apply bg-muted px-2 py-1 rounded text-sm font-mono;
-}
+  /* Strong text in lists should stand out more */
+  .content-html li strong {
+    @apply font-semibold text-primary;
+  }
 
-.content-html pre {
-  @apply bg-muted p-4 rounded-lg overflow-x-auto mb-4;
-}
+  .content-html blockquote {
+    @apply border-l-4 border-primary/30 pl-4 italic text-foreground/80 bg-muted/50 p-4 rounded-r-lg mb-4;
+  }
 
-.content-html pre code {
-  @apply bg-transparent p-0;
-}
+  .content-html code {
+    @apply bg-muted px-2 py-1 rounded text-sm font-mono;
+  }
 
-.content-html a {
-  @apply text-primary hover:text-primary/80 underline underline-offset-2 transition-colors;
-}
+  .content-html pre {
+    @apply bg-muted p-4 rounded-lg overflow-x-auto mb-4;
+  }
 
-.content-html img {
-  @apply max-w-full h-auto rounded-lg mb-4 shadow-soft;
-}
+  .content-html pre code {
+    @apply bg-transparent p-0;
+  }
 
-.content-html table {
-  @apply w-full border-collapse border border-border mb-4;
-}
+  .content-html a {
+    @apply text-primary hover:text-primary/80 underline underline-offset-2 transition-colors;
+  }
 
-.content-html th,
-.content-html td {
-  @apply border border-border px-3 py-2 text-left;
-}
+  .content-html img {
+    @apply max-w-full h-auto rounded-lg mb-4 shadow-soft;
+  }
 
-.content-html th {
-  @apply bg-muted font-semibold;
-}
+  .content-html table {
+    @apply w-full border-collapse border border-border mb-4;
+  }
 
-.content-html hr {
-  @apply border-0 border-t border-border my-6;
-}
+  .content-html th,
+  .content-html td {
+    @apply border border-border px-3 py-2 text-left;
+  }
 
-.content-html strong {
-  @apply font-semibold text-primary;
-}
+  .content-html th {
+    @apply bg-muted font-semibold;
+  }
 
-.content-html em {
-  @apply italic;
-}
+  .content-html hr {
+    @apply border-0 border-t border-border my-6;
+  }
 
-/* List styling improvements */
-.content-html ul ul,
-.content-html ol ol {
-  @apply ml-6 mb-2;
-}
+  .content-html strong {
+    @apply font-semibold text-primary;
+  }
 
-.content-html li > ul,
-.content-html li > ol {
-  @apply mt-2;
+  .content-html em {
+    @apply italic;
+  }
+
+  /* List styling improvements */
+  .content-html ul ul,
+  .content-html ol ol {
+    @apply ml-6 mb-2;
+  }
+
+  .content-html li > ul,
+  .content-html li > ol {
+    @apply mt-2;
+  }
 }
 
 @layer utilities {
