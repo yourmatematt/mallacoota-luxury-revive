@@ -1,11 +1,26 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Clock, User, Calendar } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useCategories } from "@/hooks/useBlogFilters";
 import { getBlogImage } from "@/lib/utils";
+
+// BlogCategoryBadge component to match Discover.tsx
+const BlogCategoryBadge = ({ categoryId }: { categoryId?: string }) => {
+  const { data: categories } = useCategories();
+  const category = categories?.find(cat => cat.id === categoryId);
+  
+  if (!category) return null;
+  
+  return (
+    <Badge variant="secondary" className="bg-background/90 text-foreground">
+      {category.name}
+    </Badge>
+  );
+};
 
 const DiscoverSection = () => {
   const [activeFilter, setActiveFilter] = useState("");
@@ -58,8 +73,8 @@ const DiscoverSection = () => {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {[1, 2, 3, 4].map((i) => (
-              <Card key={i} className="card-luxury overflow-hidden">
-                <div className="relative h-64 bg-muted animate-pulse"></div>
+              <Card key={i} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="aspect-video bg-muted animate-pulse"></div>
                 <CardContent className="p-6">
                   <div className="h-4 bg-muted rounded animate-pulse mb-2"></div>
                   <div className="h-3 bg-muted rounded animate-pulse mb-4 w-2/3"></div>
@@ -74,57 +89,51 @@ const DiscoverSection = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {displayPosts.map((post) => (
               <Link key={post.id} to={`/discover-mallacoota/${post.slug}`}>
-                <Card className="card-luxury overflow-hidden group cursor-pointer">
-                  <div className="relative h-64 overflow-hidden">
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="aspect-video overflow-hidden">
                     <img
                       src={getBlogImage(post.slug)}
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      alt={post.title || 'Blog post'}
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = '/placeholder-blog.jpg';
                       }}
                     />
-                    <Badge className="absolute top-4 right-4 bg-luxury-gold text-primary">
-                      NEW
-                    </Badge>
-                    <div className="absolute top-4 left-4 bg-background/90 px-3 py-1 rounded-full">
-                      <span className="text-sm font-medium text-primary">
-                        {post.published_date ? new Date(post.published_date).toLocaleDateString('en-AU', {
-                          month: 'short',
-                          day: 'numeric'
-                        }) : 'Recent'}
-                      </span>
-                    </div>
                   </div>
-                  
                   <CardContent className="p-6">
-                    <div className="mb-4">
-                      <h3 className="text-xl font-serif font-semibold text-primary mb-2 group-hover:text-primary/80 transition-colors">
-                        {post.title}
-                      </h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <BlogCategoryBadge categoryId={post.Categories_id} />
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Clock className="h-4 w-4" />
+                        <span>5 min read</span>
+                      </div>
                     </div>
-                    
-                    <p className="text-muted-foreground mb-6 leading-relaxed line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    
-                    <Button variant="link" className="p-0 h-auto text-primary font-medium group-hover:underline">
-  Read More →
-</Button>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </div>
-    )}
+                    <h3 className="text-xl font-semibold mb-3 line-clamp-2">{post.title}</h3>
+                    <p className="text-muted-foreground mb-4 line-clamp-3">{post.excerpt}</p>
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <User className="h-4 w-4" />
+                        <span>Amelia Hammond</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        <span>{post.published_date ? new Date(post.published_date).toLocaleDateString() : 'Recent'}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* View All Button */}
         <div className="text-center">
           <Link to="/discover-mallacoota">
             <Button variant="accent" size="lg" rounded="full">
-  View All Articles
-</Button>
+              View All Articles
+            </Button>
           </Link>
         </div>
       </div>

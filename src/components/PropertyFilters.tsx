@@ -1,10 +1,14 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Star, Users, Car, Heart } from "lucide-react";
+import { Eye, Dog, Car, Waves } from "lucide-react";
 
 interface PropertyFiltersProps {
-  onFiltersChange: (filters: { guests: number; petFriendly: boolean; boatParking: boolean }) => void;
+  onFiltersChange: (filters: { 
+    guests: number; 
+    petFriendly: boolean; 
+    boatParking: boolean;
+    waterViews: boolean;
+  }) => void;
   isLoading?: boolean;
 }
 
@@ -12,10 +16,16 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
   const [guestCount, setGuestCount] = useState(2);
   const [petFriendly, setPetFriendly] = useState(false);
   const [boatParking, setBoatParking] = useState(false);
+  const [waterViews, setWaterViews] = useState(false);
 
   // Debounced filter change handler
   const debouncedFiltersChange = useCallback(
-    debounce((filters: { guests: number; petFriendly: boolean; boatParking: boolean }) => {
+    debounce((filters: { 
+      guests: number; 
+      petFriendly: boolean; 
+      boatParking: boolean;
+      waterViews: boolean;
+    }) => {
       onFiltersChange(filters);
     }, 300),
     [onFiltersChange]
@@ -23,8 +33,13 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
 
   // Update filters when any filter value changes
   useEffect(() => {
-    debouncedFiltersChange({ guests: guestCount, petFriendly, boatParking });
-  }, [guestCount, petFriendly, boatParking, debouncedFiltersChange]);
+    debouncedFiltersChange({ 
+      guests: guestCount, 
+      petFriendly, 
+      boatParking,
+      waterViews
+    });
+  }, [guestCount, petFriendly, boatParking, waterViews, debouncedFiltersChange]);
 
   const handleGuestChange = (newCount: number) => {
     setGuestCount(newCount);
@@ -38,18 +53,20 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
     setBoatParking(value);
   };
 
-  const handleSearchClick = () => {
-    // Immediately trigger search when search button is clicked
-    onFiltersChange({ guests: guestCount, petFriendly, boatParking });
+  const handleWaterViewsChange = (value: boolean) => {
+    setWaterViews(value);
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-card rounded-2xl p-6 shadow-soft border">
+    <div className="max-w-6xl mx-auto bg-card rounded-2xl p-6 shadow-soft border">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
         {/* Guest Count */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Guests</label>
-          <div className="flex items-center space-x-3">
+          <label className="text-sm font-medium text-foreground flex items-center justify-center">
+            <Eye className="w-4 h-4 mr-2" />
+            Guests
+          </label>
+          <div className="flex items-center justify-center space-x-3">
             <Button
               variant="outline"
               size="sm"
@@ -72,44 +89,42 @@ const PropertyFilters = ({ onFiltersChange, isLoading }: PropertyFiltersProps) =
 
         {/* Pet Friendly Toggle */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Pet Friendly</label>
+          <label className="text-sm font-medium text-foreground text-center block">Pet Friendly</label>
           <Button
             variant={petFriendly ? "default" : "outline"}
             onClick={() => handlePetFriendlyChange(!petFriendly)}
-            className="w-full justify-start"
+            className="w-full justify-center"
           >
-            <Heart className="w-4 h-4 mr-2" />
+            <Dog className="w-4 h-4 mr-2" />
             {petFriendly ? "Yes" : "Any"}
           </Button>
         </div>
 
         {/* Boat Parking Toggle */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Boat Parking</label>
+          <label className="text-sm font-medium text-foreground text-center block">Boat Parking</label>
           <Button
             variant={boatParking ? "default" : "outline"}
             onClick={() => handleBoatParkingChange(!boatParking)}
-            className="w-full justify-start"
+            className="w-full justify-center"
           >
             <Car className="w-4 h-4 mr-2" />
             {boatParking ? "Yes" : "Any"}
           </Button>
         </div>
 
-        {/* Action Button */}
-        {/* Action Button */}
-<div>
-  <Button 
-    variant="accent"
-    size="default"
-    rounded="full"
-    className="px-8 w-full" 
-    onClick={handleSearchClick}
-    disabled={isLoading}
-  >
-    {isLoading ? "Searching..." : "Search Properties"}
-  </Button>
-</div>
+        {/* Water Views Toggle */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-foreground text-center block">Water Views</label>
+          <Button
+            variant={waterViews ? "default" : "outline"}
+            onClick={() => handleWaterViewsChange(!waterViews)}
+            className="w-full justify-center"
+          >
+            <Waves className="w-4 h-4 mr-2" />
+            {waterViews ? "Yes" : "Any"}
+          </Button>
+        </div>
       </div>
     </div>
   );

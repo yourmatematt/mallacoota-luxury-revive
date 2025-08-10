@@ -2,12 +2,13 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, Car, PawPrint, Star, Bed, Bath, Wifi } from "lucide-react";
+import { Users, Anchor, PawPrint, Star, Bed, Bath, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Property } from "@/hooks/useProperties";
 import PropertyImageCarousel from "@/components/PropertyImageCarousel";
 import { usePropertyCardImages } from "@/hooks/usePropertyImages";
 import { supabase } from "@/integrations/supabase/client";
+
 // Keep stock images as fallbacks
 import propertyInterior1 from "@/assets/property-interior-1.jpg";
 import propertyInterior2 from "@/assets/property-interior-2.jpg";
@@ -118,31 +119,36 @@ const PropertyCard = ({ property }: { property: Property }) => {
           </div>
         </div>
         
-        {/* Amenities with better spacing */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {property.pet_friendly && (
-            <div className="flex items-center space-x-1 text-xs bg-success/10 text-success px-2 py-1 rounded-full">
-              <PawPrint size={12} />
-              <span>Pet Friendly</span>
-            </div>
-          )}
-          {property.boat_parking && (
-            <div className="flex items-center space-x-1 text-xs bg-ocean-blue/10 text-ocean-blue px-2 py-1 rounded-full">
-              <Car size={12} />
-              <span>Boat Parking</span>
-            </div>
-          )}
-          <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-            <Wifi size={12} />
-            <span>WiFi</span>
-          </div>
-        </div>
+        {/* Amenities with uniform styling */}
+<div className="flex flex-wrap gap-2 mb-6">
+  {/* Pet Friendly - only show if true */}
+  {property.pet_friendly && (
+    <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+      <PawPrint size={12} />
+      <span>Pet Friendly</span>
+    </div>
+  )}
+
+  {/* Boat Parking - only show if true */}
+  {property.boat_parking && (
+    <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+      <Anchor size={12} />
+      <span>Boat Parking</span>
+    </div>
+  )}
+
+  {/* View Type - always show */}
+  <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+    <Eye size={12} />
+    <span>{property.view_type || 'Standard View'}</span>
+  </div>
+</div>
         
         <Button asChild variant="secondary" size="default" rounded="full" className="w-full">
-  <Link to={`/properties/${property.slug}`}>
-    View Details
-  </Link>
-</Button>
+          <Link to={`/properties/${property.slug}`}>
+            View Details
+          </Link>
+        </Button>
       </CardContent>
     </Card>
   );

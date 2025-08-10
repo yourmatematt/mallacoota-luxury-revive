@@ -6,20 +6,53 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar, User, Clock, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useCategories, useSeasons, useActivityLevels, useAudiences } from "@/hooks/useBlogFilters";
 import BlogCategoryBadge from "@/components/BlogCategoryBadge";
 import { getBlogImage } from "@/lib/utils";
 import PageTransition from "@/components/PageTransition";
 
+// CTA Section Component
+const CTASection = () => {
+  return (
+    <section className="py-20 bg-primary text-primary-foreground">
+      <div className="container mx-auto px-4 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto">
+          {/* Main CTA */}
+          <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
+            Ready to Plan Your Stay?
+          </h2>
+          
+          <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+            Discover your perfect Mallacoota retreat. Browse our collection of premium vacation rentals.
+          </p>
+          
+          {/* CTA Button */}
+          <Button asChild variant="accent" size="default" rounded="full">
+            <Link to="/properties">
+              View All Properties
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const Discover = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [filters, setFilters] = useState({
     categoryId: '',
     seasonId: '',
     activityLevelId: '',
     audienceId: '',
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const { data: blogPosts, isLoading, error } = useBlogPosts(filters);
   const { data: categories } = useCategories();
@@ -59,133 +92,174 @@ const Discover = () => {
         <Header />
         
         <main>
-          {/* Hero Section with Background Image */}
-          <section className="pt-20 py-16 relative overflow-hidden min-h-[600px]">
-            {/* Background Image */}
+          {/* Hero Section with Animations */}
+        <section className="relative h-[calc(100vh-5rem)] overflow-hidden">
+            {/* Background Image with scale effect */}
             <div 
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-out ${
+                isLoaded ? 'scale-100' : 'scale-105'
+              }`}
               style={{ backgroundImage: 'url("/images/discover-mallacoota-hero-background.jpg")' }}
             >
               {/* Overlay for better text readability */}
               <div className="absolute inset-0 bg-black/40"></div>
             </div>
             
-            {/* Content */}
-            <div className="container mx-auto px-4 lg:px-8 relative z-10">
-              <div className="text-center mb-12">
-                <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 drop-shadow-lg">
+            {/* Content with staggered animations */}
+            <div className="relative z-10 h-full flex items-center justify-center">
+              <div className="text-center text-white px-6 md:px-4 max-w-4xl mx-auto">
+                {/* Main Title */}
+                <h1 className={`text-4xl md:text-6xl font-serif font-bold mb-6 transition-all duration-800 delay-200 ${
+                  isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}>
                   Discover Mallacoota
                 </h1>
-                <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow-md">
-                  Explore the hidden gems, local attractions, and unique experiences that make Mallacoota special
+                
+                {/* Subtitle */}
+                <p className={`text-xl md:text-2xl font-light mb-8 max-w-3xl mx-auto leading-relaxed transition-all duration-800 delay-400 ${
+                  isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}>
+                  Your complete guide to exploring Australia's hidden coastal gem
                 </p>
-              </div>
-              
-              {/* Filter Controls */}
-              <div className="bg-white/95 backdrop-blur-sm p-6 rounded-lg border max-w-4xl mx-auto shadow-lg">
-                <div className="flex items-center gap-4 mb-4">
-                  <Filter className="h-5 w-5" />
-                  <h3 className="text-lg font-semibold">Filter Articles</h3>
-                  <Button variant="outline" size="sm" onClick={clearFilters}>
-                    Clear All
-                  </Button>
+                
+                {/* Description */}
+                <div className={`text-lg font-light mb-12 transition-all duration-800 delay-600 ${
+                  isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}>
+                  From pristine beaches to hidden bushwalking trails, discover the best activities, attractions, and experiences Mallacoota has to offer
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <Select value={filters.categoryId || "all"} onValueChange={(value) => setFilters({...filters, categoryId: value === "all" ? "" : value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      {categories?.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  
-                  <Select value={filters.seasonId || "all"} onValueChange={(value) => setFilters({...filters, seasonId: value === "all" ? "" : value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Season" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Seasons</SelectItem>
-                      {seasons?.map((season) => (
-                        <SelectItem key={season.id} value={season.id}>
-                          {season.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  
-                  <Select value={filters.activityLevelId || "all"} onValueChange={(value) => setFilters({...filters, activityLevelId: value === "all" ? "" : value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Activity Level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Levels</SelectItem>
-                      {activityLevels?.map((level) => (
-                        <SelectItem key={level.id} value={level.id}>
-                          {level.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  
-                  <Select value={filters.audienceId || "all"} onValueChange={(value) => setFilters({...filters, audienceId: value === "all" ? "" : value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Audience" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Audiences</SelectItem>
-                      {audiences?.map((audience) => (
-                        <SelectItem key={audience.id} value={audience.id}>
-                          {audience.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                
+                {/* Filter Controls with Animation */}
+                <div className={`max-w-4xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 transition-all duration-800 delay-800 ${
+                  isLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
+                }`}>
+                  <div className="flex flex-col space-y-6">
+                    <div>
+                      <label className="text-sm font-medium text-white mb-4 flex items-center">
+                        <Filter className="w-4 h-4 mr-2" />
+                        Find Your Perfect Experience
+                      </label>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        {/* Category Filter */}
+                        <Select value={filters.categoryId || "all"} onValueChange={(value) => setFilters({...filters, categoryId: value === "all" ? "" : value})}>
+                          <SelectTrigger className="bg-white/20 border-white/30 text-white">
+                            <SelectValue placeholder="Category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Categories</SelectItem>
+                            {categories?.map((category) => (
+                              <SelectItem key={category.id} value={category.id}>
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        
+                        {/* Season Filter */}
+                        <Select value={filters.seasonId || "all"} onValueChange={(value) => setFilters({...filters, seasonId: value === "all" ? "" : value})}>
+                          <SelectTrigger className="bg-white/20 border-white/30 text-white">
+                            <SelectValue placeholder="Season" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Seasons</SelectItem>
+                            {seasons?.map((season) => (
+                              <SelectItem key={season.id} value={season.id}>
+                                {season.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        
+                        {/* Activity Level Filter */}
+                        <Select value={filters.activityLevelId || "all"} onValueChange={(value) => setFilters({...filters, activityLevelId: value === "all" ? "" : value})}>
+                          <SelectTrigger className="bg-white/20 border-white/30 text-white">
+                            <SelectValue placeholder="Activity Level" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Levels</SelectItem>
+                            {activityLevels?.map((level) => (
+                              <SelectItem key={level.id} value={level.id}>
+                                {level.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        
+                        {/* Audience Filter */}
+                        <Select value={filters.audienceId || "all"} onValueChange={(value) => setFilters({...filters, audienceId: value === "all" ? "" : value})}>
+                          <SelectTrigger className="bg-white/20 border-white/30 text-white">
+                            <SelectValue placeholder="For Who" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">Everyone</SelectItem>
+                            {audiences?.map((audience) => (
+                              <SelectItem key={audience.id} value={audience.id}>
+                                {audience.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    {/* Clear Filters Button */}
+                    {(filters.categoryId || filters.seasonId || filters.activityLevelId || filters.audienceId) && (
+                      <div className="text-center">
+                        <Button 
+                          onClick={clearFilters}
+                          variant="outline"
+                          className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+                        >
+                          Clear All Filters
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              
-              {/* Results Count */}
-              <div className="text-center mt-8">
-                <p className="text-lg text-white/90 drop-shadow-md">
-                  {isLoading ? "Loading articles..." : `${blogPosts?.length || 0} article${blogPosts?.length === 1 ? '' : 's'} found`}
-                </p>
               </div>
             </div>
           </section>
 
-          {/* Blog Posts Grid */}
-          <section className="py-16">
+          {/* Blog Posts Section */}
+          <section className="py-20 bg-background">
             <div className="container mx-auto px-4 lg:px-8">
-              {isLoading ? (
+              {/* Results Header */}
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-4">
+                  {isLoading ? "Loading experiences..." : `${blogPosts?.length || 0} Experience${blogPosts?.length === 1 ? '' : 's'} Found`}
+                </h2>
+                <p className="text-lg text-muted-foreground">
+                  Curated guides and insider tips for your Mallacoota adventure
+                </p>
+              </div>
+              {/* Loading State */}
+              {isLoading && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <Card key={i} className="overflow-hidden">
-                      <div className="aspect-video bg-muted animate-pulse"></div>
+                  {[...Array(6)].map((_, index) => (
+                    <Card key={index} className="card-luxury animate-pulse">
+                      <div className="aspect-video bg-muted rounded-t-xl"></div>
                       <CardContent className="p-6">
-                        <div className="space-y-3">
-                          <div className="h-6 bg-muted rounded animate-pulse"></div>
-                          <div className="h-4 bg-muted rounded animate-pulse"></div>
-                          <div className="h-4 bg-muted rounded animate-pulse w-2/3"></div>
-                        </div>
+                        <div className="h-4 bg-muted rounded mb-2"></div>
+                        <div className="h-4 bg-muted rounded w-3/4 mb-4"></div>
+                        <div className="h-3 bg-muted rounded mb-2"></div>
+                        <div className="h-3 bg-muted rounded w-2/3"></div>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
-              ) : blogPosts && blogPosts.length > 0 ? (
+              )}
+
+              {/* Blog Posts Grid */}
+              {!isLoading && blogPosts && blogPosts.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {blogPosts.map((post) => (
-                    <Link key={post.id} to={`/discover-mallacoota/${post.slug}`}>
-                      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                        <div className="aspect-video overflow-hidden">
+                    <Card key={post.id} className="card-luxury hover:scale-[1.02] transition-all duration-300">
+                      <Link to={`/discover-mallacoota/${post.slug}`}>
+                        <div className="aspect-video overflow-hidden rounded-t-xl">
                           <img
                             src={getBlogImage(post.slug)}
                             alt={post.title || 'Blog post'}
-                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
                               target.src = '/placeholder-blog.jpg';
@@ -193,39 +267,91 @@ const Discover = () => {
                           />
                         </div>
                         <CardContent className="p-6">
-                          <div className="flex items-center justify-between mb-3">
-                            <BlogCategoryBadge categoryId={post.Categories_id} />
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <Clock className="h-4 w-4" />
-                              <span>5 min read</span>
+                          {/* Category Badge */}
+                          {post.Categories_id && (
+                            <div className="mb-3">
+                              <BlogCategoryBadge categoryId={post.Categories_id} />
                             </div>
-                          </div>
-                          <h3 className="text-xl font-semibold mb-3 line-clamp-2">{post.title}</h3>
-                          <p className="text-muted-foreground mb-4 line-clamp-3">{post.excerpt}</p>
+                          )}
+
+                          {/* Title */}
+                          <h3 className="text-xl font-serif font-bold text-primary mb-3 line-clamp-2 hover:text-accent-red transition-colors">
+                            {post.title}
+                          </h3>
+
+                          {/* Excerpt */}
+                          <p className="text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+                            {post.excerpt}
+                          </p>
+
+                          {/* Meta Information */}
                           <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <User className="h-4 w-4" />
-                              <span>Amelia Hammond</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              <span>{post.published_date ? new Date(post.published_date).toLocaleDateString() : 'Recent'}</span>
+                            <div className="flex items-center space-x-4">
+                              {post.published_date && (
+                                <div className="flex items-center">
+                                  <Calendar className="w-4 h-4 mr-1" />
+                                  <span>{new Date(post.published_date).toLocaleDateString('en-AU', { 
+                                    year: 'numeric', 
+                                    month: 'short', 
+                                    day: 'numeric' 
+                                  })}</span>
+                                </div>
+                              )}
+                              <div className="flex items-center">
+                                <Clock className="w-4 h-4 mr-1" />
+                                <span>5 min read</span>
+                              </div>
                             </div>
                           </div>
+
+                          {/* Tags */}
+                          {(post.seasons || post.activity_levels || post.audiences) && (
+                            <div className="flex flex-wrap gap-2 mt-4">
+                              {post.seasons && (
+                                <Badge variant="outline" className="text-xs">
+                                  {post.seasons}
+                                </Badge>
+                              )}
+                              {post.activity_levels && (
+                                <Badge variant="outline" className="text-xs">
+                                  {post.activity_levels}
+                                </Badge>
+                              )}
+                              {post.audiences && (
+                                <Badge variant="outline" className="text-xs">
+                                  {post.audiences}
+                                </Badge>
+                              )}
+                            </div>
+                          )}
                         </CardContent>
-                      </Card>
-                    </Link>
+                      </Link>
+                    </Card>
                   ))}
                 </div>
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-xl text-muted-foreground">
-                    No articles match your current filters. Try adjusting your search criteria.
-                  </p>
+              )}
+
+              {/* No Results */}
+              {!isLoading && blogPosts?.length === 0 && (
+                <div className="text-center py-16">
+                  <div className="max-w-md mx-auto">
+                    <h3 className="text-xl font-semibold text-primary mb-4">
+                      No experiences found
+                    </h3>
+                    <p className="text-muted-foreground mb-8">
+                      Try adjusting your filters to discover more Mallacoota experiences.
+                    </p>
+                    <Button onClick={clearFilters} size="lg">
+                      Clear All Filters
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
           </section>
+
+          {/* CTA Section - Added after blog posts */}
+          <CTASection />
         </main>
         
         <Footer />

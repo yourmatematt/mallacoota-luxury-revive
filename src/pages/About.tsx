@@ -1,12 +1,19 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Award, Heart, Home, Shield, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PageTransition from "@/components/PageTransition";
 
 const About = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const values = [
     {
       icon: Heart,
@@ -50,40 +57,51 @@ const About = () => {
   ];
 
   return (
-    <PageTransition>
-      <div className="min-h-screen bg-background">
-        <Header />
-        
-        <main>
-        {/* Hero Section with Background Image */}
-        <section className="pt-20 py-16 relative overflow-hidden min-h-[600px] flex items-center">
-          {/* Background Image */}
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main>
+        {/* Hero Section with Animations */}
+        <section className="relative h-[calc(100vh-5rem)] overflow-hidden">
+          {/* Background Image with scale effect */}
           <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-out ${
+              isLoaded ? 'scale-100' : 'scale-105'
+            }`}
             style={{ backgroundImage: 'url("/images/about-hero-background.jpg")' }}
           />
           
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/40"></div>
+          {/* Enhanced Overlay */}
+          <div className="hero-overlay" />
           
-          {/* Content */}
-          <div className="relative z-10 container mx-auto px-4 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center text-white">
-              <h1 className="text-4xl md:text-6xl font-serif font-bold mb-8 drop-shadow-lg">
+          {/* Content with staggered animations */}
+          <div className="relative z-10 h-full flex items-center justify-center">
+            <div className="text-center text-white px-6 md:px-4 max-w-4xl mx-auto">
+              {/* Main Title */}
+              <h1 className={`text-4xl md:text-6xl font-serif font-bold mb-6 transition-all duration-800 delay-200 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}>
                 About Hammond Properties
               </h1>
-              <blockquote className="text-xl md:text-2xl leading-relaxed italic drop-shadow-md mb-6">
-                "Amelia is more than just a property manager – she is your gateway to experiencing Mallacoota's magic. 
-                Her passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family."
+              
+              {/* Quote */}
+              <blockquote className={`text-xl md:text-2xl font-light leading-relaxed italic mb-6 transition-all duration-800 delay-400 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}>
+                "Amelia is more than just a property manager – she is your gateway to experiencing Mallacoota's magic. Her passion for exceptional hospitality and deep local knowledge creates unforgettable stays that turn guests into family."
               </blockquote>
-              <cite className="block text-lg font-medium text-white/90 drop-shadow-md">
-                — James, Past Property Owner
-              </cite>
+              
+              {/* Quote Attribution */}
+              <div className={`text-lg font-medium transition-all duration-800 delay-600 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}>
+                <span className="text-boutique-accent">— James, Past Property Owner</span>
+              </div>
             </div>
           </div>
         </section>
 
-          {/* Our Story Section */}
+      {/* Our Story Section */}
           <section className="py-16">
             <div className="container mx-auto px-4 lg:px-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -93,17 +111,17 @@ const About = () => {
                   </h2>
                   <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                     <p>
-                      Founded with a simple belief that every guest deserves an exceptional experience, Hammond Properties 
+                      Founded with a simple belief that every guest deserves an exceptional experience, Hammond Properties
                       has grown from a single property to a curated collection of Mallacoota's finest vacation rentals.
                     </p>
                     <p>
-                      What started as a passion project to share our love for this coastal paradise has evolved into 
-                      East Gippsland's premier luxury accommodation provider. We understand that a holiday is more than 
+                      What started as a passion project to share our love for this coastal paradise has evolved into
+                      East Gippsland's premier luxury accommodation provider. We understand that a holiday is more than
                       just a getaway – it's a time to create memories that last a lifetime.
                     </p>
                     <p>
-                      Our deep connection to Mallacoota, combined with our commitment to premium service, ensures that 
-                      every guest experiences the very best our region has to offer. From sunrise walks on pristine beaches 
+                      Our deep connection to Mallacoota, combined with our commitment to premium service, ensures that
+                      every guest experiences the very best our region has to offer. From sunrise walks on pristine beaches
                       to sunset dinners overlooking the inlet, we're here to help make your coastal escape extraordinary.
                     </p>
                   </div>
@@ -135,30 +153,28 @@ const About = () => {
             </div>
           </section>
 
-          {/* Our Values Section */}
-          <section className="py-16 bg-primary/5">
-            <div className="container mx-auto px-4 lg:px-8">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
-                  What Drives Us
-                </h2>
-                <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  Our core values shape every interaction and ensure that your experience as both guest and owner, exceeds expectations.
-                </p>
-              </div>
+        {/* What Drives Us Section */}
+        <section className="py-20 bg-primary/5">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
+                What Drives Us
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Our core values shape every interaction and ensure that your experience as both guest and owner, exceeds expectations.
+              </p>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {values.map((value, index) => (
-                  <Card 
-                    key={index}
-                    className="card-luxury text-center animate-fade-in"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <CardContent className="p-6">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                        <value.icon className="w-8 h-8 text-primary" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {values.map((value, index) => {
+                const Icon = value.icon;
+                return (
+                  <Card key={index} className="card-luxury text-center">
+                    <CardContent className="pt-8">
+                      <div className="mx-auto w-16 h-16 bg-white rounded-full flex items-center justify-center mb-6 border-2 border-accent-red/20">
+                        <Icon className="w-8 h-8 text-accent-red stroke-2" />
                       </div>
-                      <h3 className="text-xl font-serif font-semibold text-primary mb-3">
+                      <h3 className="text-xl font-semibold text-primary mb-4">
                         {value.title}
                       </h3>
                       <p className="text-muted-foreground leading-relaxed">
@@ -166,133 +182,136 @@ const About = () => {
                       </p>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* Meet Our Team Section */}
-          <section className="py-16">
-            <div className="container mx-auto px-4 lg:px-8">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
-                  Meet Amelia
+        {/* Meet Amelia & Terry Section */}
+        <section className="py-20 bg-background">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
+                Meet Amelia & Terry
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                The passionate people behind your exceptional Mallacoota experience.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+              {/* Amelia Card */}
+              <Card className="card-luxury">
+                <CardContent className="p-8">
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-shrink-0">
+                      <img 
+                        src="/images/amelia-about-page.jpg" 
+                        alt="Amelia Hammond"
+                        className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0"
+                      />
+                    </div>
+                    <div className="text-center md:text-left">
+                      <h3 className="text-2xl font-serif font-bold text-primary mb-2">
+                        Amelia Hammond
+                      </h3>
+                      <p className="text-accent-red font-medium mb-4">
+                        Founder & Managing Director
+                      </p>
+                      <p className="text-muted-foreground leading-relaxed">
+                        A Mallacoota local with over 15 years in hospitality and property management. Amelia's passion for exceptional guest experiences drives our commitment to excellence.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Terry Card - Placeholder */}
+              <Card className="card-luxury">
+                <CardContent className="p-8">
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-shrink-0">
+                      <img 
+                        src="/images/terry-placeholder.jpg" 
+                        alt="Terry"
+                        className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0"
+                      />
+                    </div>
+                    <div className="text-center md:text-left">
+                      <h3 className="text-2xl font-serif font-bold text-primary mb-2">
+                        Terry Hammond
+                      </h3>
+                      <p className="text-accent-red font-medium mb-4">
+                        [Role to be added]
+                      </p>
+                      <p className="text-muted-foreground leading-relaxed">
+                        [Description to be added - placeholder content for Terry's bio and role information]
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Property Owners Section */}
+        <section className="py-20 bg-primary text-white">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">
+                  For Property Owners
                 </h2>
-                <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  The passionate host behind your perfect Mallacoota experience.
+                <p className="text-xl text-white/90 leading-relaxed">
+                  Turn your Mallacoota property into a thriving vacation rental with our comprehensive management service.
                 </p>
               </div>
 
-              <div className="max-w-2xl mx-auto">
-                {teamMembers.map((member, index) => (
-                  <Card 
-                    key={index}
-                    className="card-luxury animate-fade-in"
-                  >
-                    <CardContent className="p-8">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-                        <div className="md:col-span-1">
-                          <img
-                            src={member.image}
-                            alt={member.name}
-                            className="w-full h-64 object-cover rounded-xl mx-auto"
-                          />
-                        </div>
-                        <div className="md:col-span-2">
-                          <h3 className="text-2xl font-serif font-bold text-primary mb-2">
-                            {member.name}
-                          </h3>
-                          <p className="text-primary/80 font-medium mb-4">
-                            {member.role}
-                          </p>
-                          <p className="text-muted-foreground leading-relaxed">
-                            {member.description}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Property Owners Section */}
-          <section className="py-16 bg-primary/5">
-            <div className="container mx-auto px-4 lg:px-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
-                  <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
-                    For Property Owners
-                  </h2>
-                  <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                    Looking to maximize your property's potential? Partner with Hammond Properties and benefit from our 
-                    proven track record of delivering exceptional returns while maintaining the highest standards of care 
-                    for your investment.
-                  </p>
-
-                  <div className="space-y-4 mb-8">
+                  <h3 className="text-2xl font-serif font-bold mb-6">
+                    Why Choose Hammond Properties?
+                  </h3>
+                  <ul className="space-y-4">
                     {propertyOwnerBenefits.map((benefit, index) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                        <p className="text-muted-foreground">{benefit}</p>
-                      </div>
+                      <li key={index} className="flex items-start">
+                        <Star className="w-5 h-5 text-accent-red mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-white/90">{benefit}</span>
+                      </li>
                     ))}
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Link to="/contact">
-                      <Button size="lg">
-                        Contact Amelia
-                      </Button>
-                    </Link>
-                  </div>
+                  </ul>
                 </div>
-
-                <div className="relative">
-                  <img
-                    src="/images/about-property-owners.jpg"
-                    alt="Luxury property management"
-                    className="w-full h-96 object-cover rounded-2xl shadow-medium"
-                  />
-                  <div className="absolute top-6 right-6 bg-white p-4 rounded-xl shadow-soft border">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-primary">25%</p>
-                      <p className="text-sm text-muted-foreground">Higher Returns</p>
-                    </div>
-                  </div>
+                <div className="text-center">
+                  <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                    <CardContent className="p-8">
+                      <h4 className="text-xl font-semibold mb-4 text-white">
+                        Ready to Get Started?
+                      </h4>
+                      <p className="text-white/90 mb-6">
+                        Let's discuss how we can maximize your property's potential and provide exceptional guest experiences.
+                      </p>
+                      <Button 
+                        asChild
+                        size="lg" 
+                        className="bg-accent-red hover:bg-accent-red/90 text-white w-full"
+                      >
+                        <Link to="/contact">
+                          Contact Us Today
+                        </Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
             </div>
-          </section>
-
-          {/* CTA Section */}
-           <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 lg:px-8 text-center">
-          <div className="max-w-4xl mx-auto">
-            {/* Main CTA */}
-            <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
-              Ready to Plan Your Stay?
-            </h2>
-            
-            <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
-              Discover your perfect Mallacoota retreat. Browse our collection of premium vacation rentals.
-            </p>
-            
-            {/* CTA Button */}
-            <Button asChild size="lg" className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-4 text-lg rounded-full shadow-strong hover:shadow-medium transition-all duration-300">
-              <Link to="/properties">
-                View All Properties
-              </Link>
-            </Button>
           </div>
-        </div>
-      </section>
-        </main>
+        </section>
+      </main>
 
-        <Footer />
-      </div>
-    </PageTransition>
+      <Footer />
+    </div>
   );
 };
 

@@ -29,6 +29,33 @@ interface PropertyReviewsSectionProps {
   setSelectedProperty: (propertyId: string) => void;
 }
 
+// CTA Section Component
+const CTASection = () => {
+  return (
+    <section className="py-20 bg-primary text-primary-foreground">
+      <div className="container mx-auto px-4 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto">
+          {/* Main CTA */}
+          <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
+            Ready to Plan Your Stay?
+          </h2>
+          
+          <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+            Discover your perfect Mallacoota retreat. Browse our collection of premium vacation rentals.
+          </p>
+          
+          {/* CTA Button */}
+          <Button asChild variant="accent" size="default" rounded="full">
+            <Link to="/properties">
+              View All Properties
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const PropertyReviewsSection = ({ property, allReviews, setSelectedProperty }: PropertyReviewsSectionProps) => {
   // Only show up to 6 reviews
   const reviewsToShow = allReviews.slice(0, 6);
@@ -332,25 +359,8 @@ const Testimonials = () => {
               </div>
             </section>
           )}
-
-          {/* CTA Section */}
-          <section className="py-16 bg-primary/5">
-            <div className="container mx-auto px-4 lg:px-8">
-              <div className="max-w-2xl mx-auto text-center">
-                <h2 className="text-3xl font-serif font-bold text-primary mb-4">
-                  Ready to Create Your Own Story?
-                </h2>
-                <p className="text-lg text-muted-foreground mb-8">
-                  Join our family of happy guests and discover why Mallacoota is the perfect destination for your next getaway.
-                </p>
-                <Link to="/properties">
-                  <Button size="lg">
-                    Book Your Stay
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </section>
+          {/* CTA Section - Above Footer */}
+          <CTASection />
         </main>
 
         <Footer />

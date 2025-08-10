@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Bed, Bath, Users, Wifi, PawPrint, Car, Star } from "lucide-react";
+import { Bed, Bath, Users, Wifi, PawPrint, Car, Star, Eye } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useProperties } from "@/hooks/useProperties";
@@ -74,23 +74,28 @@ const HomePropertyCard = ({ property, index }: { property: any; index: number })
         </div>
       </div>
               
-      {/* Amenities with better spacing */}
+      {/* Amenities with uniform styling */}
       <div className="flex flex-wrap gap-2 mb-6">
+        {/* Pet Friendly - only show if true */}
         {property.pet_friendly && (
-          <div className="flex items-center space-x-1 text-xs bg-success/10 text-success px-2 py-1 rounded-full">
+          <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
             <PawPrint size={12} />
             <span>Pet Friendly</span>
           </div>
         )}
+
+        {/* Boat Parking - only show if true */}
         {property.boat_parking && (
-          <div className="flex items-center space-x-1 text-xs bg-ocean-blue/10 text-ocean-blue px-2 py-1 rounded-full">
+          <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
             <Car size={12} />
             <span>Boat Parking</span>
           </div>
         )}
+
+        {/* View Type - always show */}
         <div className="flex items-center space-x-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-          <Wifi size={12} />
-          <span>WiFi</span>
+          <Eye size={12} />
+          <span>{property.view_type || 'Standard View'}</span>
         </div>
       </div>
               
@@ -109,12 +114,14 @@ const PropertyGrid = () => {
     guests: 2,
     petFriendly: false,
     boatParking: false,
+    waterViews: false,
   });
 
   const { data: properties, isLoading, error } = useProperties({
     guests: filters.guests,
     petFriendly: filters.petFriendly || undefined,
     boatParking: filters.boatParking || undefined,
+    waterViews: filters.waterViews || undefined,
   });
 
   if (error) {
@@ -141,9 +148,9 @@ const PropertyGrid = () => {
         </div>
 
         {/* Property Filters */}
-<div className="mb-12">
-  <PropertyFilters onFiltersChange={setFilters} />
-</div>
+        <div className="mb-12">
+          <PropertyFilters onFiltersChange={setFilters} />
+        </div>
 
         {/* Property Grid */}
         {isLoading ? (
@@ -176,13 +183,13 @@ const PropertyGrid = () => {
         {/* Enhanced View All Properties Link */}
         <div className="text-center mt-20 fade-in-up">
           <Button asChild variant="accent" size="lg" rounded="full" className="px-12 py-6 text-lg">
-  <Link to="/properties">
-    View All Properties
-  </Link>
-</Button>
+            <Link to="/properties">
+              View All Properties
+            </Link>
+          </Button>
         </div>
       </div>
-   </section>
+    </section>
   );
 };
 

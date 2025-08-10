@@ -13,10 +13,12 @@ import PropertyAmenities from "@/components/PropertyAmenities";
 import { useToast } from "@/hooks/use-toast";
 import { usePropertyReviews, usePropertyBySlug } from "@/hooks/useProperties";
 import { usePropertyHeroImage, usePropertyGalleryImages } from "@/hooks/usePropertyImages";
+import { usePropertyAmenities } from "@/hooks/usePropertyAmenities";
 import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { SafeHtmlContent } from "@/components/SafeHtmlContent";
 import PageTransition from "@/components/PageTransition";
+import { PawPrint, Anchor, Eye } from "lucide-react";
 
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
@@ -32,6 +34,7 @@ const PropertyDetail = () => {
   const { slug } = useParams();
   const { data: property, isLoading: propertyLoading } = usePropertyBySlug(slug || '');
   const { data: reviews } = usePropertyReviews(property?.id);
+  const { data: propertyAmenities } = usePropertyAmenities(property?.property_id);
   const { toast } = useToast();
   
   // Get real images from Supabase
@@ -46,11 +49,38 @@ const PropertyDetail = () => {
   const heroImages = [propertyHero1, propertyHero2, propertyHero3];
   const stockGalleryImages = [propertyInterior1, propertyInterior2, propertyInterior3, propertyInterior4, propertyInterior5];
   
-  // Basic amenities for key display in hero
+  // Get premium features from property amenities data
+  const premiumFeatures = propertyAmenities?.filter(amenity => amenity.amenity.is_premium) || [];
+
+  // Enhanced amenities for key display in hero
   const keyAmenities = [
-    ...(property?.pet_friendly ? ['Pet Friendly'] : []),
-    ...(property?.boat_parking ? ['Boat Parking'] : []),
-    'WiFi', 'Kitchen'
+    // Pet Friendly - only if true
+    ...(property?.pet_friendly ? [{ 
+      type: 'standard', 
+      icon: <PawPrint className="w-3 h-3" />, 
+      label: 'Pet Friendly' 
+    }] : []),
+    
+    // Boat Parking - only if true  
+    ...(property?.boat_parking ? [{ 
+      type: 'standard', 
+      icon: <Anchor className="w-3 h-3" />, 
+      label: 'Boat Parking' 
+    }] : []),
+    
+    // View Type - always show
+    { 
+      type: 'standard', 
+      icon: <Eye className="w-3 h-3" />, 
+      label: property?.view_type || 'Standard View' 
+    },
+    
+    // Premium features - different styling
+    ...premiumFeatures.slice(0, 4).map(amenity => ({
+      type: 'premium',
+      icon: <Star className="w-3 h-3 fill-amber-500 text-amber-500" />,
+      label: amenity.amenity.name
+    }))
   ];
 
   // Get hero image - use real image if available, otherwise fallback to stock
@@ -247,10 +277,17 @@ Property URL: ${window.location.href}
                   {property.boat_parking && (
                     <Badge className="bg-white/90 text-primary shadow-lg text-xs">Boat Parking</Badge>
                   )}
-                  {/* Show first few amenities */}
-                  {keyAmenities.slice(0, 2).map((amenity, index) => (
-                    <Badge key={index} className="bg-white/90 text-primary shadow-lg text-xs">
-                      {amenity}
+                  {property.view_type && (
+                    <Badge className="bg-blue-500/90 text-white shadow-lg text-xs flex items-center gap-1">
+                      <Eye className="h-3 w-3" />
+                      {property.view_type}
+                    </Badge>
+                  )}
+                  {/* Show all premium amenities */}
+                  {premiumFeatures.map((amenity, index) => (
+                    <Badge key={index} className="bg-amber-500/90 text-white shadow-lg text-xs flex items-center gap-1">
+                      <Star className="h-3 w-3 fill-current" />
+                      {amenity.amenity.name}
                     </Badge>
                   ))}
                 </div>

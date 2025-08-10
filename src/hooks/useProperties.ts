@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-
 export interface Property {
   id: string;
   property_id: string;
@@ -14,19 +13,23 @@ export interface Property {
   guests: number;
   pet_friendly: boolean;
   boat_parking: boolean;
-  view?: string;  // 👈 Add this line
+  water_views: boolean;  // 👈 Changed from view to water_views (boolean)
+  view_type?: string;    // 👈 Added view_type for display
   airbnb_rating?: string;
   image_folder?: string;
 }
 
-export const useProperties = (filters?: {
+interface PropertyFilters {
   guests?: number;
   petFriendly?: boolean;
   boatParking?: boolean;
-}) => {
+  waterViews?: boolean;  // 👈 Changed from viewType to waterViews (boolean)
+}
+
+export const useProperties = (filters?: PropertyFilters) => {
   return useQuery({
     queryKey: ['properties', filters],
-    queryFn: async () => {
+    queryFn: async (): Promise<Property[]> => {
       let query = supabase
         .from('Properties')
         .select('*')
@@ -44,10 +47,20 @@ export const useProperties = (filters?: {
         query = query.eq('boat_parking', filters.boatParking);
       }
 
+      // Add water views filter (boolean)
+      if (filters?.waterViews !== undefined) {
+        query = query.eq('water_views', filters.waterViews);
+      }
+
       const { data, error } = await query;
       
       if (error) throw error;
-      return (data || []).map(item => ({ ...item, id: item.property_id })) as Property[];
+      
+      const properties = (data || []) as any[];
+      return properties.map(item => ({ 
+        ...item, 
+        id: item.property_id 
+      })) as Property[];
     },
   });
 };
