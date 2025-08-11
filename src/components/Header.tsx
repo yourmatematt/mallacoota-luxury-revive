@@ -30,25 +30,25 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-<div className="flex items-center">
-  <Link to="/" className="transition-opacity hover:opacity-80">
-    <img 
-      src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
-      alt="Hammond Properties" 
-      className="h-12 lg:h-14 w-auto object-contain"
-    />
-  </Link>
-</div>
+          <div className="flex items-center">
+            <Link to="/" className="transition-opacity hover:opacity-80">
+              <img 
+                src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
+                alt="Hammond Properties" 
+                className="h-12 lg:h-14 w-auto object-contain"
+              />
+            </Link>
+          </div>
 
-          {/* Desktop Navigation - Cleaned up and simplified */}
+          {/* Desktop Navigation - Consistent accent-red colors */}
           <nav className="hidden lg:flex items-center space-x-2">
             {/* Primary Navigation Items - First 3 as direct links */}
             <Link
               to="/"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isActiveRoute("/") 
-                  ? "text-red-600 bg-red-50" 
-                  : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+                  ? "text-accent-red bg-accent-red/10" 
+                  : "text-gray-700 hover:text-accent-red hover:bg-gray-50"
               }`}
             >
               Home
@@ -58,8 +58,8 @@ const Header = () => {
               to="/properties"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isActiveRoute("/properties") 
-                  ? "text-red-600 bg-red-50" 
-                  : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+                  ? "text-accent-red bg-accent-red/10" 
+                  : "text-gray-700 hover:text-accent-red hover:bg-gray-50"
               }`}
             >
               Properties
@@ -69,8 +69,8 @@ const Header = () => {
               to="/discover-mallacoota"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isActiveRoute("/discover-mallacoota") 
-                  ? "text-red-600 bg-red-50" 
-                  : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+                  ? "text-accent-red bg-accent-red/10" 
+                  : "text-gray-700 hover:text-accent-red hover:bg-gray-50"
               }`}
             >
               Discover Mallacoota
@@ -83,7 +83,7 @@ const Header = () => {
               onMouseLeave={() => setIsDropdownOpen(false)}
             >
               <button
-                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-all duration-200"
+                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-accent-red hover:bg-gray-50 transition-all duration-200"
               >
                 More
                 <ChevronDown className={`ml-1 h-3 w-3 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
@@ -94,7 +94,7 @@ const Header = () => {
                   <Link
                     to="/about"
                     className={`flex flex-col px-4 py-3 hover:bg-gray-50 transition-colors duration-200 ${
-                      isActiveRoute("/about") ? "bg-red-50 text-red-600" : "text-gray-700 hover:text-red-600"
+                      isActiveRoute("/about") ? "bg-accent-red/10 text-accent-red" : "text-gray-700 hover:text-accent-red"
                     }`}
                   >
                     <div className="text-sm font-medium">About</div>
@@ -106,7 +106,7 @@ const Header = () => {
                   <Link
                     to="/testimonials"
                     className={`flex flex-col px-4 py-3 hover:bg-gray-50 transition-colors duration-200 ${
-                      isActiveRoute("/testimonials") ? "bg-red-50 text-red-600" : "text-gray-700 hover:text-red-600"
+                      isActiveRoute("/testimonials") ? "bg-accent-red/10 text-accent-red" : "text-gray-700 hover:text-accent-red"
                     }`}
                   >
                     <div className="text-sm font-medium">Testimonials</div>
@@ -118,7 +118,7 @@ const Header = () => {
                   <Link
                     to="/contact"
                     className={`flex flex-col px-4 py-3 hover:bg-gray-50 transition-colors duration-200 ${
-                      isActiveRoute("/contact") ? "bg-red-50 text-red-600" : "text-gray-700 hover:text-red-600"
+                      isActiveRoute("/contact") ? "bg-accent-red/10 text-accent-red" : "text-gray-700 hover:text-accent-red"
                     }`}
                   >
                     <div className="text-sm font-medium">Contact</div>
@@ -131,23 +131,23 @@ const Header = () => {
             </div>
           </nav>
 
-          {/* CTA Button - Improved styling */}
+          {/* CTA Button - Consistent styling */}
           <div className="hidden lg:block">
-<Button asChild variant="accent" size="default" rounded="full">             
-   <Link to="/properties">View Stays</Link>
+            <Button asChild variant="accent" size="default" rounded="full">             
+              <Link to="/properties">View Stays</Link>
             </Button>
           </div>
 
-          {/* Mobile Menu Button - Unchanged */}
+          {/* Mobile Menu Button - Consistent colors */}
           <button
-            className="lg:hidden p-2 text-gray-700 hover:text-red-600"
+            className="lg:hidden p-2 text-gray-700 hover:text-accent-red transition-colors duration-200"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Mobile Menu - Unchanged */}
+        {/* Mobile Menu - Consistent colors */}
         {isMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-lg">
             <nav className="flex flex-col space-y-4 p-6">
@@ -157,16 +157,16 @@ const Header = () => {
                   to={item.href}
                   className={`transition-colors duration-300 font-medium ${
                     isActiveRoute(item.href) 
-                      ? "text-red-600" 
-                      : "text-gray-700 hover:text-red-600"
+                      ? "text-accent-red" 
+                      : "text-gray-700 hover:text-accent-red"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-<Button asChild variant="accent" size="default" rounded="full">
-                  <Link to="/properties">View Stays</Link>
+              <Button asChild variant="accent" size="default" rounded="full">
+                <Link to="/properties">View Stays</Link>
               </Button>
             </nav>
           </div>

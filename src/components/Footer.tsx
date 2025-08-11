@@ -16,20 +16,18 @@ const Footer = () => {
     <footer className="bg-secondary border-t border-border">
       <div className="container mx-auto px-4 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Logo with SEO Text */}
+          {/* Logo with tagline */}
           <div className="flex flex-col items-center md:items-start">
             <img 
               src="/lovable-uploads/f810822d-1f52-487a-a0d9-5a203b6d8570.png" 
-              alt="Hammond Properties - Premium Vacation Rentals Mallacoota" 
+              alt="Hammond Properties" 
               className="h-12 w-auto mb-4"
             />
-            {/* SEO-friendly text */}
-            <div className="text-center md:text-left">
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-                Premium vacation rentals in Mallacoota, East Gippsland. 
-                Luxury accommodation with exceptional service and local expertise.
+            <div className="text-center md:text-left max-w-xs">
+              <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+                Premium vacation rentals in Mallacoota, East Gippsland. Luxury accommodation with exceptional service and local expertise.
               </p>
-              <p className="text-xs text-muted-foreground/80 mt-2">
+              <p className="text-sm font-medium text-primary italic">
                 Come as guests. Leave as family.
               </p>
             </div>
@@ -51,8 +49,8 @@ const Footer = () => {
             </nav>
           </div>
 
-          {/* Contact Info with Better Spacing */}
-          <div className="text-center md:text-left space-y-4">
+          {/* Contact Info */}
+          <div className="text-center md:text-left space-y-3">
             <h4 className="font-semibold text-foreground mb-4">Contact</h4>
             
             <div className="flex items-center justify-center md:justify-start space-x-2">
@@ -75,18 +73,11 @@ const Footer = () => {
               </a>
             </div>
             
-            {/* Contact Amelia Button with Better Spacing */}
-            <div className="pt-4">
+            <Button asChild variant="accent" size="default" rounded="full">
               <Link to="/contact">
-                <Button 
-                  variant="outline" 
-                  size="default" 
-                  className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white rounded-full px-6 py-2"
-                >
-                  Contact Amelia
-                </Button>
+                Contact Amelia
               </Link>
-            </div>
+            </Button>
           </div>
 
           {/* Attribution */}
