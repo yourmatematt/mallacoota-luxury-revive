@@ -38,7 +38,7 @@ const StatCard = ({ icon: Icon, title, value, subtitle, delay = 0 }: {
   delay?: number;
 }) => (
   <Card 
-    className="bg-gradient-to-br from-white to-gray-50 border-0 shadow-lg hover:shadow-xl transition-all duration-500 animate-fade-in-up"
+   className="bg-white/10 backdrop-blur-md border border-white/20 shadow-lg hover:shadow-xl transition-all duration-500 animate-fade-in-up"
     style={{ animationDelay: `${delay}ms` }}
   >
     <CardContent className="p-4 sm:p-6 text-center">
@@ -47,9 +47,9 @@ const StatCard = ({ icon: Icon, title, value, subtitle, delay = 0 }: {
           <Icon className="h-6 w-6 text-red-500" />
         </div>
       </div>
-      <div className="text-2xl sm:text-3xl font-bold text-primary mb-1">{value}</div>
-      <div className="text-sm font-medium text-foreground mb-1">{title}</div>
-      <div className="text-xs text-muted-foreground">{subtitle}</div>
+     <div className="text-2xl sm:text-3xl font-bold text-white mb-1">{value}</div>
+<div className="text-sm font-medium text-white/90 mb-1">{title}</div>
+<div className="text-xs text-white/80">{subtitle}</div>
     </CardContent>
   </Card>
 );
