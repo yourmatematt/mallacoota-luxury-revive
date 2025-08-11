@@ -80,7 +80,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
     };
 
-    // Send notification email to property manager
+    // Send notification email to Amelia
     const managerEmailHtml = `
       <h2>New Property Enquiry - ${enquiry.propertyTitle}</h2>
       
@@ -99,13 +99,13 @@ const handler = async (req: Request): Promise<Response> => {
       <p>${enquiry.message || "No additional message provided."}</p>
       
       <hr>
-      <p><em>This enquiry was submitted via the Discover Mallacoota website.</em></p>
+      <p><em>This enquiry was submitted via the Hammond Properties website.</em></p>
     `;
 
     const managerEmailResponse = await resend.emails.send({
-      from: "Discover Mallacoota <enquiries@discovermallacoota.com.au>",
-      to: ["hello@discovermallacoota.com.au"],
-      subject: `New Enquiry: ${enquiry.propertyTitle} - ${enquiry.name}`,
+      from: "Hammond Properties <amelia@hammondproperties.com.au>",
+      to: ["amelia@hammondproperties.com.au"],
+      subject: `New Property Enquiry: ${enquiry.propertyTitle} - ${enquiry.name}`,
       html: managerEmailHtml,
     });
 
@@ -125,19 +125,20 @@ const handler = async (req: Request): Promise<Response> => {
       <p><strong>Check-out:</strong> ${formatDate(enquiry.checkOut)}</p>
       <p><strong>Guests:</strong> ${enquiry.guests || "Not specified"}</p>
       
-      <p>We typically respond to enquiries within 24 hours. If you have any urgent questions, please don't hesitate to contact us directly.</p>
+      <p>We typically respond to enquiries within 24 hours. If you have any urgent questions, please don't hesitate to contact us directly at amelia@hammondproperties.com.au or call us on 0401 825 547.</p>
       
       <p>Best regards,<br>
-      The Discover Mallacoota Team</p>
+      Amelia Hammond<br>
+      Hammond Properties</p>
       
       <hr>
-      <p><em>This is an automated confirmation email from Discover Mallacoota.</em></p>
+      <p><em>This is an automated confirmation email from Hammond Properties.</em></p>
     `;
 
     const guestEmailResponse = await resend.emails.send({
-      from: "Discover Mallacoota <enquiries@discovermallacoota.com.au>",
+      from: "Hammond Properties <amelia@hammondproperties.com.au>",
       to: [enquiry.email],
-      subject: `Enquiry Confirmation - ${enquiry.propertyTitle}`,
+      subject: `Property Enquiry Confirmation - ${enquiry.propertyTitle}`,
       html: guestEmailHtml,
     });
 
