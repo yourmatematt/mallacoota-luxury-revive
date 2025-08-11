@@ -10,13 +10,16 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-interface ContactRequest {
+interface EnquiryRequest {
+  propertyId: string;
+  propertyTitle: string;
   name: string;
   email: string;
   phone?: string;
-  subject?: string;
-  message: string;
-  enquiryType: string;
+  checkIn?: string;
+  checkOut?: string;
+  guests?: number;
+  message?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -26,82 +29,102 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const contact: ContactRequest = await req.json();
+    const enquiry: EnquiryRequest = await req.json();
     
     // Input validation
-    if (!contact.name || !contact.email || !contact.message) {
-      throw new Error("Missing required fields: name, email, and message are required");
+    if (!enquiry.propertyId || !enquiry.name || !enquiry.email) {
+      throw new Error("Missing required fields: propertyId, name, and email are required");
     }
     
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(contact.email)) {
+    if (!emailRegex.test(enquiry.email)) {
       throw new Error("Invalid email format");
     }
     
-    console.log("Contact enquiry received from:", contact.email);
+    console.log("Enquiry received for property:", enquiry.propertyId);
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Store contact enquiry in database
+    // Store enquiry in database
     const { error: dbError } = await supabase
-      .from("contact_enquiries")
+      .from("enquiries")
       .insert({
-        name: contact.name,
-        email: contact.email,
-        phone: contact.phone,
-        subject: contact.subject,
-        message: contact.message,
-        enquiry_type: contact.enquiryType,
+        property_id: enquiry.propertyId,
+        property_title: enquiry.propertyTitle,
+        name: enquiry.name,
+        email: enquiry.email,
+        phone: enquiry.phone,
+        check_in: enquiry.checkIn,
+        check_out: enquiry.checkOut,
+        guests: enquiry.guests,
+        message: enquiry.message,
       });
 
     if (dbError) {
       console.error("Database error:", dbError);
-      throw new Error("Failed to save contact enquiry");
+      throw new Error("Failed to save enquiry");
     }
 
-    // Send notification email to Amelia
-    const managementEmailHtml = `
-      <h2>New Contact Enquiry - ${contact.enquiryType || 'General'}</h2>
+    // Format dates for email display
+    const formatDate = (dateStr?: string) => {
+      if (!dateStr) return "Not specified";
+      return new Date(dateStr).toLocaleDateString("en-AU", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    };
+
+    // Send notification email to Amelia using Resend domain
+    const managerEmailHtml = `
+      <h2>New Property Enquiry - ${enquiry.propertyTitle}</h2>
       
-      <h3>Contact Information:</h3>
-      <p><strong>Name:</strong> ${contact.name}</p>
-      <p><strong>Email:</strong> ${contact.email}</p>
-      <p><strong>Phone:</strong> ${contact.phone || "Not provided"}</p>
-      <p><strong>Enquiry Type:</strong> ${contact.enquiryType || "General"}</p>
-      <p><strong>Subject:</strong> ${contact.subject || "No subject provided"}</p>
+      <h3>Guest Information:</h3>
+      <p><strong>Name:</strong> ${enquiry.name}</p>
+      <p><strong>Email:</strong> ${enquiry.email}</p>
+      <p><strong>Phone:</strong> ${enquiry.phone || "Not provided"}</p>
+      
+      <h3>Stay Details:</h3>
+      <p><strong>Property:</strong> ${enquiry.propertyTitle}</p>
+      <p><strong>Check-in:</strong> ${formatDate(enquiry.checkIn)}</p>
+      <p><strong>Check-out:</strong> ${formatDate(enquiry.checkOut)}</p>
+      <p><strong>Guests:</strong> ${enquiry.guests || "Not specified"}</p>
       
       <h3>Message:</h3>
-      <p>${contact.message}</p>
+      <p>${enquiry.message || "No additional message provided."}</p>
       
       <hr>
       <p><em>This enquiry was submitted via the Hammond Properties website.</em></p>
     `;
 
-    const managementEmailResponse = await resend.emails.send({
-      from: "Hammond Properties <amelia@hammondproperties.com.au>",
+    const managerEmailResponse = await resend.emails.send({
+      from: "Hammond Properties <onboarding@resend.dev>",
       to: ["amelia@hammondproperties.com.au"],
-      subject: `New Contact Enquiry: ${contact.enquiryType || 'General'} - ${contact.name}`,
-      html: managementEmailHtml,
+      reply_to: ["amelia@hammondproperties.com.au"],
+      subject: `New Property Enquiry: ${enquiry.propertyTitle} - ${enquiry.name}`,
+      html: managerEmailHtml,
     });
 
-    console.log("Management email sent successfully");
+    console.log("Manager email sent successfully");
 
-    // Send confirmation email to contact
-    const confirmationEmailHtml = `
-      <h2>Thank you for contacting us!</h2>
+    // Send confirmation email to guest using Resend domain
+    const guestEmailHtml = `
+      <h2>Thank you for your enquiry!</h2>
       
-      <p>Hi ${contact.name},</p>
+      <p>Hi ${enquiry.name},</p>
       
-      <p>Thank you for reaching out to Hammond Properties. We have received your ${contact.enquiryType?.toLowerCase() || 'general'} enquiry and will get back to you as soon as possible.</p>
+      <p>Thank you for your interest in <strong>${enquiry.propertyTitle}</strong>. We have received your enquiry and will get back to you as soon as possible.</p>
       
       <h3>Your enquiry details:</h3>
-      <p><strong>Enquiry Type:</strong> ${contact.enquiryType || "General"}</p>
-      <p><strong>Subject:</strong> ${contact.subject || "No subject provided"}</p>
-      <p><strong>Message:</strong> ${contact.message}</p>
+      <p><strong>Property:</strong> ${enquiry.propertyTitle}</p>
+      <p><strong>Check-in:</strong> ${formatDate(enquiry.checkIn)}</p>
+      <p><strong>Check-out:</strong> ${formatDate(enquiry.checkOut)}</p>
+      <p><strong>Guests:</strong> ${enquiry.guests || "Not specified"}</p>
       
       <p>We typically respond to enquiries within 24 hours. If you have any urgent questions, please don't hesitate to contact us directly at amelia@hammondproperties.com.au or call us on 0401 825 547.</p>
       
@@ -113,19 +136,20 @@ const handler = async (req: Request): Promise<Response> => {
       <p><em>This is an automated confirmation email from Hammond Properties.</em></p>
     `;
 
-    const confirmationEmailResponse = await resend.emails.send({
-      from: "Hammond Properties <amelia@hammondproperties.com.au>",
-      to: [contact.email],
-      subject: `Contact Enquiry Confirmation - Hammond Properties`,
-      html: confirmationEmailHtml,
+    const guestEmailResponse = await resend.emails.send({
+      from: "Hammond Properties <onboarding@resend.dev>",
+      to: [enquiry.email],
+      reply_to: ["amelia@hammondproperties.com.au"],
+      subject: `Property Enquiry Confirmation - ${enquiry.propertyTitle}`,
+      html: guestEmailHtml,
     });
 
-    console.log("Confirmation email sent successfully");
+    console.log("Guest confirmation email sent successfully");
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "Contact enquiry submitted successfully" 
+        message: "Enquiry submitted successfully" 
       }),
       {
         status: 200,
@@ -136,11 +160,11 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
   } catch (error: any) {
-    console.error("Error in send-contact-enquiry function:", error.message);
+    console.error("Error in send-property-enquiry function:", error.message);
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: "Failed to submit contact enquiry. Please try again or contact us directly." 
+        error: "Failed to submit enquiry. Please try again or contact us directly." 
       }),
       {
         status: 500,
