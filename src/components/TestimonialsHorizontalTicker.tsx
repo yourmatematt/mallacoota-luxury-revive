@@ -143,9 +143,9 @@ const TestimonialsHorizontalTicker = () => {
 
         {/* CTA Section */}
         <div className="text-center fade-in-up">
-          <Button asChild variant="outline" size="lg" className="px-8 rounded-full">
+          <Button asChild variant="accent" size="default" rounded="full">
             <Link to="/testimonials">
-              View All Testimonials
+              Read More Guest Stories
             </Link>
           </Button>
         </div>

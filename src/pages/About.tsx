@@ -102,7 +102,8 @@ const About = () => {
         </section>
 
       {/* Our Story Section */}
-          <section className="py-16">
+          
+<section className="section-primary py-16">
             <div className="container mx-auto px-4 lg:px-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
@@ -154,7 +155,7 @@ const About = () => {
           </section>
 
         {/* What Drives Us Section */}
-        <section className="py-20 bg-primary/5">
+        <section className="section-secondary py-16">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
@@ -189,7 +190,7 @@ const About = () => {
         </section>
 
         {/* Meet Amelia & Terry Section */}
-        <section className="py-20 bg-background">
+        <section className="section-primary py-16">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">

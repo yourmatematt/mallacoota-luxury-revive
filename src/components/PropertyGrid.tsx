@@ -140,10 +140,10 @@ const PropertyGrid = () => {
         {/* Section Header */}
         <div className="text-center mb-20 fade-in-up">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-primary mb-6">
-            Where Comfort Meets Adventure
+            Find Your Perfect Mallacoota Escape
           </h2>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Premium vacation rentals perfectly positioned for your Mallacoota discovery.
+           Premium holiday rentals with everything you need to make Mallacoota yours.
           </p>
         </div>
 

@@ -136,7 +136,7 @@ const TestimonialsSection = () => {
             What Our Guests Say
           </h2>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Real experiences from families who've made Mallacoota their home away from home.
+            Real stories from guests who’ve made Mallacoota feel like their home away from home.
           </p>
         </div>
 

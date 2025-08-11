@@ -4,23 +4,24 @@ import { MapPin, Home, Heart } from "lucide-react";
 const WhyChooseUs = () => {
   const features = [
     {
-      icon: MapPin,
-      title: "Local Expertise",
-      description: "We live and work in Mallacoota. That means we know the area, the people, and what makes a holiday special. From booking to check-out, we make sure your stay is smooth and memorable.",
-      image: "/api/placeholder/400/300"
-    },
-    {
-      icon: Home,
-      title: "Premium Properties",
-      description: "We only list homes we’d happily stay in ourselves. Modern, spacious, family-friendly, and thoughtfully styled — every stay is designed for comfort and relaxation.",
-      image: "/api/placeholder/400/300"
-    },
-    {
-      icon: Heart,
-      title: "Genuine Care",
-      description: "We care about the little things. Whether it's local tips, your favourite tea, or just a friendly chat, we go the extra mile to make you feel at home.",
-      image: "/api/placeholder/400/300"
-    }
+  icon: MapPin,
+  title: "Locals Who Know",
+  description: "We live and breathe Mallacoota. We know the hidden spots, the local legends, and the best way to make your holiday truly yours. From booking to check-out, we’ll make sure your stay is effortless and memorable.",
+  image: "/api/placeholder/400/300"
+},
+{
+  icon: Home,
+  title: "Stays You'll Love",
+  description: "Every home in our collection is one we’d happily stay in ourselves — spacious, stylish, and set up for real comfort. Whether it’s a weekend getaway or a long coastal break, you’ll feel right at home.",
+  image: "/api/placeholder/400/300"
+},
+{
+  icon: Heart,
+  title: "Care That Feels Like Home",
+  description: "It’s the little things that make a trip special. A local tip for the perfect fishing spot, a favourite tea waiting in the kitchen, or just a friendly chat — we go the extra mile to make you feel welcome.",
+  image: "/api/placeholder/400/300"
+}
+
   ];
 
   return (
@@ -29,7 +30,7 @@ const WhyChooseUs = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
-            Why Choose Hammond Properties
+            Why Stay with Hammond Properties
           </h2>
         </div>
 

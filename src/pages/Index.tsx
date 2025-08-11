@@ -16,8 +16,8 @@ const Index = () => {
         <main>
           <HeroSection />
           <PropertyGrid />
-          <WhyChooseUs />
           <DiscoverSection />
+          <WhyChooseUs />
           <TestimonialsHorizontalTicker />
           <CTASection />
         </main>

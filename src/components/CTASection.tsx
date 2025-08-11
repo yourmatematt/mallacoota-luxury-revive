@@ -8,17 +8,17 @@ const CTASection = () => {
         <div className="max-w-4xl mx-auto">
           {/* Main CTA */}
           <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
-            Ready to Plan Your Stay?
+            Ready to Start Your Mallacoota Escape?
           </h2>
           
           <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
-            Discover your perfect Mallacoota retreat. Browse our collection of premium vacation rentals.
+            From beachfront luxury to cosy hideaways, our hand-picked stays are ready to welcome you.
           </p>
           
           {/* CTA Button */}
 <Button asChild variant="accent" size="default" rounded="full">
               <Link to="/properties">
-              View All Properties
+              Start Your Escape
             </Link>
           </Button>
         </div>

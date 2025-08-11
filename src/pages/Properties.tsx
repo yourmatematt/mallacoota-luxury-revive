@@ -75,21 +75,21 @@ const Properties = () => {
               <h1 className={`text-4xl md:text-6xl font-serif font-bold mb-6 transition-all duration-800 delay-200 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}>
-                Our Properties
+                Stays with Hammond Properties
               </h1>
               
               {/* Subtitle */}
               <p className={`text-xl md:text-2xl font-light mb-8 max-w-3xl mx-auto leading-relaxed transition-all duration-800 delay-400 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}>
-                Discover your perfect coastal retreat in Mallacoota's most stunning locations
+                Discover your dream coastal escape in Mallacoota — from beachfront luxury to hidden retreats.
               </p>
               
               {/* Description */}
               <div className={`text-lg font-light mb-12 transition-all duration-800 delay-600 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}>
-                From luxury beachfront homes to cozy family retreats, find the perfect accommodation for your Mallacoota getaway
+                
               </div>
               
               {/* Filter Controls with Animation */}
@@ -101,7 +101,7 @@ const Properties = () => {
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex-1"></div>
                       <h3 className="text-lg font-medium text-white text-center">
-                        Find Your Perfect Property
+                        Whether you’re chasing ocean views, a family-friendly yard, or a quiet hideaway, find your perfect Mallacoota stay.
                       </h3>
                       <div className="flex-1 flex justify-end">
                         {(filters.guests !== 2 || filters.petFriendly || filters.boatParking || filters.waterViews) && (
@@ -201,18 +201,20 @@ const Properties = () => {
                   
                  <div className="text-center">
  <Button
-    onClick={() => {
-      document.getElementById('properties-grid')?.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }}
-    variant="outline"
-    size="sm"
-    className="bg-white/20 border-white/30 text-white hover:bg-white/30 hover:border-white/40 font-medium"
-  >
-    View {properties?.length || 0} stays matching your search
-  </Button>
+  onClick={() => {
+    document.getElementById('properties-grid')?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }}
+  className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+  disabled={isLoading}
+>
+  {isLoading 
+    ? "Loading properties..." 
+    : `View ${properties?.length || 0} Stays`
+  }
+</Button>
                   </div>
                 </div>
               </div>
@@ -221,7 +223,7 @@ const Properties = () => {
         </section>
 
         {/* Properties Grid */}
-        <section id="properties-grid" className="py-20 bg-background">
+        <section id="properties-grid" className="section-primary py-16">
           <div className="container mx-auto px-4 lg:px-8">
             {/* Results Header */}
             <div className="text-center mb-12">
