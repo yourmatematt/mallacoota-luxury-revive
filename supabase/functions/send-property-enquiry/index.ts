@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "npm:resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+console.log("RESEND_API_KEY exists:", !!Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -50,19 +51,19 @@ const handler = async (req: Request): Promise<Response> => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Store enquiry in database
-    const { error: dbError } = await supabase
-      .from("enquiries")
-      .insert({
-        property_id: enquiry.propertyId,
-        property_title: enquiry.propertyTitle,
-        name: enquiry.name,
-        email: enquiry.email,
-        phone: enquiry.phone,
-        check_in: enquiry.checkIn,
-        check_out: enquiry.checkOut,
-        guests: enquiry.guests,
-        message: enquiry.message,
-      });
+const { error: dbError } = await supabase
+  .from("enquiries")
+  .insert({
+    property_id: enquiry.propertyId,
+    property_title: enquiry.propertyTitle,
+    name: enquiry.name,
+    email: enquiry.email,
+    phone: enquiry.phone,
+    check_in: enquiry.checkIn || null,  // <-- Add || null
+    check_out: enquiry.checkOut || null, // <-- Add || null
+    guests: enquiry.guests,
+    message: enquiry.message,
+  });
 
     if (dbError) {
       console.error("Database error:", dbError);
@@ -80,7 +81,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
     };
 
-    // Send notification email to Amelia
+    // Send notification email to Amelia using Resend domain
     const managerEmailHtml = `
       <h2>New Property Enquiry - ${enquiry.propertyTitle}</h2>
       
@@ -103,15 +104,17 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     const managerEmailResponse = await resend.emails.send({
-      from: "Hammond Properties <amelia@hammondproperties.com.au>",
-      to: ["amelia@hammondproperties.com.au"],
+      from: "Hammond Properties <onboarding@resend.dev>",
+      to: ["matt@yourmateagency.com.au"],
+      reply_to: ["matt@yourmateagency.com.au"],
       subject: `New Property Enquiry: ${enquiry.propertyTitle} - ${enquiry.name}`,
       html: managerEmailHtml,
     });
 
     console.log("Manager email sent successfully");
+    console.log("Manager email response:", managerEmailResponse);
 
-    // Send confirmation email to guest
+    // Send confirmation email to guest using Resend domain
     const guestEmailHtml = `
       <h2>Thank you for your enquiry!</h2>
       
@@ -136,13 +139,15 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     const guestEmailResponse = await resend.emails.send({
-      from: "Hammond Properties <amelia@hammondproperties.com.au>",
-      to: [enquiry.email],
+      from: "Hammond Properties <onboarding@resend.dev>",
+      to: ["matt@yourmateagency.com.au"],
+      reply_to: ["matt@yourmateagency.com.au"],
       subject: `Property Enquiry Confirmation - ${enquiry.propertyTitle}`,
       html: guestEmailHtml,
     });
 
     console.log("Guest confirmation email sent successfully");
+    console.log("Guest email response:", guestEmailResponse);
 
     return new Response(
       JSON.stringify({ 

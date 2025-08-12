@@ -127,7 +127,7 @@ const PropertyDetail = () => {
     }
   }, [property]);
 
- const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   
   if (!property) return;
@@ -135,49 +135,46 @@ const PropertyDetail = () => {
   setIsSubmitting(true);
   
   try {
-    // Create mailto link with property enquiry data
-    const subject = `Property Enquiry: ${property.title}`;
-    const checkInDate = formData.checkIn ? new Date(formData.checkIn).toLocaleDateString('en-AU') : 'Not specified';
-    const checkOutDate = formData.checkOut ? new Date(formData.checkOut).toLocaleDateString('en-AU') : 'Not specified';
-    
-    const body = `
-Property Enquiry Details:
-
-Property: ${property.title}
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone || 'Not provided'}
-Check-in: ${checkInDate}
-Check-out: ${checkOutDate}
-Guests: ${formData.guests || 'Not specified'}
-
-Message:
-${formData.message}
-
----
-Property URL: ${window.location.href}
-    `.trim();
-    
-    const mailtoLink = `mailto:amelia@hammondproperties.com.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoLink;
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      checkIn: '',
-      checkOut: '',
-      guests: '',
-      message: '',
-      property: property.title || '',
+    const response = await fetch('https://iqdmesndmfphlevakgqe.supabase.co/functions/v1/send-property-enquiry', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        propertyId: property.property_id,
+        propertyTitle: property.title,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        checkIn: formData.checkIn,
+        checkOut: formData.checkOut,
+        guests: parseInt(formData.guests) || undefined,
+        message: formData.message,
+      }),
     });
 
-    toast({
-      title: "Enquiry Sent Successfully!",
-      description: "Thank you for your enquiry. We'll get back to you soon!",
-    });
-    
+    const result = await response.json();
+
+    if (result.success) {
+      toast({
+        title: "Enquiry Sent Successfully!",
+        description: "Thank you for your enquiry. We'll get back to you soon!",
+      });
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        checkIn: '',
+        checkOut: '',
+        guests: '',
+        message: '',
+        property: property.title || '',
+      });
+    } else {
+      throw new Error(result.error || 'Failed to send enquiry');
+    }
   } catch (error) {
     console.error('Error submitting enquiry:', error);
     toast({
