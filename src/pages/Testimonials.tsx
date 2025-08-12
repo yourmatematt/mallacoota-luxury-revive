@@ -41,15 +41,15 @@ const StatCard = ({ icon: Icon, title, value, subtitle, delay = 0 }: {
    className="bg-white/10 backdrop-blur-md border border-white/20 shadow-lg hover:shadow-xl transition-all duration-500 animate-fade-in-up"
     style={{ animationDelay: `${delay}ms` }}
   >
-    <CardContent className="p-4 sm:p-6 text-center">
-      <div className="flex justify-center mb-3">
-        <div className="p-3 bg-red-500/10 rounded-full">
-          <Icon className="h-6 w-6 text-red-500" />
+    <CardContent className="p-2 sm:p-4 lg:p-6 text-center">
+      <div className="flex justify-center mb-1 sm:mb-3">
+        <div className="p-1.5 sm:p-2 lg:p-3 bg-red-500/10 rounded-full">
+          <Icon className="h-3 w-3 sm:h-4 sm:w-4 lg:h-6 lg:w-6 text-red-500" />
         </div>
       </div>
-     <div className="text-2xl sm:text-3xl font-bold text-white mb-1">{value}</div>
-<div className="text-sm font-medium text-white/90 mb-1">{title}</div>
-<div className="text-xs text-white/80">{subtitle}</div>
+     <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-white mb-0.5 sm:mb-1">{value}</div>
+<div className="text-xs sm:text-sm font-medium text-white/90 mb-0.5 sm:mb-1">{title}</div>
+<div className="text-xs text-white/80 leading-tight">{subtitle}</div>
     </CardContent>
   </Card>
 );
@@ -150,8 +150,10 @@ const PropertySection = ({ property, onViewAll }: {
 
   return (
     <div id={`property-${property.id}`} className="mb-12 animate-fade-in-up">
-      {/* Property header - Now sticky */}
-      <div className="sticky top-20 z-30 bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sm:p-6 rounded-t-2xl shadow-lg">
+      {/* Property header - Consistently rounded like properties.tsx */}
+      <div className="sticky top-20 z-50 bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sm:p-6 rounded-lg shadow-lg mb-8"
+        style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' }}
+      >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
           <div>
             <h3 className="text-xl sm:text-2xl font-serif font-bold mb-2">
@@ -173,7 +175,10 @@ const PropertySection = ({ property, onViewAll }: {
               variant="outline"
               size="sm"
               onClick={() => {
-                document.getElementById('hero-section')?.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('filter-controls')?.scrollIntoView({ 
+                  behavior: 'smooth',
+                  block: 'center'
+                });
               }}
               className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
             >
@@ -194,7 +199,7 @@ const PropertySection = ({ property, onViewAll }: {
       </div>
 
       {/* Reviews grid */}
-      <div className="bg-gray-50 p-6 rounded-b-2xl">
+      <div className="bg-gray-50 p-6 rounded-lg">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {displayReviews.map((review, index) => (
             <ReviewCard key={review.id} review={review} index={index} expandable={true} />
@@ -222,6 +227,7 @@ const PropertySection = ({ property, onViewAll }: {
 const Testimonials = () => {
   const [searchParams] = useSearchParams();
   const [selectedProperty, setSelectedProperty] = useState<string>("All");
+  const [dropdownSelection, setDropdownSelection] = useState<string>("All");
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Fetch properties and reviews from Supabase
@@ -277,6 +283,7 @@ const Testimonials = () => {
     const propertyParam = searchParams.get("property");
     if (propertyParam) {
       setSelectedProperty(propertyParam);
+      setDropdownSelection(propertyParam);
     }
   }, [searchParams]);
 
@@ -298,22 +305,22 @@ const Testimonials = () => {
       
       <main>
         {/* Hero Section */}
-        <section id="hero-section" className="relative h-[calc(100vh-5rem)] flex items-center bg-gradient-to-br from-primary via-primary/90 to-primary/80 overflow-hidden">
+        <section id="hero-section" className="relative min-h-[70vh] sm:min-h-[80vh] lg:h-[calc(100vh-5rem)] flex items-center bg-gradient-to-br from-primary via-primary/90 to-primary/80 overflow-hidden">
           <div className="absolute inset-0 bg-[url('/images/testimonials-hero-background.jpg')] bg-cover bg-center opacity-20"></div>
           
-          <div className="relative z-10 container mx-auto px-4 lg:px-8 py-20 pt-32">
+          <div className="relative z-10 container mx-auto px-4 lg:px-8 py-16 sm:py-20 lg:pt-32">
             {/* Hero content */}
-            <div className={`text-center mb-12 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-serif font-bold text-white mb-4 sm:mb-6">
+            <div className={`text-center mb-6 sm:mb-8 lg:mb-12 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-2 sm:mb-3 lg:mb-4 xl:mb-6 leading-tight">
                 Guest Stories
               </h1>
-              <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed px-4">
+              <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed px-4">
                 Real experiences from families who've made our properties their home away from home
               </p>
             </div>
 
             {/* Statistics Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 mb-4 sm:mb-6 lg:mb-8">
               <StatCard 
                 icon={Users}
                 title="Total Reviews"
@@ -345,19 +352,67 @@ const Testimonials = () => {
             </div>
 
             {/* Filter Controls */}
-            <div className={`bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 sm:p-6 transition-all duration-1000 delay-600 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <div className="flex items-center justify-center mb-4">
-                <Filter className="h-5 w-5 text-white mr-2" />
-                <span className="text-white font-medium">Filter by Property</span>
+            <div id="filter-controls" className={`bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 sm:p-4 lg:p-6 transition-all duration-1000 delay-600 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              <div className="flex items-center justify-center mb-3 sm:mb-4">
+                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-white mr-2" />
+                <span className="text-white font-medium text-sm sm:text-base">Filter by Property</span>
               </div>
               
-              <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+              {/* Mobile Dropdown Version */}
+              <div className="block sm:hidden space-y-3">
+                {/* Dropdown */}
+                <select
+                  value={dropdownSelection}
+                  onChange={(e) => setDropdownSelection(e.target.value)}
+                  className="w-full px-4 py-3 bg-white/90 backdrop-blur-sm border border-white/30 rounded-lg text-primary font-medium text-sm focus:outline-none focus:ring-2 focus:ring-white/50 text-center"
+                >
+                  <option value="All">All Properties ({totalReviews} reviews)</option>
+                  {reviewsByProperty.map((property) => (
+                    <option key={property.id} value={property.id}>
+                      {property.title} ({property.reviewCount} reviews)
+                    </option>
+                  ))}
+                </select>
+                
+                {/* View Button - shows when dropdown selection differs from current filter */}
+                {dropdownSelection !== selectedProperty && (
+                  <Button
+                    onClick={() => {
+                      setSelectedProperty(dropdownSelection);
+                      // Scroll to reviews section
+                      setTimeout(() => {
+                        const element = document.getElementById('reviews-section');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }, 100);
+                    }}
+                    className="w-full bg-white text-primary hover:bg-white/90 font-semibold py-3 px-4 rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    {dropdownSelection === "All" ? (
+                      `View ${totalReviews} Reviews`
+                    ) : (
+                      `View ${reviewsByProperty.find(p => p.id === dropdownSelection)?.reviewCount || 0} ${reviewsByProperty.find(p => p.id === dropdownSelection)?.title} Reviews`
+                    )}
+                  </Button>
+                )}
+                
+                {/* Current selection indicator */}
+                <div className="text-center">
+                  <span className="text-white/80 text-xs">
+                    Currently viewing: {selectedProperty === "All" ? "All Properties" : reviewsByProperty.find(p => p.id === selectedProperty)?.title}
+                  </span>
+                </div>
+              </div>
+
+              {/* Desktop Button Version (hidden on mobile) */}
+              <div className="hidden sm:flex flex-wrap justify-center gap-2 sm:gap-3">
                 <Button
                   variant={selectedProperty === "All" ? "secondary" : "outline"}
                   size="sm"
                   onClick={() => {
                     setSelectedProperty("All");
-                    // Scroll to top of reviews section
+                    setDropdownSelection("All"); // Keep dropdown in sync
                     setTimeout(() => {
                       const element = document.getElementById('reviews-section');
                       if (element) {
@@ -365,7 +420,7 @@ const Testimonials = () => {
                       }
                     }, 100);
                   }}
-                  className={`transition-all duration-300 ${
+                  className={`transition-all duration-300 text-xs sm:text-sm px-3 sm:px-4 py-2 whitespace-nowrap ${
                     selectedProperty === "All" 
                       ? "bg-white text-primary shadow-lg" 
                       : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
@@ -380,7 +435,7 @@ const Testimonials = () => {
                     size="sm"
                     onClick={() => {
                       setSelectedProperty(property.id);
-                      // Auto scroll to reviews section (not specific property)
+                      setDropdownSelection(property.id); // Keep dropdown in sync
                       setTimeout(() => {
                         const element = document.getElementById('reviews-section');
                         if (element) {
@@ -388,15 +443,16 @@ const Testimonials = () => {
                         }
                       }, 100);
                     }}
-                    className={`transition-all duration-300 ${
+                    className={`transition-all duration-300 text-xs sm:text-sm px-3 sm:px-4 py-2 whitespace-nowrap min-w-0 ${
                       selectedProperty === property.id
                         ? "bg-white text-primary shadow-lg"
                         : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
                     }`}
                   >
-                    <span className="hidden sm:inline">{property.title}</span>
-                    <span className="sm:hidden">{property.title.split(' ')[0]}</span>
-                    <span className="ml-1">({property.reviewCount})</span>
+                    <span className="truncate max-w-[120px] sm:max-w-none">
+                      {property.title}
+                    </span>
+                    <span className="ml-1 flex-shrink-0">({property.reviewCount})</span>
                   </Button>
                 ))}
               </div>
@@ -421,8 +477,10 @@ const Testimonials = () => {
             ) : (
               // Show individual property reviews with sticky header
               <div>
-                {/* Sticky header for individual property */}
-                <div className="sticky top-20 z-40 bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sm:p-6 rounded-lg shadow-lg mb-8">
+                {/* Sticky header for individual property - Consistently rounded like properties.tsx */}
+                <div className="sticky top-20 z-50 bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sm:p-6 rounded-lg shadow-lg mb-8"
+                  style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' }}
+                >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                     <div>
                       <h2 className="text-xl sm:text-2xl font-serif font-bold mb-2">
@@ -446,8 +504,12 @@ const Testimonials = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                          setSelectedProperty("All");
-                          document.getElementById('hero-section')?.scrollIntoView({ behavior: 'smooth' });
+                          // Reset dropdown to current selection and scroll to filters
+                          setDropdownSelection(selectedProperty);
+                          document.getElementById('filter-controls')?.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'center'
+                          });
                         }}
                         className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
                       >

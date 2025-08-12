@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, User, Clock, Filter } from "lucide-react";
+import { Calendar, User, Clock, Filter, ArrowUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
@@ -42,7 +42,7 @@ const CTASection = () => {
 const Discover = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [filters, setFilters] = useState({
-    categoryId: '',
+    categoryId: '', // Back to single categoryId
   });
 
   useEffect(() => {
@@ -70,9 +70,21 @@ const Discover = () => {
     }
   };
 
+  // Function to scroll back to filters
+  const scrollToFilters = () => {
+    const filtersSection = document.querySelector('.bg-white\\/10.backdrop-blur-sm');
+    if (filtersSection) {
+      filtersSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  };
+
   // Get the count of articles for the button
   const articleCount = blogPosts?.length || 0;
   const articleText = articleCount === 1 ? 'article' : 'articles';
+  const hasActiveFilters = filters.categoryId !== '';
 
   if (error) {
     return (
@@ -97,129 +109,167 @@ const Discover = () => {
         <Header />
         
         <main>
-          {/* Hero Section with Animations */}
-          <section className="relative h-[calc(100vh-5rem)] overflow-hidden">
-            {/* Background Image with scale effect */}
-            <div 
-              className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-out ${
-                isLoaded ? 'scale-100' : 'scale-105'
-              }`}
-              style={{ backgroundImage: 'url("/images/discover-mallacoota-hero-background.jpg")' }}
-            >
-              {/* Overlay for better text readability */}
-              <div className="absolute inset-0 bg-black/40"></div>
-            </div>
+        {/* Hero Section with Animations - Mobile Optimized */}
+<section className="relative min-h-[60vh] sm:min-h-[70vh] lg:h-[calc(100vh-5rem)] overflow-hidden">
+  {/* Background Image with scale effect */}
+  <div 
+    className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-out ${
+      isLoaded ? 'scale-100' : 'scale-105'
+    }`}
+    style={{ backgroundImage: 'url("/images/discover-mallacoota-hero-background.jpg")' }}
+  >
+    {/* Overlay for better text readability */}
+    <div className="absolute inset-0 bg-black/40"></div>
+  </div>
+  
+  {/* Content with staggered animations */}
+  <div className="relative z-10 h-full flex items-center justify-center py-16 sm:py-20">
+    <div className="text-center text-white px-6 md:px-4 max-w-4xl mx-auto">
+      {/* Main Title */}
+      <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-3 sm:mb-4 lg:mb-6 transition-all duration-800 delay-200 leading-tight ${
+        isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}>
+        Discover Mallacoota
+      </h1>
+      
+      {/* Subtitle */}
+      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-4 sm:mb-6 lg:mb-8 max-w-3xl mx-auto leading-relaxed transition-all duration-800 delay-400 ${
+        isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}>
+        Your complete guide to exploring Australia's hidden coastal gem
+      </p>
+      
+      {/* Filter Controls with Animation - Mobile Optimized */}
+      <div className={`max-w-4xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 transition-all duration-800 delay-800 ${
+        isLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
+      }`}>
+        <div className="flex flex-col space-y-4 sm:space-y-6">
+          <div>
+            <label className="text-xs sm:text-sm font-medium text-white mb-4 sm:mb-6 flex items-center justify-center text-center leading-relaxed">
+              From pristine beaches to hidden bushwalking trails, discover the best activities, attractions, and experiences Mallacoota has to offer
+            </label>
             
-            {/* Content with staggered animations */}
-            <div className="relative z-10 h-full flex items-center justify-center">
-              <div className="text-center text-white px-6 md:px-4 max-w-4xl mx-auto">
-                {/* Main Title */}
-                <h1 className={`text-4xl md:text-6xl font-serif font-bold mb-6 transition-all duration-800 delay-200 ${
-                  isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                }`}>
-                  Discover Mallacoota
-                </h1>
-                
-                {/* Subtitle */}
-                <p className={`text-xl md:text-2xl font-light mb-8 max-w-3xl mx-auto leading-relaxed transition-all duration-800 delay-400 ${
-                  isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                }`}>
-                  Your complete guide to exploring Australia's hidden coastal gem
-                </p>
-                
-                {/* Description */}
-                <div className={`text-lg font-light mb-12 transition-all duration-800 delay-600 ${
-                  isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                }`}>
-                 
-                </div>
-                
-                {/* Filter Controls with Animation */}
-                <div className={`max-w-4xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 transition-all duration-800 delay-800 ${
-                  isLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
-                }`}>
-                  <div className="flex flex-col space-y-6">
-                    <div>
-                      <label className="text-sm font-medium text-white mb-6 flex items-center justify-center">
-                       
-                        From pristine beaches to hidden bushwalking trails, discover the best activities, attractions, and experiences Mallacoota has to offer
-                      </label>
-                      
-                      {/* Category Pills */}
-                      <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-                        <Button
-                          variant={!filters.categoryId ? "secondary" : "outline"}
-                          size="sm"
-                          onClick={() => setFilters({...filters, categoryId: ""})}
-                          className={`transition-all duration-300 ${
-                            !filters.categoryId 
-                              ? "bg-white text-primary shadow-lg" 
-                              : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
-                          }`}
-                        >
-                          All Articles
-                        </Button>
-                        {categories?.map((category) => (
-                          <Button
-                            key={category.id}
-                            variant={filters.categoryId === category.id ? "secondary" : "outline"}
-                            size="sm"
-                            onClick={() => setFilters({...filters, categoryId: category.id})}
-                            className={`transition-all duration-300 ${
-                              filters.categoryId === category.id
-                                ? "bg-white text-primary shadow-lg"
-                                : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
-                            }`}
-                          >
-                            {category.name}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Results Button and Clear Filters */}
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                      {/* View Articles Button */}
-                      <Button 
-                        onClick={scrollToResults}
-                        className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-                        disabled={isLoading}
-                      >
-                        {isLoading 
-                          ? "Loading articles..." 
-                          : `View ${articleCount} ${articleText} matching your search`
-                        }
-                      </Button>
-                      
-                      {/* Clear Filters Button */}
-                      {filters.categoryId && (
-                        <Button 
-                          onClick={clearFilters}
-                          variant="outline"
-                          className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-                        >
-                          Clear Filter
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {/* Category Pills - Mobile Grid */}
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2 sm:gap-3">
+              <Button
+                variant={!hasActiveFilters ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => setFilters({categoryId: ''})}
+                className={`text-xs sm:text-sm px-3 sm:px-4 py-2 transition-all duration-300 ${
+                  !hasActiveFilters 
+                    ? "bg-white text-primary shadow-lg" 
+                    : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
+                }`}
+              >
+                All Articles
+              </Button>
+              {categories?.map((category) => {
+                const isSelected = filters.categoryId === category.id;
+                return (
+                  <Button
+                    key={category.id}
+                    variant={isSelected ? "secondary" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      if (isSelected) {
+                        // If clicking the active category, deactivate it (go to "All")
+                        setFilters({categoryId: ''});
+                      } else {
+                        // Otherwise, activate this category
+                        setFilters({categoryId: category.id});
+                      }
+                    }}
+                    className={`text-xs sm:text-sm px-3 sm:px-4 py-2 transition-all duration-300 whitespace-nowrap ${
+                      isSelected
+                        ? "bg-white text-primary shadow-lg hover:bg-white/90"
+                        : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
+                    }`}
+                  >
+                    <span className="truncate">{category.name}</span>
+                  </Button>
+                );
+              })}
             </div>
-          </section>
+          </div>
+          
+          {/* Results Button and Clear Filters */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+            {/* View Articles Button */}
+            <Button 
+              onClick={scrollToResults}
+              className="w-full sm:w-auto bg-accent-red hover:bg-accent-red/90 text-white px-6 sm:px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
+              disabled={isLoading}
+            >
+              {isLoading 
+                ? "Loading articles..." 
+                : `View ${articleCount} ${articleText} matching your search`
+              }
+            </Button>
+            
+            {/* Clear Filters Button */}
+            {hasActiveFilters && (
+              <Button 
+                onClick={clearFilters}
+                variant="outline"
+                className="w-full sm:w-auto bg-white/20 border-white/30 text-white hover:bg-white/30 text-sm sm:text-base"
+              >
+                Clear Filter
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
           {/* Blog Posts Section */}
           <section id="articles-section" className="section-primary py-20">
             <div className="container mx-auto px-4 lg:px-8">
-              {/* Results Header */}
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-4">
-                  {isLoading ? "Loading experiences..." : `${blogPosts?.length || 0} Experience${blogPosts?.length === 1 ? '' : 's'} Found`}
-                </h2>
-                <p className="text-lg text-muted-foreground">
-                  Curated guides and insider tips for your Mallacoota adventure
-                </p>
+              
+              {/* Sticky Header - Always Visible - Fixed z-index */}
+              <div className="sticky top-20 z-30 bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sm:p-6 rounded-lg shadow-lg mb-8"
+                style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' }}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-serif font-bold mb-2">
+                      {hasActiveFilters 
+                        ? (categories?.find(cat => cat.id === filters.categoryId)?.name || 'Filtered Articles')
+                        : 'All Articles'
+                      }
+                    </h2>
+                    <div className="flex items-center space-x-4 text-white/90 text-sm">
+                      {hasActiveFilters && (
+                        <span>{categories?.find(cat => cat.id === filters.categoryId)?.name}</span>
+                      )}
+                      <span>• {blogPosts?.length || 0} articles found</span>
+                    </div>
+                  </div>
+                  <div className="flex space-x-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={scrollToFilters}
+                      className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
+                    >
+                      <ArrowUp className="w-4 h-4 mr-2" />
+                      Back to Filters
+                    </Button>
+                    {hasActiveFilters && (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={clearFilters}
+                        className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
+                      >
+                        Clear Filter
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </div>
+
               {/* Loading State */}
               {isLoading && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

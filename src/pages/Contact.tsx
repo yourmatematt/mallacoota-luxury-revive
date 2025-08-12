@@ -14,6 +14,7 @@ const Contact = () => {
   const { toast } = useToast();
   const [isLoaded, setIsLoaded] = useState(false);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -30,37 +31,57 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const subject = formData.subject || `${formData.enquiryType} Enquiry from ${formData.name}`;
-    const body = `
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Enquiry Type: ${formData.enquiryType}
-Subject: ${formData.subject}
-
-Message:
-${formData.message}
-    `.trim();
+    setIsSubmitting(true);
     
-    const mailtoLink = `mailto:amelia@hammondproperties.com.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoLink;
-    
-    toast({
-      title: "Message Sent",
-      description: "Thank you for your enquiry. We'll get back to you soon!",
-    });
+    try {
+      const response = await fetch('https://iqdmesndmfphlevakgqe.supabase.co/functions/v1/send-contact-enquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+          enquiryType: formData.enquiryType,
+        }),
+      });
 
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: "",
-      enquiryType: "general"
-    });
+      const result = await response.json();
+
+      if (result.success) {
+        toast({
+          title: "Message Sent Successfully!",
+          description: "Thank you for your enquiry. We'll get back to you soon!",
+        });
+
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+          enquiryType: "general"
+        });
+      } else {
+        throw new Error(result.error || 'Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error submitting contact enquiry:', error);
+      toast({
+        title: "Error Sending Message",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -169,39 +190,39 @@ ${formData.message}
       <Header />
       
       <main>
-        <section className="relative h-[calc(100vh-5rem)] flex items-center bg-gradient-to-br from-primary via-primary/95 to-primary/80 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/images/contact-hero-background.jpg')] bg-cover bg-center opacity-20"></div>
-          
-          <div className="relative z-10 container mx-auto px-4 lg:px-8">
-            <div className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif font-bold text-white mb-6 drop-shadow-lg">
-                Get in Touch
-              </h1>
-              <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8 drop-shadow-md">
-                We're here to help make your Mallacoota experience extraordinary. 
-                Get in touch with any questions about our properties, bookings, or the local area.
-              </p>
-              
-              <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                {trustIndicators.map((indicator, index) => (
-                  <div 
-                    key={indicator.label}
-                    className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 text-center"
-                  >
-                    <div className="flex justify-center mb-2">
-                      <div className="p-2 bg-white/20 rounded-full">
-                        <indicator.icon className="h-5 w-5 text-white" />
-                      </div>
-                    </div>
-                    <div className="text-2xl font-bold text-white mb-1">{indicator.value}</div>
-                    <div className="text-sm font-medium text-white mb-1">{indicator.label}</div>
-                    <div className="text-xs text-white/80">{indicator.description}</div>
-                  </div>
-                ))}
+        <section className="relative min-h-[60vh] sm:min-h-[70vh] lg:h-[calc(100vh-5rem)] flex items-center bg-gradient-to-br from-primary via-primary/95 to-primary/80 overflow-hidden py-16 sm:py-20">
+  <div className="absolute inset-0 bg-[url('/images/contact-hero-background.jpg')] bg-cover bg-center opacity-20"></div>
+  
+  <div className="relative z-10 container mx-auto px-4 lg:px-8">
+    <div className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-serif font-bold text-white mb-4 sm:mb-6 drop-shadow-lg leading-tight">
+        Get in Touch
+      </h1>
+      <p className="text-base sm:text-lg lg:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 drop-shadow-md px-4">
+        We're here to help make your Mallacoota experience extraordinary. 
+        Get in touch with any questions about our properties, bookings, or the local area.
+      </p>
+      
+      <div className={`grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        {trustIndicators.map((indicator, index) => (
+          <div 
+            key={indicator.label}
+            className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 sm:p-4 text-center"
+          >
+            <div className="flex justify-center mb-2">
+              <div className="p-2 bg-white/20 rounded-full">
+                <indicator.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
               </div>
             </div>
+            <div className="text-xl sm:text-2xl font-bold text-white mb-1">{indicator.value}</div>
+            <div className="text-xs sm:text-sm font-medium text-white mb-1">{indicator.label}</div>
+            <div className="text-xs text-white/80 leading-tight">{indicator.description}</div>
           </div>
-        </section>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
 
         <section className="py-16 relative z-20">
           <div className="container mx-auto px-4 lg:px-8">
@@ -324,10 +345,11 @@ ${formData.message}
                       <Button 
                         type="submit" 
                         size="lg" 
-                        className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                        disabled={isSubmitting}
+                        className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Send className="w-4 h-4 mr-2" />
-                        Send Message
+                        {isSubmitting ? "Sending..." : "Send Message"}
                       </Button>
 
                       <p className="text-sm text-muted-foreground text-center">
@@ -364,14 +386,14 @@ ${formData.message}
                             <div className="w-14 h-14 bg-primary/10 group-hover:bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300">
                               <info.icon className="w-6 h-6 text-primary" />
                             </div>
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-0">
                               <h3 className="text-lg font-semibold text-primary mb-2">
                                 {info.title}
                               </h3>
                               {info.action ? (
                                 <a 
                                   href={info.action}
-                                  className="text-foreground font-medium mb-2 block hover:text-primary transition-colors duration-300 text-lg"
+                                  className="text-foreground font-medium mb-2 block hover:text-primary transition-colors duration-300 text-lg break-all"
                                 >
                                   {info.details}
                                 </a>
