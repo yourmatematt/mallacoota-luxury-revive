@@ -19,6 +19,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { SafeHtmlContent } from "@/components/SafeHtmlContent";
 import PageTransition from "@/components/PageTransition";
 import { PawPrint, Anchor, Eye } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";

@@ -197,7 +197,7 @@ const About = () => {
                 Meet Amelia & Terry
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                The passionate people behind your exceptional Mallacoota experience.
+                The passionate people behind your exceptional Mallacoota experience. Granddaughter Ayla featuring in the photos after wanting to be on the website.
               </p>
             </div>
 
@@ -218,23 +218,22 @@ const About = () => {
                         Amelia Hammond
                       </h3>
                       <p className="text-accent-red font-medium mb-4">
-                        Property Manager & Guest Experience
+                        Guest Experience & Property Care
                       </p>
                       <p className="text-muted-foreground leading-relaxed">
-                        With 15 years of experience in hospitality and property care, Amelia has grown Hammond Properties from one home to a trusted local service. She ensures every property is perfectly presented, working closely with both guests and owners to deliver stays that feel just like home.
-                      </p>
+With over 40 years of experience in hospitality and property management, Amelia has grown Hammond Properties from one holiday home to a trusted local service. Born and raised in Orbost, she brings a natural warmth and attention to detail to every property that ensures every guest feels at home the moment they arrive.                       </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Terry Card - Placeholder */}
+              {/* Terry Card */}
               <Card className="card-luxury">
                 <CardContent className="p-8">
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-shrink-0">
                       <img 
-                        src="/images/terry-about-page.jpg" 
+                        src="/images/terry-about-page.png" 
                         alt="Terry"
                         className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0"
                       />
@@ -244,10 +243,10 @@ const About = () => {
                         Terry Pheeney
                       </h3>
                       <p className="text-accent-red font-medium mb-4">
-                        Property Care & Maintenance
+                        Property Maintenance & Support
                       </p>
                       <p className="text-muted-foreground leading-relaxed">
-                        Born and raised in Mallacoota, Terry brings local wisdom and years of hands-on experience from his time with Gippsland Ports. If there’s ever an unforeseen issue with your property during your stay, you can trust Terry has the tools and know-how to promptly fix it. He may even let you in on some of Mallacoota's hidden fishing spots.
+                        Born and raised in Mallacoota, Terry brings local wisdom and years of hands-on experience from his time with Gippsland Ports. If there’s ever an unforeseen issue with your property during your stay, you can trust Terry has the tools and know-how to promptly fix it. He might even share a tip or two about Mallacoota’s best-kept fishing spots.
                       </p>
                     </div>
                   </div>

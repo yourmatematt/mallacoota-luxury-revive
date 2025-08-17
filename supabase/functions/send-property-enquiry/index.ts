@@ -1,9 +1,6 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "npm:resend@2.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-console.log("RESEND_API_KEY exists:", !!Deno.env.get("RESEND_API_KEY"));
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -23,14 +20,19 @@ interface EnquiryRequest {
   message?: string;
 }
 
-const handler = async (req: Request): Promise<Response> => {
+serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    console.log("=== Starting property enquiry processing ===");
+    
     const enquiry: EnquiryRequest = await req.json();
+    console.log("Property enquiry received from:", enquiry.name);
+    console.log("Property:", enquiry.propertyTitle);
+    console.log("Email:", enquiry.email);
     
     // Input validation
     if (!enquiry.propertyId || !enquiry.name || !enquiry.email) {
@@ -39,36 +41,43 @@ const handler = async (req: Request): Promise<Response> => {
     
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(enquiry.email)) {
+    if (!enquiry.email.test(emailRegex)) {
       throw new Error("Invalid email format");
     }
     
-    console.log("Enquiry received for property:", enquiry.propertyId);
+    console.log("=== Validation passed ===");
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    console.log("Supabase URL exists:", !!supabaseUrl);
+    console.log("Supabase key exists:", !!supabaseKey);
+    
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+    console.log("=== Saving to database ===");
+
     // Store enquiry in database
-const { error: dbError } = await supabase
-  .from("enquiries")
-  .insert({
-    property_id: enquiry.propertyId,
-    property_title: enquiry.propertyTitle,
-    name: enquiry.name,
-    email: enquiry.email,
-    phone: enquiry.phone,
-    check_in: enquiry.checkIn || null,  // <-- Add || null
-    check_out: enquiry.checkOut || null, // <-- Add || null
-    guests: enquiry.guests,
-    message: enquiry.message,
-  });
+    const { error: dbError } = await supabase
+      .from("enquiries")
+      .insert({
+        property_id: enquiry.propertyId,
+        property_title: enquiry.propertyTitle,
+        name: enquiry.name,
+        email: enquiry.email,
+        phone: enquiry.phone,
+        check_in: enquiry.checkIn || null,
+        check_out: enquiry.checkOut || null,
+        guests: enquiry.guests,
+        message: enquiry.message,
+      });
 
     if (dbError) {
       console.error("Database error:", dbError);
       throw new Error("Failed to save enquiry");
     }
+
+    console.log("=== Database save successful ===");
 
     // Format dates for email display
     const formatDate = (dateStr?: string) => {
@@ -81,7 +90,9 @@ const { error: dbError } = await supabase
       });
     };
 
-    // Send notification email to Amelia using Resend domain
+    console.log("=== Preparing to send emails ===");
+
+    // Send notification email to Amelia using verified domain
     const managerEmailHtml = `
       <h2>New Property Enquiry - ${enquiry.propertyTitle}</h2>
       
@@ -103,51 +114,74 @@ const { error: dbError } = await supabase
       <p><em>This enquiry was submitted via the Hammond Properties website.</em></p>
     `;
 
-    const managerEmailResponse = await resend.emails.send({
-      from: "Hammond Properties <onboarding@resend.dev>",
-      to: ["matt@yourmateagency.com.au"],
-      reply_to: ["matt@yourmateagency.com.au"],
-      subject: `New Property Enquiry: ${enquiry.propertyTitle} - ${enquiry.name}`,
-      html: managerEmailHtml,
+    console.log("=== Sending notification email ===");
+
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+
+    const managerEmailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Hammond Properties <noreply@hammondproperties.com.au>",
+        to: ["amelia@hammondproperties.com.au"],
+        reply_to: [enquiry.email],
+        subject: `New Property Enquiry: ${enquiry.propertyTitle} - ${enquiry.name}`,
+        html: managerEmailHtml,
+      }),
     });
 
-    console.log("Manager email sent successfully");
-    console.log("Manager email response:", managerEmailResponse);
+    const managerResult = await managerEmailResponse.json();
+    console.log("Manager email response:", JSON.stringify(managerResult));
 
-    // Send confirmation email to guest using Resend domain
+    console.log("=== Sending confirmation email ===");
+
+    // Send confirmation email to guest using verified domain
     const guestEmailHtml = `
-      <h2>Thank you for your enquiry!</h2>
-      
-      <p>Hi ${enquiry.name},</p>
-      
-      <p>Thank you for your interest in <strong>${enquiry.propertyTitle}</strong>. We have received your enquiry and will get back to you as soon as possible.</p>
-      
-      <h3>Your enquiry details:</h3>
-      <p><strong>Property:</strong> ${enquiry.propertyTitle}</p>
-      <p><strong>Check-in:</strong> ${formatDate(enquiry.checkIn)}</p>
-      <p><strong>Check-out:</strong> ${formatDate(enquiry.checkOut)}</p>
-      <p><strong>Guests:</strong> ${enquiry.guests || "Not specified"}</p>
-      
-      <p>We typically respond to enquiries within 24 hours. If you have any urgent questions, please don't hesitate to contact us directly at amelia@hammondproperties.com.au or call us on 0401 825 547.</p>
-      
-      <p>Best regards,<br>
-      Amelia Hammond<br>
-      Hammond Properties</p>
-      
-      <hr>
-      <p><em>This is an automated confirmation email from Hammond Properties.</em></p>
+     <h2>Thanks for your enquiry!</h2>
+
+<p>Hi ${enquiry.name},</p>
+
+<p>Thanks for your interest in <strong>${enquiry.propertyTitle}</strong>. I’ve received your enquiry and will be in touch as soon as I can to assist with your booking.</p>
+
+<h3>Your enquiry details:</h3>
+<p><strong>Property:</strong> ${enquiry.propertyTitle}</p>
+<p><strong>Check-in:</strong> ${formatDate(enquiry.checkIn)}</p>
+<p><strong>Check-out:</strong> ${formatDate(enquiry.checkOut)}</p>
+<p><strong>Guests:</strong> ${enquiry.guests || "Not specified"}</p>
+
+<p>I usually reply within 24 hours. If it’s something urgent, you can always call or text me directly on <a href="tel:0401825547">0401 825 547</a>.</p>
+
+<p>Talk soon,<br>
+Amelia Hammond<br>
+Hammond Properties</p>
+
+<hr>
+<p><em>(This note was sent automatically, but I’ve got your enquiry and will reply personally.)</em></p>
+
     `;
 
-    const guestEmailResponse = await resend.emails.send({
-      from: "Hammond Properties <onboarding@resend.dev>",
-      to: ["matt@yourmateagency.com.au"],
-      reply_to: ["matt@yourmateagency.com.au"],
-      subject: `Property Enquiry Confirmation - ${enquiry.propertyTitle}`,
-      html: guestEmailHtml,
+    const guestEmailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Hammond Properties <noreply@hammondproperties.com.au>",
+        to: [enquiry.email],
+        reply_to: ["amelia@hammondproperties.com.au"],
+        subject: `Property Enquiry Confirmation - ${enquiry.propertyTitle}`,
+        html: guestEmailHtml,
+      }),
     });
 
-    console.log("Guest confirmation email sent successfully");
-    console.log("Guest email response:", guestEmailResponse);
+    const guestResult = await guestEmailResponse.json();
+    console.log("Guest email response:", JSON.stringify(guestResult));
+
+    console.log("=== All emails sent successfully ===");
 
     return new Response(
       JSON.stringify({ 
@@ -163,7 +197,9 @@ const { error: dbError } = await supabase
       }
     );
   } catch (error: any) {
-    console.error("Error in send-property-enquiry function:", error.message);
+    console.error("=== ERROR in send-property-enquiry function ===");
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
     return new Response(
       JSON.stringify({ 
         success: false, 
@@ -178,6 +214,4 @@ const { error: dbError } = await supabase
       }
     );
   }
-};
-
-serve(handler);
+});

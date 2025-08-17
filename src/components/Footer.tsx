@@ -85,7 +85,7 @@ const Footer = () => {
             <p className="text-sm text-muted-foreground">
               Website Designed by{" "}
               <span className="text-ocean-blue font-medium">
-                Lakes Web Design
+                Your Mate Agency
               </span>
             </p>
           </div>
@@ -94,7 +94,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="border-t border-border mt-8 pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 Hammond Properties. All rights reserved.
+            © 2025 Hammond Properties. All rights reserved.
           </p>
         </div>
       </div>

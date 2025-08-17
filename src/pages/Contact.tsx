@@ -9,6 +9,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import { serve } from "std/http/server.ts";
+import { createClient } from "@supabase/supabase-js";
+import { Resend } from "resend";
 
 const Contact = () => {
   const { toast } = useToast();
