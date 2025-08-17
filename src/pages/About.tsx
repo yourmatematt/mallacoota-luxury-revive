@@ -218,10 +218,10 @@ const About = () => {
                         Amelia Hammond
                       </h3>
                       <p className="text-accent-red font-medium mb-4">
-                        Founder & Managing Director
+                        Property Manager & Guest Experience
                       </p>
                       <p className="text-muted-foreground leading-relaxed">
-                        A Mallacoota local with over 15 years in hospitality and property management. Amelia's passion for exceptional guest experiences drives our commitment to excellence.
+                        With 15 years of experience in hospitality and property care, Amelia has grown Hammond Properties from one home to a trusted local service. She ensures every property is perfectly presented, working closely with both guests and owners to deliver stays that feel just like home.
                       </p>
                     </div>
                   </div>
@@ -234,20 +234,20 @@ const About = () => {
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-shrink-0">
                       <img 
-                        src="/images/terry-placeholder.jpg" 
+                        src="/images/terry-about-page.jpg" 
                         alt="Terry"
                         className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0"
                       />
                     </div>
                     <div className="text-center md:text-left">
                       <h3 className="text-2xl font-serif font-bold text-primary mb-2">
-                        Terry Hammond
+                        Terry Pheeney
                       </h3>
                       <p className="text-accent-red font-medium mb-4">
-                        [Role to be added]
+                        Property Care & Maintenance
                       </p>
                       <p className="text-muted-foreground leading-relaxed">
-                        [Description to be added - placeholder content for Terry's bio and role information]
+                        Born and raised in Mallacoota, Terry brings local wisdom and years of hands-on experience from his time with Gippsland Ports. If there’s ever an unforeseen issue with your property during your stay, you can trust Terry has the tools and know-how to promptly fix it. He may even let you in on some of Mallacoota's hidden fishing spots.
                       </p>
                     </div>
                   </div>
