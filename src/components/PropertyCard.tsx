@@ -80,14 +80,7 @@ const PropertyCard = ({ property }: { property: Property }) => {
             propertyTitle={property.title || 'Property'}
           />
         )}
-        <div className="absolute top-4 right-4">
-          {property.airbnb_rating && (
-            <Badge className="bg-white/95 text-primary flex items-center gap-1 shadow-lg backdrop-blur-sm">
-              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-              {property.airbnb_rating}
-            </Badge>
-          )}
-        </div>
+        
       </div>
       
       <CardContent className="p-6">

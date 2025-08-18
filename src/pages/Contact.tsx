@@ -456,7 +456,7 @@ const Contact = () => {
           </div>
         </section>
 
-        <section className="py-16 bg-white">
+  <section className="py-16 bg-white">
   <div className="container mx-auto px-4 lg:px-8">
     <div className="max-w-4xl mx-auto text-center">
       <h2 className="text-3xl lg:text-4xl font-serif font-bold text-primary mb-6">
@@ -473,8 +473,8 @@ const Contact = () => {
           style={{ animationDelay: '0s' }}
         >
           <CardContent className="p-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-              <Home className="w-8 h-8 text-primary" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-50 rounded-full flex items-center justify-center border-2 border-accent-red/80 shadow-sm relative">
+              <Home className="w-8 h-8 text-accent-red" />
             </div>
             <h3 className="text-xl font-serif font-semibold text-primary mb-3">
               Local Expertise
@@ -490,8 +490,8 @@ const Contact = () => {
           style={{ animationDelay: '0.1s' }}
         >
           <CardContent className="p-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-              <Heart className="w-8 h-8 text-primary" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-50 rounded-full flex items-center justify-center border-2 border-accent-red/80 shadow-sm relative">
+              <Heart className="w-8 h-8 text-accent-red" />
             </div>
             <h3 className="text-xl font-serif font-semibold text-primary mb-3">
               Personal Service
@@ -507,8 +507,8 @@ const Contact = () => {
           style={{ animationDelay: '0.2s' }}
         >
           <CardContent className="p-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-              <Star className="w-8 h-8 text-primary" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-50 rounded-full flex items-center justify-center border-2 border-accent-red/80 shadow-sm relative">
+              <Star className="w-8 h-8 text-accent-red" />
             </div>
             <h3 className="text-xl font-serif font-semibold text-primary mb-3">
               Quality Guaranteed
