@@ -4,14 +4,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Clock, MessageCircle, Send, Star, Heart, Users, ChevronDown } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, MessageCircle, Send, Star, Heart, Users, ChevronDown, Home } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
-import { serve } from "std/http/server.ts";
-import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -130,13 +127,13 @@ const Contact = () => {
   const trustIndicators = [
     {
       icon: Star,
-      value: "4.9/5",
+      value: "4.8/5",
       label: "Guest Rating",
-      description: "Based on 200+ reviews"
+      description: "Based on 500+ reviews"
     },
     {
       icon: Users,
-      value: "500+",
+      value: "1,000+",
       label: "Happy Families",
       description: "Hosted since 2019"
     },
@@ -460,48 +457,71 @@ const Contact = () => {
         </section>
 
         <section className="py-16 bg-white">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl lg:text-4xl font-serif font-bold text-primary mb-6">
-                Why Choose Hammond Properties?
-              </h2>
-              <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
-                We're not just property managers – we're your local Mallacoota experts, 
-                dedicated to creating unforgettable experiences for every guest.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <div className="text-4xl mb-4">🏡</div>
-                  <h3 className="text-xl font-semibold text-primary mb-3">
-                    Local Expertise
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Born and raised in Mallacoota, we know all the hidden gems and can provide insider tips for your perfect getaway.
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl mb-4">💫</div>
-                  <h3 className="text-xl font-semibold text-primary mb-3">
-                    Personal Service
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    We treat every guest like family, ensuring your stay exceeds expectations from check-in to check-out.
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl mb-4">🌟</div>
-                  <h3 className="text-xl font-semibold text-primary mb-3">
-                    Quality Guaranteed
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    All our properties are personally selected and maintained to the highest standards for your comfort and peace of mind.
-                  </p>
-                </div>
-              </div>
+  <div className="container mx-auto px-4 lg:px-8">
+    <div className="max-w-4xl mx-auto text-center">
+      <h2 className="text-3xl lg:text-4xl font-serif font-bold text-primary mb-6">
+        Why Choose Hammond Properties?
+      </h2>
+      <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
+        We're not just property managers – we're your local Mallacoota experts, 
+        dedicated to creating unforgettable experiences for every guest.
+      </p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <Card 
+          className="card-luxury text-center animate-fade-in"
+          style={{ animationDelay: '0s' }}
+        >
+          <CardContent className="p-6">
+            <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+              <Home className="w-8 h-8 text-primary" />
             </div>
-          </div>
-        </section>
+            <h3 className="text-xl font-serif font-semibold text-primary mb-3">
+              Local Expertise
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">
+              Born and raised in Mallacoota, we know all the hidden gems and can provide insider tips for your perfect getaway.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className="card-luxury text-center animate-fade-in"
+          style={{ animationDelay: '0.1s' }}
+        >
+          <CardContent className="p-6">
+            <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+              <Heart className="w-8 h-8 text-primary" />
+            </div>
+            <h3 className="text-xl font-serif font-semibold text-primary mb-3">
+              Personal Service
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">
+              We treat every guest like family, ensuring your stay exceeds expectations from check-in to check-out.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className="card-luxury text-center animate-fade-in"
+          style={{ animationDelay: '0.2s' }}
+        >
+          <CardContent className="p-6">
+            <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+              <Star className="w-8 h-8 text-primary" />
+            </div>
+            <h3 className="text-xl font-serif font-semibold text-primary mb-3">
+              Quality Guaranteed
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">
+              All our properties are personally selected and maintained to the highest standards for your comfort and peace of mind.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </div>
+</section>
 
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4 lg:px-8">

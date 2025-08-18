@@ -34,7 +34,7 @@ const StatCard = ({ icon: Icon, title, value, subtitle, delay = 0 }: {
   icon: any;
   title: string;
   value: string;
-  subtitle: string;
+  subtitle?: string;
   delay?: number;
 }) => (
   <Card 
@@ -49,7 +49,7 @@ const StatCard = ({ icon: Icon, title, value, subtitle, delay = 0 }: {
       </div>
      <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-white mb-0.5 sm:mb-1">{value}</div>
 <div className="text-xs sm:text-sm font-medium text-white/90 mb-0.5 sm:mb-1">{title}</div>
-<div className="text-xs text-white/80 leading-tight">{subtitle}</div>
+{subtitle && <div className="text-xs text-white/80 leading-tight">{subtitle}</div>}
     </CardContent>
   </Card>
 );
@@ -160,10 +160,6 @@ const PropertySection = ({ property, onViewAll }: {
               {property.title}
             </h3>
             <div className="flex items-center space-x-4 text-white/90">
-              <div className="flex items-center space-x-1">
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <span className="font-semibold">{property.averageRating.toFixed(1)}</span>
-              </div>
               <div className="flex items-center space-x-1">
                 <Users className="h-4 w-4" />
                 <span>{property.reviewCount} reviews</span>
@@ -324,29 +320,25 @@ const Testimonials = () => {
               <StatCard 
                 icon={Users}
                 title="Total Reviews"
-                value={totalReviews.toString()}
-                subtitle="Happy guests"
+                value="499+"
                 delay={200}
               />
               <StatCard 
                 icon={Star}
-                title="Average Rating"
-                value={averageRating}
-                subtitle="Out of 5 stars"
+                title="Average Star Rating"
+                value="4.8+"
                 delay={300}
               />
               <StatCard 
                 icon={Award}
                 title="5-Star Reviews"
-                value={fiveStarReviews.toString()}
-                subtitle="Excellent ratings"
+                value="499+"
                 delay={400}
               />
               <StatCard 
                 icon={TrendingUp}
-                title="5-Star Rate"
-                value={`${fiveStarPercentage}%`}
-                subtitle="Guest satisfaction"
+                title="5-Star Review Rate"
+                value="96%"
                 delay={500}
               />
             </div>
@@ -488,12 +480,6 @@ const Testimonials = () => {
                       </h2>
                       <div className="flex items-center space-x-4 text-white/90">
                         <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span className="font-semibold">
-                            {reviewsByProperty.find(p => p.id === selectedProperty)?.averageRating.toFixed(1)}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-1">
                           <Users className="h-4 w-4" />
                           <span>{filteredReviews.length} reviews</span>
                         </div>
@@ -561,25 +547,26 @@ const Testimonials = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-12 sm:py-16 bg-gradient-to-r from-primary/5 to-primary/10">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-primary mb-4">
-                Ready to Create Your Own Story?
-              </h2>
-              <p className="text-base sm:text-lg text-muted-foreground mb-8">
-                Join our family of happy guests and discover why Mallacoota is the perfect destination for your next getaway.
-              </p>
-              <Link to="/properties">
-                <Button 
-                  size="lg" 
-                  className="px-8 py-3 text-base sm:text-lg hover:scale-105 transition-transform duration-300"
-                >
-                  Book Your Stay
-                </Button>
-              </Link>
-            </div>
-          </div>
+        <section className="py-20 bg-primary text-primary-foreground">
+      <div className="container mx-auto px-4 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto">
+          {/* Main CTA */}
+          <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
+            Uncover Mallacoota's best-kept secrets
+          </h2>
+          
+          <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+            From pristine beaches to local hotspots - get the insider's guide.
+          </p>
+          
+          {/* CTA Button */}
+<Button asChild variant="accent" size="default" rounded="full">
+              <Link to="/discover-mallacoota">
+              Explore Local Guides
+            </Link>
+          </Button>
+        </div>
+      </div>
         </section>
       </main>
 

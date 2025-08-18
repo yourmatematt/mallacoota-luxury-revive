@@ -136,15 +136,15 @@ const About = () => {
                   <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-soft border">
                     <div className="flex items-center space-x-4">
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-primary">500+</p>
+                        <p className="text-2xl font-bold text-primary">1,000+</p>
                         <p className="text-sm text-muted-foreground">Happy Guests</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-primary">4.9</p>
+                        <p className="text-2xl font-bold text-primary">4.8</p>
                         <p className="text-sm text-muted-foreground">Average Rating</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-primary">15+</p>
+                        <p className="text-2xl font-bold text-primary">14</p>
                         <p className="text-sm text-muted-foreground">Properties</p>
                       </div>
                     </div>

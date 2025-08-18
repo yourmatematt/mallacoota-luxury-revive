@@ -39,9 +39,9 @@ serve(async (req) => {
       throw new Error("Missing required fields: propertyId, name, and email are required");
     }
     
-    // Email validation
+    // Email validation - FIXED: Call test() on the regex, not the email string
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!enquiry.email.test(emailRegex)) {
+    if (!emailRegex.test(enquiry.email)) {
       throw new Error("Invalid email format");
     }
     
@@ -144,7 +144,7 @@ serve(async (req) => {
 
 <p>Hi ${enquiry.name},</p>
 
-<p>Thanks for your interest in <strong>${enquiry.propertyTitle}</strong>. I’ve received your enquiry and will be in touch as soon as I can to assist with your booking.</p>
+<p>Thanks for your interest in <strong>${enquiry.propertyTitle}</strong>. I've received your enquiry and will be in touch as soon as I can to assist with your booking.</p>
 
 <h3>Your enquiry details:</h3>
 <p><strong>Property:</strong> ${enquiry.propertyTitle}</p>
@@ -152,14 +152,14 @@ serve(async (req) => {
 <p><strong>Check-out:</strong> ${formatDate(enquiry.checkOut)}</p>
 <p><strong>Guests:</strong> ${enquiry.guests || "Not specified"}</p>
 
-<p>I usually reply within 24 hours. If it’s something urgent, you can always call or text me directly on <a href="tel:0401825547">0401 825 547</a>.</p>
+<p>I usually reply within 24 hours. If it's something urgent, you can always call or text me directly on <a href="tel:0401825547">0401 825 547</a>.</p>
 
 <p>Talk soon,<br>
 Amelia Hammond<br>
 Hammond Properties</p>
 
 <hr>
-<p><em>(This note was sent automatically, but I’ve got your enquiry and will reply personally.)</em></p>
+<p><em>(This note was sent automatically, but I've got your enquiry and will reply personally.)</em></p>
 
     `;
 

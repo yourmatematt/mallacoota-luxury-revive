@@ -144,7 +144,7 @@ const PropertyCard = ({ property }: { property: Property }) => {
   </div>
 </div>
         
-        <Button asChild variant="secondary" size="default" rounded="full" className="w-full">
+        <Button asChild variant="accent" size="default" rounded="full" className="w-full">
           <Link to={`/properties/${property.slug}`}>
             View Details
           </Link>

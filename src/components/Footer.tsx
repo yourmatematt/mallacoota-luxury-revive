@@ -81,12 +81,30 @@ const Footer = () => {
           </div>
 
           {/* Attribution */}
-          <div className="text-center md:text-right">
+          <div className="text-right">
             <p className="text-sm text-muted-foreground">
               Website Designed by{" "}
               <span className="text-ocean-blue font-medium">
                 Your Mate Agency
               </span>
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Email{" "}
+              <a 
+                href="mailto:matt@yourmateagency.com.au" 
+                className="text-ocean-blue hover:text-ocean-blue/80 font-medium underline transition-colors duration-200"
+              >
+                matt@yourmateagency.com.au
+              </a>
+            </p>
+            <p className="text-xs text-muted-foreground">
+              about your digital strategy today.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Straight talk - No fluff
+            </p>
+            <p className="text-xs text-muted-foreground">
+              
             </p>
           </div>
         </div>
