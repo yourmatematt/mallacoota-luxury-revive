@@ -45,6 +45,160 @@ const Discover = () => {
     categoryId: '', // Back to single categoryId
   });
 
+  // SEO Meta Tags for Discover Mallacoota page
+  useEffect(() => {
+    // Set page title
+    const title = "Discover Mallacoota - Complete Local Guide | Hammond Properties";
+    document.title = title;
+    
+    // Set meta description
+    const description = "Your complete guide to exploring Mallacoota. Discover the best beaches, restaurants, activities, and hidden gems in Australia's coastal paradise. Local insider tips and recommendations.";
+    
+    // Update existing meta tags or create new ones
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', description);
+    } else {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      metaDescription.setAttribute('content', description);
+      document.head.appendChild(metaDescription);
+    }
+
+    // Open Graph meta tags for social sharing
+    const updateOrCreateOGMeta = (property: string, content: string) => {
+      let ogMeta = document.querySelector(`meta[property="${property}"]`);
+      if (ogMeta) {
+        ogMeta.setAttribute('content', content);
+      } else {
+        ogMeta = document.createElement('meta');
+        ogMeta.setAttribute('property', property);
+        ogMeta.setAttribute('content', content);
+        document.head.appendChild(ogMeta);
+      }
+    };
+
+    updateOrCreateOGMeta('og:title', title);
+    updateOrCreateOGMeta('og:description', description);
+    updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/discover-mallacoota');
+    updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/discover-mallacoota-hero-background.jpg');
+    updateOrCreateOGMeta('og:type', 'website');
+
+    // Twitter Card meta tags
+    const updateOrCreateTwitterMeta = (name: string, content: string) => {
+      let twitterMeta = document.querySelector(`meta[name="${name}"]`);
+      if (twitterMeta) {
+        twitterMeta.setAttribute('content', content);
+      } else {
+        twitterMeta = document.createElement('meta');
+        twitterMeta.setAttribute('name', name);
+        twitterMeta.setAttribute('content', content);
+        document.head.appendChild(twitterMeta);
+      }
+    };
+
+    updateOrCreateTwitterMeta('twitter:card', 'summary_large_image');
+    updateOrCreateTwitterMeta('twitter:title', title);
+    updateOrCreateTwitterMeta('twitter:description', description);
+    updateOrCreateTwitterMeta('twitter:image', 'https://hammondproperties.com.au/images/discover-mallacoota-hero-background.jpg');
+
+    // Structured data for local guide/blog
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Discover Mallacoota - Local Guide",
+      "description": description,
+      "url": "https://hammondproperties.com.au/discover-mallacoota",
+      "mainEntity": {
+        "@type": "Blog",
+        "name": "Discover Mallacoota Blog",
+        "description": "Local insights and travel guides for Mallacoota, Victoria",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Hammond Properties",
+          "url": "https://hammondproperties.com.au"
+        }
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://hammondproperties.com.au"
+          },
+          {
+            "@type": "ListItem", 
+            "position": 2,
+            "name": "Discover Mallacoota",
+            "item": "https://hammondproperties.com.au/discover-mallacoota"
+          }
+        ]
+      },
+      "about": {
+        "@type": "Place",
+        "name": "Mallacoota",
+        "description": "Coastal town in Victoria, Australia known for pristine beaches, national parks, and wildlife",
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "-37.5667",
+          "longitude": "149.7333"
+        },
+        "containedInPlace": {
+          "@type": "AdministrativeArea",
+          "name": "Victoria, Australia"
+        }
+      }
+    };
+
+    // Add structured data script
+    let structuredDataScript = document.querySelector('#discover-structured-data');
+    if (structuredDataScript) {
+      structuredDataScript.textContent = JSON.stringify(structuredData);
+    } else {
+      structuredDataScript = document.createElement('script');
+      structuredDataScript.id = 'discover-structured-data';
+      structuredDataScript.type = 'application/ld+json';
+      structuredDataScript.textContent = JSON.stringify(structuredData);
+      document.head.appendChild(structuredDataScript);
+    }
+
+    // Additional meta tags
+    const updateOrCreateMeta = (name: string, content: string) => {
+      let meta = document.querySelector(`meta[name="${name}"]`);
+      if (meta) {
+        meta.setAttribute('content', content);
+      } else {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        meta.setAttribute('content', content);
+        document.head.appendChild(meta);
+      }
+    };
+
+    updateOrCreateMeta('keywords', 'Mallacoota travel guide, things to do Mallacoota, Mallacoota attractions, Mallacoota beaches, Mallacoota restaurants, Victoria travel, Croajingolong National Park');
+    updateOrCreateMeta('author', 'Hammond Properties');
+
+    // Cleanup function
+    return () => {
+      // Reset title
+      document.title = 'Hammond Properties - Luxury Vacation Rentals';
+      
+      // Reset meta description
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury vacation rentals with Hammond Properties. Come as guests. Leave as family.');
+      }
+      
+      // Remove structured data
+      const structuredDataScript = document.querySelector('#discover-structured-data');
+      if (structuredDataScript) {
+        structuredDataScript.remove();
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
     return () => clearTimeout(timer);

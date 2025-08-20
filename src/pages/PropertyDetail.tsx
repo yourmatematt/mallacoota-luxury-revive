@@ -46,6 +46,122 @@ const PropertyDetail = () => {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [showAllReviews, setShowAllReviews] = useState(false);
 
+  // SEO META TAGS - Set when property loads
+  useEffect(() => {
+    if (property) {
+      // Set page title using meta_title or fallback
+      const title = property.meta_title || `${property.title} - ${property.bedrooms}BR Luxury Mallacoota Rental | Hammond Properties`;
+      document.title = title;
+      
+      // Set meta description using meta_description or fallback
+      const description = property.meta_description || 
+        `${property.excerpt || 'Luxury holiday rental in Mallacoota'} ${property.bedrooms}-bedroom property sleeps ${property.guests} guests. Book your perfect getaway with Hammond Properties.`;
+      
+      // Update existing meta tags or create new ones
+      let metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', description);
+      } else {
+        metaDescription = document.createElement('meta');
+        metaDescription.setAttribute('name', 'description');
+        metaDescription.setAttribute('content', description);
+        document.head.appendChild(metaDescription);
+      }
+
+      // Open Graph meta tags for social sharing
+      const updateOrCreateOGMeta = (property: string, content: string) => {
+        let ogMeta = document.querySelector(`meta[property="${property}"]`);
+        if (ogMeta) {
+          ogMeta.setAttribute('content', content);
+        } else {
+          ogMeta = document.createElement('meta');
+          ogMeta.setAttribute('property', property);
+          ogMeta.setAttribute('content', content);
+          document.head.appendChild(ogMeta);
+        }
+      };
+
+      const propertyImage = heroImage?.url || getHeroImage(property.property_id);
+      
+      updateOrCreateOGMeta('og:title', title);
+      updateOrCreateOGMeta('og:description', description);
+      updateOrCreateOGMeta('og:url', `https://hammondproperties.com.au/properties/${property.slug}`);
+      updateOrCreateOGMeta('og:image', propertyImage);
+      updateOrCreateOGMeta('og:type', 'website');
+
+      // Twitter Card meta tags
+      const updateOrCreateTwitterMeta = (name: string, content: string) => {
+        let twitterMeta = document.querySelector(`meta[name="${name}"]`);
+        if (twitterMeta) {
+          twitterMeta.setAttribute('content', content);
+        } else {
+          twitterMeta = document.createElement('meta');
+          twitterMeta.setAttribute('name', name);
+          twitterMeta.setAttribute('content', content);
+          document.head.appendChild(twitterMeta);
+        }
+      };
+
+      updateOrCreateTwitterMeta('twitter:card', 'summary_large_image');
+      updateOrCreateTwitterMeta('twitter:title', title);
+      updateOrCreateTwitterMeta('twitter:description', description);
+      updateOrCreateTwitterMeta('twitter:image', propertyImage);
+
+      // Structured data for better search results
+      const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "LodgingBusiness",
+        "name": property.title,
+        "description": description,
+        "image": propertyImage,
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Mallacoota",
+          "addressRegion": "Victoria",
+          "addressCountry": "AU"
+        },
+        "aggregateRating": property.airbnb_rating ? {
+          "@type": "AggregateRating",
+          "ratingValue": property.airbnb_rating,
+          "bestRating": "5"
+        } : undefined,
+        "amenityFeature": propertyAmenities?.map(amenity => ({
+          "@type": "LocationFeatureSpecification",
+          "name": amenity.amenity.name
+        }))
+      };
+
+      // Add structured data script
+      let structuredDataScript = document.querySelector('#property-structured-data');
+      if (structuredDataScript) {
+        structuredDataScript.textContent = JSON.stringify(structuredData);
+      } else {
+        structuredDataScript = document.createElement('script');
+        structuredDataScript.id = 'property-structured-data';
+        structuredDataScript.type = 'application/ld+json';
+        structuredDataScript.textContent = JSON.stringify(structuredData);
+        document.head.appendChild(structuredDataScript);
+      }
+    }
+  }, [property, propertyAmenities, heroImage]);
+
+  // Reset to default meta tags when component unmounts
+  useEffect(() => {
+    return () => {
+      document.title = 'Hammond Properties - Luxury Holiday Rentals';
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury holiday rentals with Hammond Properties. Come as guests. Leave as family.');
+      }
+      
+      // Remove property structured data
+      const structuredDataScript = document.querySelector('#property-structured-data');
+      if (structuredDataScript) {
+        structuredDataScript.remove();
+      }
+    };
+  }, []);
+
   // Stock images for fallbacks
   const heroImages = [propertyHero1, propertyHero2, propertyHero3];
   const stockGalleryImages = [propertyInterior1, propertyInterior2, propertyInterior3, propertyInterior4, propertyInterior5];

@@ -9,6 +9,222 @@ import Footer from "@/components/Footer";
 const About = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // SEO Meta Tags for About page
+  useEffect(() => {
+    // Set page title
+    const title = "About Hammond Properties - 40+ Years Mallacoota Experience | Local Experts";
+    document.title = title;
+    
+    // Set meta description
+    const description = "Meet Amelia Hammond and Terry Pheeney - your local Mallacoota vacation rental experts. 40+ years combined experience, 1,000+ happy guests, 4.8★ rating. Born and raised locals providing exceptional hospitality.";
+    
+    // Update existing meta tags or create new ones
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', description);
+    } else {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      metaDescription.setAttribute('content', description);
+      document.head.appendChild(metaDescription);
+    }
+
+    // Open Graph meta tags for social sharing
+    const updateOrCreateOGMeta = (property: string, content: string) => {
+      let ogMeta = document.querySelector(`meta[property="${property}"]`);
+      if (ogMeta) {
+        ogMeta.setAttribute('content', content);
+      } else {
+        ogMeta = document.createElement('meta');
+        ogMeta.setAttribute('property', property);
+        ogMeta.setAttribute('content', content);
+        document.head.appendChild(ogMeta);
+      }
+    };
+
+    updateOrCreateOGMeta('og:title', title);
+    updateOrCreateOGMeta('og:description', description);
+    updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/about');
+    updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/about-hero-background.jpg');
+    updateOrCreateOGMeta('og:type', 'website');
+
+    // Twitter Card meta tags
+    const updateOrCreateTwitterMeta = (name: string, content: string) => {
+      let twitterMeta = document.querySelector(`meta[name="${name}"]`);
+      if (twitterMeta) {
+        twitterMeta.setAttribute('content', content);
+      } else {
+        twitterMeta = document.createElement('meta');
+        twitterMeta.setAttribute('name', name);
+        twitterMeta.setAttribute('content', content);
+        document.head.appendChild(twitterMeta);
+      }
+    };
+
+    updateOrCreateTwitterMeta('twitter:card', 'summary_large_image');
+    updateOrCreateTwitterMeta('twitter:title', title);
+    updateOrCreateTwitterMeta('twitter:description', description);
+    updateOrCreateTwitterMeta('twitter:image', 'https://hammondproperties.com.au/images/about-hero-background.jpg');
+
+    // Structured data for About page - Organization schema
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "mainEntity": {
+        "@type": "Organization",
+        "@id": "https://hammondproperties.com.au/#organization",
+        "name": "Hammond Properties",
+        "alternateName": "Hammond Properties Mallacoota",
+        "description": description,
+        "url": "https://hammondproperties.com.au",
+        "logo": "https://hammondproperties.com.au/images/hammond-properties-logo.jpg",
+        "image": "https://hammondproperties.com.au/images/about-hero-background.jpg",
+        "foundingDate": "2010", // Adjust based on actual founding date
+        "founder": {
+          "@type": "Person",
+          "name": "Amelia Hammond",
+          "jobTitle": "Founder & Managing Director",
+          "image": "https://hammondproperties.com.au/images/amelia-about-page.jpg",
+          "description": "With over 40 years of experience in hospitality and property management, Amelia has grown Hammond Properties from one holiday home to a trusted local service."
+        },
+        "employee": [
+          {
+            "@type": "Person",
+            "name": "Amelia Hammond",
+            "jobTitle": "Guest Experience & Property Care",
+            "image": "https://hammondproperties.com.au/images/amelia-about-page.jpg"
+          },
+          {
+            "@type": "Person", 
+            "name": "Terry Pheeney",
+            "jobTitle": "Property Maintenance & Support",
+            "image": "https://hammondproperties.com.au/images/terry-about-page.png"
+          }
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Mallacoota",
+          "addressRegion": "Victoria", 
+          "addressCountry": "AU"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "-37.5667",
+          "longitude": "149.7333"
+        },
+        "email": "amelia@hammondproperties.com.au",
+        "serviceArea": {
+          "@type": "GeoCircle",
+          "geoMidpoint": {
+            "@type": "GeoCoordinates",
+            "latitude": "-37.5667",
+            "longitude": "149.7333"
+          },
+          "geoRadius": "25000"
+        },
+        "knowsAbout": [
+          "Vacation Rental Management",
+          "Property Management", 
+          "Hospitality Services",
+          "Mallacoota Tourism",
+          "Local Area Expertise"
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Vacation Rental Services",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Luxury Vacation Rentals",
+                "description": "Premium holiday accommodation in Mallacoota"
+              }
+            },
+            {
+              "@type": "Offer", 
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Property Management Services",
+                "description": "Comprehensive property management for vacation rental owners"
+              }
+            }
+          ]
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": "1000"
+        }
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://hammondproperties.com.au"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "About",
+            "item": "https://hammondproperties.com.au/about"
+          }
+        ]
+      }
+    };
+
+    // Add structured data script
+    let structuredDataScript = document.querySelector('#about-structured-data');
+    if (structuredDataScript) {
+      structuredDataScript.textContent = JSON.stringify(structuredData);
+    } else {
+      structuredDataScript = document.createElement('script');
+      structuredDataScript.id = 'about-structured-data';
+      structuredDataScript.type = 'application/ld+json';
+      structuredDataScript.textContent = JSON.stringify(structuredData);
+      document.head.appendChild(structuredDataScript);
+    }
+
+    // Additional meta tags
+    const updateOrCreateMeta = (name: string, content: string) => {
+      let meta = document.querySelector(`meta[name="${name}"]`);
+      if (meta) {
+        meta.setAttribute('content', content);
+      } else {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        meta.setAttribute('content', content);
+        document.head.appendChild(meta);
+      }
+    };
+
+    updateOrCreateMeta('keywords', 'Hammond Properties about, Amelia Hammond, Terry Pheeney, Mallacoota property management, local experts, vacation rental owners, hospitality experience');
+    updateOrCreateMeta('author', 'Hammond Properties');
+
+    // Cleanup function
+    return () => {
+      // Reset title
+      document.title = 'Hammond Properties - Luxury Vacation Rentals';
+      
+      // Reset meta description
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury vacation rentals with Hammond Properties. Come as guests. Leave as family.');
+      }
+      
+      // Remove structured data
+      const structuredDataScript = document.querySelector('#about-structured-data');
+      if (structuredDataScript) {
+        structuredDataScript.remove();
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
     return () => clearTimeout(timer);
@@ -246,7 +462,7 @@ With over 40 years of experience in hospitality and property management, Amelia 
                         Property Maintenance & Support
                       </p>
                       <p className="text-muted-foreground leading-relaxed">
-                        Born and raised in Mallacoota, Terry brings local wisdom and years of hands-on experience from his time with Gippsland Ports. If there’s ever an unforeseen issue with your property during your stay, you can trust Terry has the tools and know-how to promptly fix it. He might even share a tip or two about Mallacoota’s best-kept fishing spots.
+                        Born and raised in Mallacoota, Terry brings local wisdom and years of hands-on experience from his time with Gippsland Ports. If there's ever an unforeseen issue with your property during your stay, you can trust Terry has the tools and know-how to promptly fix it. He might even share a tip or two about Mallacoota's best-kept fishing spots.
                       </p>
                     </div>
                   </div>

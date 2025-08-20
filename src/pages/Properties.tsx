@@ -27,6 +27,176 @@ const Properties = () => {
     waterViews: filters.waterViews || undefined,
   });
 
+  // SEO Meta Tags for Properties listing page
+  useEffect(() => {
+    // Dynamic title based on filters
+    let title = "Luxury Vacation Rentals Mallacoota";
+    let description = "Browse 14 luxury vacation rentals in Mallacoota. From beachfront properties to pet-friendly accommodations. Book your perfect stay with Hammond Properties.";
+    
+    // Customize based on active filters
+    const activeFilters = [];
+    if (filters.petFriendly) activeFilters.push("pet-friendly");
+    if (filters.boatParking) activeFilters.push("boat parking");
+    if (filters.waterViews) activeFilters.push("water view");
+    if (filters.guests > 2) activeFilters.push(`${filters.guests} guest`);
+    
+    if (activeFilters.length > 0) {
+      title = `${activeFilters.join(', ')} Properties in Mallacoota | Hammond Properties`;
+      description = `Find ${activeFilters.join(', ')} vacation rentals in Mallacoota. ${properties?.length || 0} properties available. Premium accommodations with Hammond Properties.`;
+    } else {
+      title = "Mallacoota Vacation Rentals - 14 Luxury Properties | Hammond Properties";
+    }
+
+    document.title = title;
+    
+    // Update existing meta tags or create new ones
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', description);
+    } else {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      metaDescription.setAttribute('content', description);
+      document.head.appendChild(metaDescription);
+    }
+
+    // Open Graph meta tags for social sharing
+    const updateOrCreateOGMeta = (property: string, content: string) => {
+      let ogMeta = document.querySelector(`meta[property="${property}"]`);
+      if (ogMeta) {
+        ogMeta.setAttribute('content', content);
+      } else {
+        ogMeta = document.createElement('meta');
+        ogMeta.setAttribute('property', property);
+        ogMeta.setAttribute('content', content);
+        document.head.appendChild(ogMeta);
+      }
+    };
+
+    updateOrCreateOGMeta('og:title', title);
+    updateOrCreateOGMeta('og:description', description);
+    updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/properties');
+    updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/properties-hero-background.jpg');
+    updateOrCreateOGMeta('og:type', 'website');
+
+    // Twitter Card meta tags
+    const updateOrCreateTwitterMeta = (name: string, content: string) => {
+      let twitterMeta = document.querySelector(`meta[name="${name}"]`);
+      if (twitterMeta) {
+        twitterMeta.setAttribute('content', content);
+      } else {
+        twitterMeta = document.createElement('meta');
+        twitterMeta.setAttribute('name', name);
+        twitterMeta.setAttribute('content', content);
+        document.head.appendChild(twitterMeta);
+      }
+    };
+
+    updateOrCreateTwitterMeta('twitter:card', 'summary_large_image');
+    updateOrCreateTwitterMeta('twitter:title', title);
+    updateOrCreateTwitterMeta('twitter:description', description);
+    updateOrCreateTwitterMeta('twitter:image', 'https://hammondproperties.com.au/images/properties-hero-background.jpg');
+
+    // Structured data for properties listing
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Mallacoota Vacation Rentals",
+      "description": description,
+      "url": "https://hammondproperties.com.au/properties",
+      "mainEntity": {
+        "@type": "ItemList",
+        "name": "Hammond Properties Vacation Rentals",
+        "description": "Luxury vacation rental properties in Mallacoota, Victoria",
+        "numberOfItems": properties?.length || 14,
+        "itemListElement": properties?.map((property, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "LodgingBusiness",
+            "name": property.title,
+            "description": property.excerpt,
+            "url": `https://hammondproperties.com.au/properties/${property.slug}`,
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mallacoota",
+              "addressRegion": "Victoria",
+              "addressCountry": "AU"
+            }
+          }
+        })) || []
+      },
+      "provider": {
+        "@type": "Organization",
+        "name": "Hammond Properties",
+        "url": "https://hammondproperties.com.au"
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://hammondproperties.com.au"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Properties",
+            "item": "https://hammondproperties.com.au/properties"
+          }
+        ]
+      }
+    };
+
+    // Add structured data script
+    let structuredDataScript = document.querySelector('#properties-structured-data');
+    if (structuredDataScript) {
+      structuredDataScript.textContent = JSON.stringify(structuredData);
+    } else {
+      structuredDataScript = document.createElement('script');
+      structuredDataScript.id = 'properties-structured-data';
+      structuredDataScript.type = 'application/ld+json';
+      structuredDataScript.textContent = JSON.stringify(structuredData);
+      document.head.appendChild(structuredDataScript);
+    }
+
+    // Additional meta tags
+    const updateOrCreateMeta = (name: string, content: string) => {
+      let meta = document.querySelector(`meta[name="${name}"]`);
+      if (meta) {
+        meta.setAttribute('content', content);
+      } else {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        meta.setAttribute('content', content);
+        document.head.appendChild(meta);
+      }
+    };
+
+    updateOrCreateMeta('keywords', 'Mallacoota accommodation, vacation rentals Mallacoota, holiday houses Victoria, beachfront rentals, pet friendly accommodation Mallacoota, boat parking properties');
+    updateOrCreateMeta('author', 'Hammond Properties');
+
+    // Cleanup function
+    return () => {
+      // Reset title
+      document.title = 'Hammond Properties - Luxury Vacation Rentals';
+      
+      // Reset meta description
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury vacation rentals with Hammond Properties. Come as guests. Leave as family.');
+      }
+      
+      // Remove structured data
+      const structuredDataScript = document.querySelector('#properties-structured-data');
+      if (structuredDataScript) {
+        structuredDataScript.remove();
+      }
+    };
+  }, [filters, properties]);
+
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
     return () => clearTimeout(timer);

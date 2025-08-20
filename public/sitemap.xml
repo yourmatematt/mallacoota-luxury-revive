@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Main Pages -->
+  <url>
+    <loc>https://hammondproperties.com.au/</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/about</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/testimonials</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/contact</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Property Pages -->
+  <url>
+    <loc>https://hammondproperties.com.au/properties/27-mirrabooka-rd</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/27-mirrabooka-rd/image_1.jpg</image:loc>
+      <image:caption>27 Mirrabooka Rd - 2BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/7-allan-drive</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/7-allan-drive/image_1.jpg</image:loc>
+      <image:caption>7 Allan Drive - 4BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/bella-views</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/bella-views/image_1.jpg</image:loc>
+      <image:caption>Bella Views - 3BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/blue-bird</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/blue-bird/image_1.jpg</image:loc>
+      <image:caption>Blue Bird - 4BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/blue-waters</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/blue-waters/image_1.jpg</image:loc>
+      <image:caption>Blue Waters - 3BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/four-on-stingray-point</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/four-on-stingray-point/image_1.jpg</image:loc>
+      <image:caption>Four on Stingray Point - 3BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/gabo-views</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/gabo-views/image_1.jpg</image:loc>
+      <image:caption>Gabo Views - 3BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/high-tide-apartment</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/high-tide-apartment/image_1.jpg</image:loc>
+      <image:caption>High Tide Apartment - 2BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/high-tide-studio</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/high-tide-studio/image_1.jpg</image:loc>
+      <image:caption>High Tide Studio - 1BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/lacys-place</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/lacys-place/image_1.jpg</image:loc>
+      <image:caption>Lacy's Place - 2BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/pheeney-place</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/pheeney-place/image_1.jpg</image:loc>
+      <image:caption>Pheeney Place - 3BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/south-gateway</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/south-gateway/image_1.jpg</image:loc>
+      <image:caption>South Gateway - 6BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/vista-views</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/vista-views/image_1.jpg</image:loc>
+      <image:caption>Vista Views - 2BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/properties/yollys-cottage</loc>
+    <lastmod>2025-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hammondproperties.com.au/images/yollys-cottage/image_1.jpg</image:loc>
+      <image:caption>Yolly's Cottage - 3BR Luxury Mallacoota Holiday Rental</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Blog Posts from Discover Mallacoota - Realistic Publishing Schedule -->
+  
+  <!-- Most Recent Content (August 2025) -->
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/seasonal-seafood-sustainability</loc>
+    <lastmod>2025-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/the-complete-coffee-scene</loc>
+    <lastmod>2025-08-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/origami-coffee-the-local-institution</loc>
+    <lastmod>2025-08-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- July 2025 Content -->
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/cultural-historical-secrets</loc>
+    <lastmod>2025-07-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/multi-generational-family-fun</loc>
+    <lastmod>2025-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/teen-activities-independence-ages-13</loc>
+    <lastmod>2025-07-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/school-age-adventures-ages-7-12</loc>
+    <lastmod>2025-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- June 2025 Content -->
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/toddler-young-kids-activities-ages-2-6</loc>
+    <lastmod>2025-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/peaceful-discovery-hidden-gems</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/peak-fishing-season-guide</loc>
+    <lastmod>2025-06-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/perfect-autumn-conditions</loc>
+    <lastmod>2025-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- May 2025 Content -->
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/spring-wildlife-photography</loc>
+    <lastmod>2025-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/perfect-weather-for-outdoor-adventures</loc>
+    <lastmod>2025-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/wildflower-paradise-spring-blooms-guide</loc>
+    <lastmod>2025-05-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/cozy-winter-experiences-value</loc>
+    <lastmod>2025-05-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/whale-watching-winter-wildlife-spectacles</loc>
+    <lastmod>2025-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- April 2025 Content -->
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/victoria-s-warmest-winter-escape</loc>
+    <lastmod>2025-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/managing-peak-season-tips-strategies</loc>
+    <lastmod>2025-04-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/summer-dining-festival-scene</loc>
+    <lastmod>2025-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/peak-season-activities-adventures</loc>
+    <lastmod>2025-04-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- March 2025 Content -->
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/perfect-summer-weather-conditions</loc>
+    <lastmod>2025-03-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/wild-harvest-seafood-festival-local-culture-produce</loc>
+    <lastmod>2025-03-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/swimming-water-sports-guide</loc>
+    <lastmod>2025-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/fishing-in-mallacoota-waters</loc>
+    <lastmod>2025-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- February 2025 Content -->
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/boating-charter-adventures</loc>
+    <lastmod>2025-02-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/kayaking-paradise-in-mallacoota</loc>
+    <lastmod>2025-02-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/fishing-charters</loc>
+    <lastmod>2025-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/complete-restaurant-guide</loc>
+    <lastmod>2025-02-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- January 2025 Content -->
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/wildlife-watching</loc>
+    <lastmod>2025-01-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/secret-beaches-coastal-walks</loc>
+    <lastmod>2025-01-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/croajingolong-national-park</loc>
+    <lastmod>2025-01-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hammondproperties.com.au/discover-mallacoota/gabo-island</loc>
+    <lastmod>2025-01-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+</urlset>

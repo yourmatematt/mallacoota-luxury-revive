@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, User, ArrowLeft } from "lucide-react";
@@ -41,6 +42,77 @@ const BlogDetail = () => {
   const { slug } = useParams();
   const { data: blogPost, isLoading } = useBlogPostBySlug(slug || '');
   const { data: categories } = useCategories();
+
+  // Set meta tags when blog post loads
+  useEffect(() => {
+    if (blogPost) {
+      // Set page title
+      const title = blogPost.meta_title || blogPost.title || 'Hammond Properties Blog';
+      document.title = title;
+      
+      // Set meta description
+      const description = blogPost.meta_description || blogPost.excerpt || 'Discover Mallacoota with Hammond Properties';
+      
+      // Update existing meta tags or create new ones
+      let metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', description);
+      } else {
+        metaDescription = document.createElement('meta');
+        metaDescription.setAttribute('name', 'description');
+        metaDescription.setAttribute('content', description);
+        document.head.appendChild(metaDescription);
+      }
+
+      // Open Graph meta tags for social sharing
+      const updateOrCreateOGMeta = (property: string, content: string) => {
+        let ogMeta = document.querySelector(`meta[property="${property}"]`);
+        if (ogMeta) {
+          ogMeta.setAttribute('content', content);
+        } else {
+          ogMeta = document.createElement('meta');
+          ogMeta.setAttribute('property', property);
+          ogMeta.setAttribute('content', content);
+          document.head.appendChild(ogMeta);
+        }
+      };
+
+      updateOrCreateOGMeta('og:title', title);
+      updateOrCreateOGMeta('og:description', description);
+      updateOrCreateOGMeta('og:url', `https://hammondproperties.com.au/discover-mallacoota/${blogPost.slug}`);
+      updateOrCreateOGMeta('og:image', getBlogImage(blogPost.slug));
+      updateOrCreateOGMeta('og:type', 'article');
+
+      // Twitter Card meta tags
+      const updateOrCreateTwitterMeta = (name: string, content: string) => {
+        let twitterMeta = document.querySelector(`meta[name="${name}"]`);
+        if (twitterMeta) {
+          twitterMeta.setAttribute('content', content);
+        } else {
+          twitterMeta = document.createElement('meta');
+          twitterMeta.setAttribute('name', name);
+          twitterMeta.setAttribute('content', content);
+          document.head.appendChild(twitterMeta);
+        }
+      };
+
+      updateOrCreateTwitterMeta('twitter:card', 'summary_large_image');
+      updateOrCreateTwitterMeta('twitter:title', title);
+      updateOrCreateTwitterMeta('twitter:description', description);
+      updateOrCreateTwitterMeta('twitter:image', getBlogImage(blogPost.slug));
+    }
+  }, [blogPost]);
+
+  // Reset to default meta tags when component unmounts
+  useEffect(() => {
+    return () => {
+      document.title = 'Hammond Properties - Luxury Vacation Rentals';
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury vacation rentals with Hammond Properties. Come as guests. Leave as family.');
+      }
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -195,14 +267,6 @@ const BlogDetail = () => {
         </main>
 
         <Footer />
-        
-        {/* SEO Meta Tags would be set in document head */}
-        {blogPost.meta_title && (
-          <div className="hidden">
-            <meta name="title" content={blogPost.meta_title} />
-            <meta name="description" content={blogPost.meta_description || blogPost.excerpt || ''} />
-          </div>
-        )}
       </div>
     </PageTransition>
   );
