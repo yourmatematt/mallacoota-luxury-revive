@@ -42,7 +42,7 @@ return (
           <h1 className={`text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold mb-8 md:mb-12 max-w-5xl mx-auto leading-tight transition-all duration-800 delay-200 ${
             isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}>
-            <div>Come as Guests</div>
+            <div>Come as Guests.</div>
             <div>Leave as Family</div>
           </h1>
           
