@@ -245,64 +245,88 @@ const PropertyDetail = () => {
   }, [property]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  if (!property) return;
-  
-  setIsSubmitting(true);
-  
-  try {
-    const response = await fetch('https://iqdmesndmfphlevakgqe.supabase.co/functions/v1/send-property-enquiry', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    e.preventDefault();
+    
+    if (!property) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      console.log('Submitting enquiry for property:', property.property_id);
+      
+      const requestBody = {
         propertyId: property.property_id,
         propertyTitle: property.title,
         name: formData.name,
         email: formData.email,
-        phone: formData.phone,
-        checkIn: formData.checkIn,
-        checkOut: formData.checkOut,
-        guests: parseInt(formData.guests) || undefined,
-        message: formData.message,
-      }),
-    });
+        phone: formData.phone || undefined, // Send undefined instead of empty string
+        checkIn: formData.checkIn || undefined,
+        checkOut: formData.checkOut || undefined,
+        guests: formData.guests ? parseInt(formData.guests) : undefined,
+        message: formData.message || undefined,
+      };
+      
+      console.log('Request body:', requestBody);
+      
+      const response = await fetch('https://iqdmesndmfphlevakgqe.supabase.co/functions/v1/send-property-enquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-    const result = await response.json();
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
 
-    if (result.success) {
+      let result;
+      try {
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+        
+        if (responseText) {
+          result = JSON.parse(responseText);
+        } else {
+          throw new Error('Empty response from server');
+        }
+      } catch (parseError) {
+        console.error('Error parsing response JSON:', parseError);
+        throw new Error('Invalid response from server');
+      }
+
+      console.log('Parsed result:', result);
+
+      if (result.success) {
+        toast({
+          title: "Enquiry Sent Successfully!",
+          description: "Thank you for your enquiry. We'll get back to you soon!",
+        });
+
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          checkIn: '',
+          checkOut: '',
+          guests: '',
+          message: '',
+          property: property.title || '',
+        });
+      } else {
+        throw new Error(result.error || 'Failed to send enquiry');
+      }
+    } catch (error) {
+      console.error('Error submitting enquiry:', error);
       toast({
-        title: "Enquiry Sent Successfully!",
-        description: "Thank you for your enquiry. We'll get back to you soon!",
+        title: "Error Sending Enquiry",
+        description: error instanceof Error ? error.message : "Please try again or contact us directly.",
+        variant: "destructive",
       });
-
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        checkIn: '',
-        checkOut: '',
-        guests: '',
-        message: '',
-        property: property.title || '',
-      });
-    } else {
-      throw new Error(result.error || 'Failed to send enquiry');
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (error) {
-    console.error('Error submitting enquiry:', error);
-    toast({
-      title: "Error Sending Enquiry",
-      description: "Please try again or contact us directly.",
-      variant: "destructive",
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({

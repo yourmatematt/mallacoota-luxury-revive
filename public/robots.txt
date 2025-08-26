@@ -68,7 +68,7 @@ User-agent: dotbot
 Disallow: /
 
 # Sitemap location
-Sitemap: https://hammondproperties.com.au/sitemap.xml
+Sitemap: https://hammondproperties.com.au/sitemap_index.xml
 
 # Host preference (optional - helps with www vs non-www)
 Host: hammondproperties.com.au
