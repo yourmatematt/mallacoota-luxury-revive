@@ -28,7 +28,16 @@ const About = () => {
       metaDescription.setAttribute('content', description);
       document.head.appendChild(metaDescription);
     }
-
+// Set canonical URL
+let canonicalLink = document.querySelector('link[rel="canonical"]');
+if (canonicalLink) {
+    canonicalLink.setAttribute('href', 'https://hammondproperties.com.au/about');
+} else {
+    canonicalLink = document.createElement('link');
+    canonicalLink.setAttribute('rel', 'canonical');
+    canonicalLink.setAttribute('href', 'https://hammondproperties.com.au/about');
+    document.head.appendChild(canonicalLink);
+}
     // Open Graph meta tags for social sharing
     const updateOrCreateOGMeta = (property: string, content: string) => {
       let ogMeta = document.querySelector(`meta[property="${property}"]`);
