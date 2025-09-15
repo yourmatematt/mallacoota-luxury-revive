@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { validatePhone, getPhoneValidationMessage } from "@/lib/validation";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -77,7 +78,7 @@ const Contact = () => {
         "serviceType": [
           "Holiday Accommodation",
           "Property Management",
-          "Vacation Rentals",
+          "Holiday Rentals",
           "Short Term Accommodation"
         ],
         "priceRange": "$$-$$$",
@@ -246,9 +247,30 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     setIsSubmitting(true);
-    
+
+    // Validate required fields
+    if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate phone format
+    if (!validatePhone(formData.phone)) {
+      toast({
+        title: "Error",
+        description: getPhoneValidationMessage(),
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await fetch('https://iqdmesndmfphlevakgqe.supabase.co/functions/v1/send-contact-enquiry', {
         method: 'POST',
@@ -309,7 +331,7 @@ const Contact = () => {
       icon: Phone,
       title: "Phone",
       details: "0401 825 547",
-      description: "Available 9am - 6pm, 7 days a week",
+      description: "Available 9am - 6pm AEST/AEDT, 7 days a week",
       action: "tel:0401825547"
     },
     {
@@ -537,17 +559,21 @@ const Contact = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-2">
                             <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                              Phone
+                              Phone Number <span className="text-red-500">*</span>
                             </Label>
                             <Input
                               id="phone"
                               name="phone"
                               type="tel"
+                              placeholder="+61 4XX XXX XXX"
                               value={formData.phone}
                               onChange={handleInputChange}
+                              required
                               className="h-12 border-gray-200 focus:border-primary focus:ring-primary/20"
-                              placeholder="Your phone number"
                             />
+                            <p className="text-sm text-muted-foreground mt-1">
+                              We'll only call if needed to discuss your enquiry
+                            </p>
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="enquiryType" className="text-sm font-medium text-gray-700">
@@ -599,11 +625,12 @@ const Contact = () => {
                           />
                         </div>
 
-                        <Button 
-                          type="submit" 
-                          size="lg" 
+                        <Button
+                          type="submit"
+                          variant="default"
+                          size="lg"
                           disabled={isSubmitting}
-                          className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full h-12 font-medium"
                         >
                           <Send className="w-4 h-4 mr-2" />
                           {isSubmitting ? "Sending..." : "Send Message"}
@@ -835,14 +862,14 @@ const Contact = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button asChild variant="accent" size="lg" className="px-8 py-3 font-medium">
                     <Link to="/properties">
-                      View All Properties
+                      Explore Our Collection
                     </Link>
                   </Button>
-                  <Button 
+                  <Button
                     asChild
-                    variant="outline" 
-                    size="lg" 
-                    className="px-8 py-3 border-primary-foreground bg-primary-foreground text-primary hover:bg-primary-foreground hover:text-primary hover:scale-105 transition-all duration-300"
+                    variant="outline"
+                    size="lg"
+                    className="px-8 py-3 border-white bg-white text-primary hover:bg-white/90 hover:text-primary active:bg-white/80 active:scale-95"
                   >
                     <a href="tel:0401825547">
                       <Phone className="w-4 h-4 mr-2" />

@@ -43,7 +43,7 @@ const TestimonialsHorizontalTicker = () => {
     {
       id: "fallback-1",
       reviewer: "Dana",
-      location: "Victoria",
+      location: "Melbourne, VIC",
       review_date: "March 2023",
       rating: "5",
       review: "This place was amazing and really exceeded our expectations. The views were spectacular and the property was immaculately maintained.",
@@ -53,7 +53,7 @@ const TestimonialsHorizontalTicker = () => {
     {
       id: "fallback-2",
       reviewer: "Chris",
-      location: "Victoria", 
+      location: "Melbourne, VIC", 
       review_date: "June 2023",
       rating: "5",
       review: "We had a great stay with Alex and the team. Their local knowledge and recommendations made our holiday unforgettable.",
@@ -63,7 +63,7 @@ const TestimonialsHorizontalTicker = () => {
     {
       id: "fallback-3",
       reviewer: "James",
-      location: "Queensland",
+      location: "Brisbane, QLD",
       review_date: "September 2023",
       rating: "5",
       review: "Outstanding layout and design. I appreciated every thoughtful detail that made our stay comfortable and memorable.",

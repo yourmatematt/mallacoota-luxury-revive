@@ -30,8 +30,8 @@ const Properties = () => {
   // SEO Meta Tags for Properties listing page
   useEffect(() => {
     // Dynamic title based on filters
-    let title = "Luxury Vacation Rentals Mallacoota";
-    let description = "Browse 14 luxury vacation rentals in Mallacoota. From beachfront properties to pet-friendly accommodations. Book your perfect stay with Hammond Properties.";
+    let title = "Book Mallacoota Holiday Homes | Waterfront & Pet-Friendly Properties";
+    let description = "Browse 14 luxury holiday rentals in Mallacoota. From beachfront properties to pet-friendly accommodations. Book your perfect stay with Hammond Properties.";
     
     // Customize based on active filters
     const activeFilters = [];
@@ -42,9 +42,9 @@ const Properties = () => {
     
     if (activeFilters.length > 0) {
       title = `${activeFilters.join(', ')} Properties in Mallacoota | Hammond Properties`;
-      description = `Find ${activeFilters.join(', ')} vacation rentals in Mallacoota. ${properties?.length || 0} properties available. Premium accommodations with Hammond Properties.`;
+      description = `Find ${activeFilters.join(', ')} holiday rentals in Mallacoota. ${properties?.length || 0} properties available. Premium accommodations with Hammond Properties.`;
     } else {
-      title = "Mallacoota Vacation Rentals - 14 Luxury Properties | Hammond Properties";
+      title = "Book Mallacoota Holiday Homes | Waterfront & Pet-Friendly Properties";
     }
 
     document.title = title;
@@ -101,13 +101,13 @@ const Properties = () => {
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      "name": "Mallacoota Vacation Rentals",
+      "name": "Mallacoota Holiday Rentals",
       "description": description,
       "url": "https://hammondproperties.com.au/properties",
       "mainEntity": {
         "@type": "ItemList",
-        "name": "Hammond Properties Vacation Rentals",
-        "description": "Luxury vacation rental properties in Mallacoota, Victoria",
+        "name": "Hammond Properties Holiday Rentals",
+        "description": "Luxury holiday rental properties in Mallacoota, Victoria",
         "numberOfItems": properties?.length || 14,
         "itemListElement": properties?.map((property, index) => ({
           "@type": "ListItem",
@@ -129,7 +129,14 @@ const Properties = () => {
       "provider": {
         "@type": "Organization",
         "name": "Hammond Properties",
-        "url": "https://hammondproperties.com.au"
+        "url": "https://hammondproperties.com.au",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "reviewCount": "500",
+          "bestRating": "5",
+          "worstRating": "1"
+        }
       },
       "breadcrumb": {
         "@type": "BreadcrumbList",
@@ -175,18 +182,18 @@ const Properties = () => {
       }
     };
 
-    updateOrCreateMeta('keywords', 'Mallacoota accommodation, vacation rentals Mallacoota, holiday houses Victoria, beachfront rentals, pet friendly accommodation Mallacoota, boat parking properties');
+    updateOrCreateMeta('keywords', 'Mallacoota accommodation, holiday rentals Mallacoota, holiday houses Victoria, beachfront rentals, pet friendly accommodation Mallacoota, boat parking properties');
     updateOrCreateMeta('author', 'Hammond Properties');
 
     // Cleanup function
     return () => {
       // Reset title
-      document.title = 'Hammond Properties - Luxury Vacation Rentals';
+      document.title = 'Hammond Properties - Luxury Holiday Rentals';
       
       // Reset meta description
       const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
-        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury vacation rentals with Hammond Properties. Come as guests. Leave as family.');
+        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury holiday rentals with Hammond Properties. Come as guests. Leave as family.');
       }
       
       // Remove structured data
@@ -227,11 +234,14 @@ const Properties = () => {
       <main>
         {/* Hero Section with Animations - Mobile Optimized */}
         <section className="relative min-h-[70vh] sm:min-h-[80vh] lg:h-[calc(100vh-5rem)] overflow-hidden">
-          <div 
-            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-out ${
+          <img
+            src="/images/properties-hero-background.jpg"
+            alt="Stunning Mallacoota waterfront holiday rentals with premium amenities and coastal views"
+            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out ${
               isLoaded ? 'scale-100' : 'scale-105'
             }`}
-            style={{ backgroundImage: 'url("/images/properties-hero-background.jpg")' }}
+            loading="eager"
+            decoding="async"
           />
           
           {/* Enhanced Overlay */}
@@ -248,11 +258,28 @@ const Properties = () => {
               </h1>
               
               {/* Subtitle */}
-              <p className={`text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed transition-all duration-800 delay-400 ${
+              <p className={`text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed transition-all duration-800 delay-400 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}>
                 Discover your dream coastal escape in Mallacoota — from beachfront luxury to hidden retreats.
               </p>
+              
+              <div className={`flex flex-wrap justify-center gap-3 mb-6 sm:mb-8 transition-all duration-800 delay-600 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}>
+                <Link
+                  to="/discover-mallacoota"
+                  className="inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-full hover:bg-white/30 active:bg-white/20 transition-all duration-200 text-sm font-medium backdrop-blur-sm border border-white/30 hover:scale-105 active:scale-95"
+                >
+                  🌊 Local Guide & Activities
+                </Link>
+                <Link
+                  to="/discover-mallacoota/gabo-island"
+                  className="inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-full hover:bg-white/30 active:bg-white/20 transition-all duration-200 text-sm font-medium backdrop-blur-sm border border-white/30 hover:scale-105 active:scale-95"
+                >
+                  🏰 Gabo Island Tours
+                </Link>
+              </div>
               
               {/* Filter Controls with Animation - Mobile Optimized */}
               <div className={`max-w-6xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 transition-all duration-800 delay-800 ${
@@ -272,7 +299,7 @@ const Properties = () => {
                             onClick={resetFilters}
                             variant="outline"
                             size="sm"
-                            className="bg-white/20 border-white/30 text-white sm:hover:bg-white/30 text-xs sm:text-sm px-3 py-2 transition-colors duration-200"
+                            className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 text-xs sm:text-sm px-3 py-2 transition-all duration-200"
                           >
                             Reset Filters
                           </Button>
@@ -293,7 +320,7 @@ const Properties = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => setFilters(prev => ({ ...prev, guests: Math.max(1, prev.guests - 1) }))}
-                            className="h-8 w-8 sm:h-10 sm:w-10 p-0 bg-white/20 border-white/30 text-white sm:hover:bg-white/30 sm:hover:border-white/40 text-sm transition-colors duration-200"
+                            className="h-8 w-8 sm:h-10 sm:w-10 p-0 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 text-sm transition-all duration-200"
                           >
                             -
                           </Button>
@@ -302,7 +329,7 @@ const Properties = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => setFilters(prev => ({ ...prev, guests: prev.guests + 1 }))}
-                            className="h-8 w-8 sm:h-10 sm:w-10 p-0 bg-white/20 border-white/30 text-white sm:hover:bg-white/30 sm:hover:border-white/40 text-sm transition-colors duration-200"
+                            className="h-8 w-8 sm:h-10 sm:w-10 p-0 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 text-sm transition-all duration-200"
                           >
                             +
                           </Button>
@@ -370,7 +397,7 @@ const Properties = () => {
                           block: 'start'
                         });
                       }}
-                      className="w-full sm:w-auto bg-accent-red hover:bg-accent-red/90 text-white px-6 sm:px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
+                      className="w-full sm:w-auto bg-accent-red hover:bg-accent-red/90 active:bg-accent-red/80 text-white px-6 sm:px-8 py-3 rounded-full font-medium transition-all duration-200 hover:scale-105 active:scale-100 shadow-lg hover:shadow-xl text-sm sm:text-base"
                       disabled={isLoading}
                     >
                       {isLoading 
@@ -431,7 +458,7 @@ const Properties = () => {
                         });
                       }
                     }}
-                    className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
+                    className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
                   >
                     <Eye className="w-4 h-4 mr-2" />
                     Back to Filters
@@ -441,7 +468,7 @@ const Properties = () => {
                       variant="secondary"
                       size="sm"
                       onClick={resetFilters}
-                      className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
+                      className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
                     >
                       Clear Filters
                     </Button>

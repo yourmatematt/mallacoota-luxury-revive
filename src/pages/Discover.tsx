@@ -1,16 +1,449 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BlogCard from "@/components/BlogCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, User, Clock, Filter, ArrowUp } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useBlogPosts } from "@/hooks/useBlogPosts";
-import { useCategories } from "@/hooks/useBlogFilters";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar, Clock, Filter, ArrowUp, Search, X, Home } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { useBlogPosts, BlogPost } from "@/hooks/useBlogPosts";
+import { 
+  useCategories, 
+  useAudiences, 
+  useSeasons, 
+  useActivityLevels, 
+  useFilterCounts 
+} from "@/hooks/useBlogFilters";
 import BlogCategoryBadge from "@/components/BlogCategoryBadge";
-import { getBlogImage } from "@/lib/utils";
+import { getBlogImageUrl } from "@/lib/utils";
+import { getBlogImage } from '@/lib/blogImages';
+import { BlogImage } from "@/components/BlogImage";
 import PageTransition from "@/components/PageTransition";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+
+// TypeScript interfaces for filtering
+interface BlogFilters {
+  search: string;
+  categories: string[];
+  audiences: string[];
+  seasons: string[];
+  sort: string;
+}
+
+interface FilterCount {
+  id: string;
+  name: string;
+  slug: string;
+  count: number;
+}
+
+interface FilterCounts {
+  categories: FilterCount[];
+  audiences: FilterCount[];
+  seasons: FilterCount[];
+}
+
+// Debounce utility function
+function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeout !== null) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+
+// Blog Search Component with debouncing
+interface BlogSearchProps {
+  onSearch: (term: string) => void;
+  initialValue?: string;
+}
+
+const BlogSearch: React.FC<BlogSearchProps> = ({ onSearch, initialValue = '' }) => {
+  const [searchTerm, setSearchTerm] = useState(initialValue);
+  
+  // Debounce search for performance
+  const debouncedSearch = useMemo(
+    () => debounce(onSearch, 300),
+    [onSearch]
+  );
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedSearch(value);
+  };
+  
+  const clearSearch = () => {
+    setSearchTerm('');
+    onSearch('');
+  };
+  
+  return (
+    <div className="relative max-w-2xl mx-auto mb-8">
+      <Input
+        type="text"
+        placeholder="Search guides... (e.g., 'fishing', 'coffee', 'beaches')"
+        value={searchTerm}
+        onChange={handleInputChange}
+        className="pl-10 pr-12 py-6 text-lg bg-white/95 backdrop-blur-sm border-white/20 focus:bg-white text-foreground placeholder:text-muted-foreground transition-all duration-300"
+        aria-label="Search blog posts"
+      />
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
+      {searchTerm && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={clearSearch}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 hover:bg-gray-100"
+          aria-label="Clear search"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
+  );
+};
+
+// Multi-Select Filter Component
+interface BlogFiltersComponentProps {
+  filters: BlogFilters;
+  filterCounts: FilterCounts;
+  onFiltersChange: (filters: BlogFilters) => void;
+}
+
+const BlogFiltersComponent: React.FC<BlogFiltersComponentProps> = ({ 
+  filters, 
+  filterCounts, 
+  onFiltersChange 
+}) => {
+  const toggleFilter = (type: keyof Omit<BlogFilters, 'search' | 'sort'>, value: string) => {
+    const currentFilters = filters[type] as string[];
+    const newFilters = currentFilters.includes(value)
+      ? currentFilters.filter(item => item !== value)
+      : [...currentFilters, value];
+    
+    onFiltersChange({
+      ...filters,
+      [type]: newFilters
+    });
+  };
+
+  return (
+    <div className="space-y-6 mb-8">
+      {/* Categories */}
+      {filterCounts.categories.length > 0 && (
+        <div className="space-y-3">
+          <span className="text-sm font-semibold text-primary block">Categories:</span>
+          <div className="flex flex-wrap gap-2">
+            {filterCounts.categories.map((cat) => (
+              <Button
+                key={cat.id}
+                variant={filters.categories.includes(cat.id) ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleFilter('categories', cat.id)}
+                className="rounded-full transition-all duration-200 hover:scale-105"
+                aria-pressed={filters.categories.includes(cat.id)}
+              >
+                {cat.name} ({cat.count})
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Audiences */}
+      {filterCounts.audiences.length > 0 && (
+        <div className="space-y-3">
+          <span className="text-sm font-semibold text-primary block">Perfect for:</span>
+          <div className="flex flex-wrap gap-2">
+            {filterCounts.audiences.map((aud) => (
+              <Button
+                key={aud.id}
+                variant={filters.audiences.includes(aud.id) ? "accent" : "outline"}
+                size="sm"
+                onClick={() => toggleFilter('audiences', aud.id)}
+                className="rounded-full transition-all duration-200 hover:scale-105"
+                aria-pressed={filters.audiences.includes(aud.id)}
+              >
+                {aud.name} ({aud.count})
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Seasons */}
+      {filterCounts.seasons.length > 0 && (
+        <div className="space-y-3">
+          <span className="text-sm font-semibold text-primary block">Best time:</span>
+          <div className="flex flex-wrap gap-2">
+            {filterCounts.seasons.map((season) => (
+              <Button
+                key={season.id}
+                variant={filters.seasons.includes(season.id) ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleFilter('seasons', season.id)}
+                className="rounded-full transition-all duration-200 hover:scale-105"
+                aria-pressed={filters.seasons.includes(season.id)}
+              >
+                {season.name} ({season.count})
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Active Filters Display Component
+interface ActiveFiltersProps {
+  filters: BlogFilters;
+  filterCounts: FilterCounts;
+  onClear: () => void;
+  onRemove: (type: string, value: string | null) => void;
+}
+
+const ActiveFilters: React.FC<ActiveFiltersProps> = ({ 
+  filters, 
+  filterCounts, 
+  onClear, 
+  onRemove 
+}) => {
+  const hasFilters = filters.search || 
+    filters.categories.length > 0 || 
+    filters.audiences.length > 0 || 
+    filters.seasons.length > 0;
+    
+  if (!hasFilters) return null;
+  
+  const getFilterName = (type: string, id: string) => {
+    const collections = {
+      categories: filterCounts.categories,
+      audiences: filterCounts.audiences,
+      seasons: filterCounts.seasons
+    };
+    
+    const collection = collections[type as keyof typeof collections];
+    return collection?.find(item => item.id === id)?.name || id;
+  };
+  
+  return (
+    <div className="bg-luxury-cream p-4 rounded-lg mb-6 border border-primary/10">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-sm font-semibold text-primary">Active filters:</span>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={onClear}
+          className="text-accent-red hover:text-accent-red/80 hover:bg-accent-red/10"
+        >
+          Clear all
+        </Button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {filters.search && (
+          <Badge variant="secondary" className="px-3 py-1 bg-primary text-white">
+            Search: "{filters.search}"
+            <X 
+              className="ml-2 h-3 w-3 cursor-pointer hover:bg-white/20 rounded" 
+              onClick={() => onRemove('search', null)}
+            />
+          </Badge>
+        )}
+        {filters.categories.map((categoryId) => (
+          <Badge key={categoryId} variant="secondary" className="px-3 py-1 bg-blue-500 text-white">
+            {getFilterName('categories', categoryId)}
+            <X 
+              className="ml-2 h-3 w-3 cursor-pointer hover:bg-white/20 rounded" 
+              onClick={() => onRemove('categories', categoryId)}
+            />
+          </Badge>
+        ))}
+        {filters.audiences.map((audienceId) => (
+          <Badge key={audienceId} variant="secondary" className="px-3 py-1 bg-accent-red text-white">
+            {getFilterName('audiences', audienceId)}
+            <X 
+              className="ml-2 h-3 w-3 cursor-pointer hover:bg-white/20 rounded" 
+              onClick={() => onRemove('audiences', audienceId)}
+            />
+          </Badge>
+        ))}
+        {filters.seasons.map((seasonId) => (
+          <Badge key={seasonId} variant="secondary" className="px-3 py-1 bg-green-500 text-white">
+            {getFilterName('seasons', seasonId)}
+            <X 
+              className="ml-2 h-3 w-3 cursor-pointer hover:bg-white/20 rounded" 
+              onClick={() => onRemove('seasons', seasonId)}
+            />
+          </Badge>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Sort Options Component
+interface SortOptionsProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const SortOptions: React.FC<SortOptionsProps> = ({ value, onChange }) => {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm font-medium text-primary">Sort by:</span>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="w-[200px] bg-white/95 backdrop-blur-sm">
+          <SelectValue placeholder="Sort by..." />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="recent">Most Recent</SelectItem>
+          <SelectItem value="seasonal">Current Season First</SelectItem>
+          <SelectItem value="alphabetical">A-Z Title</SelectItem>
+          <SelectItem value="category">By Category</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+};
+
+
+// Blog Grid Skeleton for loading states
+const BlogGridSkeleton: React.FC = () => {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[...Array(6)].map((_, index) => (
+        <Card key={index} className="card-luxury animate-pulse">
+          <div className="aspect-video bg-gray-200 rounded-t-xl"></div>
+          <CardContent className="p-6">
+            <div className="h-4 bg-gray-200 rounded mb-2"></div>
+            <div className="h-6 bg-gray-200 rounded mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+            <div className="h-3 bg-gray-200 rounded mb-2"></div>
+            <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
+// Custom hook for filtered blogs with advanced search
+const useFilteredBlogs = (filters: BlogFilters) => {
+  return useQuery({
+    queryKey: ['filtered-blogs', filters],
+    queryFn: async (): Promise<BlogPost[]> => {
+      let query = supabase
+        .from('Discover Mallacoota Blogs')
+        .select('*');
+      
+      // Text search across title and excerpt
+      if (filters.search) {
+        query = query.or(`title.ilike.%${filters.search}%,excerpt.ilike.%${filters.search}%`);
+      }
+      
+      // Category filter
+      if (filters.categories.length > 0) {
+        query = query.in('Categories_id', filters.categories);
+      }
+      
+      // Sorting
+      switch (filters.sort) {
+        case 'recent':
+          query = query.order('published_date', { ascending: false });
+          break;
+        case 'alphabetical':
+          query = query.order('title');
+          break;
+        case 'category':
+          query = query.order('Categories_id');
+          break;
+        default:
+          query = query.order('published_date', { ascending: false });
+      }
+      
+      const { data, error } = await query;
+      
+      if (error) throw error;
+      
+      let blogs = data || [];
+      
+      // Client-side filtering for audiences and seasons
+      if (filters.audiences.length > 0) {
+        blogs = blogs.filter(blog => {
+          const blogAudiences = (blog.audiences || '').toLowerCase();
+          return filters.audiences.some(audienceId => 
+            blogAudiences.includes(audienceId.toLowerCase())
+          );
+        });
+      }
+      
+      if (filters.seasons.length > 0) {
+        blogs = blogs.filter(blog => {
+          const blogSeasons = (blog.seasons || '').toLowerCase();
+          return filters.seasons.some(seasonId => 
+            blogSeasons.includes(seasonId.toLowerCase())
+          );
+        });
+      }
+      
+      return blogs as BlogPost[];
+    },
+  });
+};
+
+// Custom hook to get filter counts
+const useFilterCountsCustom = (): { data: FilterCounts | undefined, isLoading: boolean } => {
+  const { data: categories } = useCategories();
+  const { data: audiences } = useAudiences();
+  const { data: seasons } = useSeasons();
+  const { data: allBlogs } = useBlogPosts({});
+  
+  return useMemo(() => {
+    if (!categories || !audiences || !seasons || !allBlogs) {
+      return { data: undefined, isLoading: true };
+    }
+    
+    // Count occurrences
+    const categoryCounts = categories.map(cat => ({
+      ...cat,
+      count: allBlogs.filter(blog => blog.Categories_id === cat.id).length
+    })).filter(cat => cat.count > 0);
+    
+    const audienceCounts = audiences.map(aud => ({
+      ...aud,
+      count: allBlogs.filter(blog => 
+        (blog.audiences || '').toLowerCase().includes(aud.name.toLowerCase())
+      ).length
+    })).filter(aud => aud.count > 0);
+    
+    const seasonCounts = seasons.map(season => ({
+      ...season,
+      count: allBlogs.filter(blog => 
+        (blog.seasons || '').toLowerCase().includes(season.name.toLowerCase())
+      ).length
+    })).filter(season => season.count > 0);
+    
+    return {
+      data: {
+        categories: categoryCounts,
+        audiences: audienceCounts,
+        seasons: seasonCounts
+      },
+      isLoading: false
+    };
+  }, [categories, audiences, seasons, allBlogs]);
+};
 
 // CTA Section Component
 const CTASection = () => {
@@ -18,19 +451,16 @@ const CTASection = () => {
     <section className="section-cta py-20">
       <div className="container mx-auto px-4 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
-          {/* Main CTA */}
           <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
             Ready to Plan Your Stay?
           </h2>
-          
           <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
-            Discover your perfect Mallacoota retreat. Browse our collection of premium vacation rentals.
+            Discover your perfect Mallacoota retreat. Browse our collection of premium holiday rentals.
           </p>
-          
-          {/* CTA Button */}
           <Button asChild variant="accent" size="default" rounded="full">
             <Link to="/properties">
-              View All Properties
+              <Home className="mr-2 h-5 w-5" />
+              Explore Our Collection
             </Link>
           </Button>
         </div>
@@ -40,15 +470,75 @@ const CTASection = () => {
 };
 
 const Discover = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [filters, setFilters] = useState({
-    categoryId: '', // Back to single categoryId
-  });
+  
+  // Parse filters from URL with defaults
+  const defaultFilters: BlogFilters = {
+    search: '',
+    categories: [],
+    audiences: [],
+    seasons: [],
+    sort: 'recent'
+  };
+  
+  const filters: BlogFilters = {
+    search: searchParams.get('q') || '',
+    categories: searchParams.getAll('category'),
+    audiences: searchParams.getAll('audience'), 
+    seasons: searchParams.getAll('season'),
+    sort: searchParams.get('sort') || 'recent'
+  };
+  
+  // Fetch filtered blogs and filter counts
+  const { data: blogs, isLoading: blogsLoading } = useFilteredBlogs(filters);
+  const { data: filterCounts, isLoading: countsLoading } = useFilterCountsCustom();
+
+  // Update URL when filters change
+  const updateFilters = useCallback((newFilters: BlogFilters) => {
+    const params = new URLSearchParams();
+    
+    if (newFilters.search) params.set('q', newFilters.search);
+    if (newFilters.sort !== 'recent') params.set('sort', newFilters.sort);
+    
+    newFilters.categories.forEach(c => params.append('category', c));
+    newFilters.audiences.forEach(a => params.append('audience', a));
+    newFilters.seasons.forEach(s => params.append('season', s));
+    
+    setSearchParams(params);
+  }, [setSearchParams]);
+  
+  // Individual filter handlers
+  const handleSearch = useCallback((term: string) => {
+    updateFilters({ ...filters, search: term });
+  }, [filters, updateFilters]);
+  
+  const handleFiltersChange = useCallback((newFilters: BlogFilters) => {
+    updateFilters(newFilters);
+  }, [updateFilters]);
+  
+  const handleSortChange = useCallback((sort: string) => {
+    updateFilters({ ...filters, sort });
+  }, [filters, updateFilters]);
+  
+  const clearAllFilters = useCallback(() => {
+    updateFilters(defaultFilters);
+  }, [updateFilters, defaultFilters]);
+  
+  const removeFilter = useCallback((type: string, value: string | null) => {
+    if (type === 'search') {
+      updateFilters({ ...filters, search: '' });
+    } else {
+      const currentFilters = filters[type as keyof Omit<BlogFilters, 'search' | 'sort'>] as string[];
+      const newFilters = value ? currentFilters.filter(item => item !== value) : [];
+      updateFilters({ ...filters, [type]: newFilters });
+    }
+  }, [filters, updateFilters]);
 
   // SEO Meta Tags for Discover Mallacoota page
   useEffect(() => {
     // Set page title
-    const title = "Discover Mallacoota - Complete Local Guide | Hammond Properties";
+    const title = "Mallacoota Travel Guide 2025 | Beaches, Restaurants & Activities";
     document.title = title;
     
     // Set meta description
@@ -102,99 +592,15 @@ const Discover = () => {
     updateOrCreateTwitterMeta('twitter:description', description);
     updateOrCreateTwitterMeta('twitter:image', 'https://hammondproperties.com.au/images/discover-mallacoota-hero-background.jpg');
 
-    // Structured data for local guide/blog
-    const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      "name": "Discover Mallacoota - Local Guide",
-      "description": description,
-      "url": "https://hammondproperties.com.au/discover-mallacoota",
-      "mainEntity": {
-        "@type": "Blog",
-        "name": "Discover Mallacoota Blog",
-        "description": "Local insights and travel guides for Mallacoota, Victoria",
-        "publisher": {
-          "@type": "Organization",
-          "name": "Hammond Properties",
-          "url": "https://hammondproperties.com.au"
-        }
-      },
-      "breadcrumb": {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://hammondproperties.com.au"
-          },
-          {
-            "@type": "ListItem", 
-            "position": 2,
-            "name": "Discover Mallacoota",
-            "item": "https://hammondproperties.com.au/discover-mallacoota"
-          }
-        ]
-      },
-      "about": {
-        "@type": "Place",
-        "name": "Mallacoota",
-        "description": "Coastal town in Victoria, Australia known for pristine beaches, national parks, and wildlife",
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": "-37.5667",
-          "longitude": "149.7333"
-        },
-        "containedInPlace": {
-          "@type": "AdministrativeArea",
-          "name": "Victoria, Australia"
-        }
-      }
-    };
-
-    // Add structured data script
-    let structuredDataScript = document.querySelector('#discover-structured-data');
-    if (structuredDataScript) {
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-    } else {
-      structuredDataScript = document.createElement('script');
-      structuredDataScript.id = 'discover-structured-data';
-      structuredDataScript.type = 'application/ld+json';
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-      document.head.appendChild(structuredDataScript);
-    }
-
-    // Additional meta tags
-    const updateOrCreateMeta = (name: string, content: string) => {
-      let meta = document.querySelector(`meta[name="${name}"]`);
-      if (meta) {
-        meta.setAttribute('content', content);
-      } else {
-        meta = document.createElement('meta');
-        meta.setAttribute('name', name);
-        meta.setAttribute('content', content);
-        document.head.appendChild(meta);
-      }
-    };
-
-    updateOrCreateMeta('keywords', 'Mallacoota travel guide, things to do Mallacoota, Mallacoota attractions, Mallacoota beaches, Mallacoota restaurants, Victoria travel, Croajingolong National Park');
-    updateOrCreateMeta('author', 'Hammond Properties');
-
     // Cleanup function
     return () => {
       // Reset title
-      document.title = 'Hammond Properties - Luxury Vacation Rentals';
+      document.title = 'Hammond Properties - Luxury Holiday Rentals';
       
       // Reset meta description
       const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
-        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury vacation rentals with Hammond Properties. Come as guests. Leave as family.');
-      }
-      
-      // Remove structured data
-      const structuredDataScript = document.querySelector('#discover-structured-data');
-      if (structuredDataScript) {
-        structuredDataScript.remove();
+        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury holiday rentals with Hammond Properties. Come as guests. Leave as family.');
       }
     };
   }, []);
@@ -204,14 +610,14 @@ const Discover = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const { data: blogPosts, isLoading, error } = useBlogPosts({categoryId: filters.categoryId});
-  const { data: categories } = useCategories();
+  // Loading and error states
+  const isLoading = blogsLoading || countsLoading;
 
-  const clearFilters = () => {
-    setFilters({
-      categoryId: '',
-    });
-  };
+  // Helper functions for display
+  const hasActiveFilters = filters.search || 
+    filters.categories.length > 0 || 
+    filters.audiences.length > 0 || 
+    filters.seasons.length > 0;
 
   // Function to scroll to results section
   const scrollToResults = () => {
@@ -235,27 +641,9 @@ const Discover = () => {
     }
   };
 
-  // Get the count of articles for the button
-  const articleCount = blogPosts?.length || 0;
-  const articleText = articleCount === 1 ? 'article' : 'articles';
-  const hasActiveFilters = filters.categoryId !== '';
-
-  if (error) {
-    return (
-      <PageTransition>
-        <div className="min-h-screen bg-background">
-          <Header />
-          <main className="pt-20">
-            <div className="container mx-auto px-4 py-16 text-center">
-              <h1 className="text-2xl font-bold mb-4">Error loading blog posts</h1>
-              <p className="text-muted-foreground">Please try again later.</p>
-            </div>
-          </main>
-          <Footer />
-        </div>
-      </PageTransition>
-    );
-  }
+  // Get the count of articles for display
+  const articleCount = blogs?.length || 0;
+  const articleText = articleCount === 1 ? 'guide' : 'guides';
 
   return (
     <PageTransition>
@@ -290,86 +678,38 @@ const Discover = () => {
       <p className={`text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-4 sm:mb-6 lg:mb-8 max-w-3xl mx-auto leading-relaxed transition-all duration-800 delay-400 ${
         isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}>
-        Your complete guide to exploring Australia's hidden coastal gem
+        {blogs?.length || 0} insider guides to help you explore like a local
       </p>
       
-      {/* Filter Controls with Animation - Mobile Optimized */}
-      <div className={`max-w-4xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 transition-all duration-800 delay-800 ${
+      {/* Search and Filter Controls */}
+      <div className={`max-w-6xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 transition-all duration-800 delay-800 ${
         isLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
       }`}>
-        <div className="flex flex-col space-y-4 sm:space-y-6">
-          <div>
-            <label className="text-xs sm:text-sm font-medium text-white mb-4 sm:mb-6 flex items-center justify-center text-center leading-relaxed">
+        <div className="space-y-6">
+          <div className="text-center">
+            <label className="text-xs sm:text-sm font-medium text-white mb-6 block leading-relaxed">
               From pristine beaches to hidden bushwalking trails, discover the best activities, attractions, and experiences Mallacoota has to offer
             </label>
             
-            {/* Category Pills - Mobile Grid */}
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2 sm:gap-3">
-              <Button
-                variant={!hasActiveFilters ? "secondary" : "outline"}
-                size="sm"
-                onClick={() => setFilters({categoryId: ''})}
-                className={`text-xs sm:text-sm px-3 sm:px-4 py-2 transition-all duration-300 ${
-                  !hasActiveFilters 
-                    ? "bg-white text-primary shadow-lg" 
-                    : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
-                }`}
-              >
-                All Articles
-              </Button>
-              {categories?.map((category) => {
-                const isSelected = filters.categoryId === category.id;
-                return (
-                  <Button
-                    key={category.id}
-                    variant={isSelected ? "secondary" : "outline"}
-                    size="sm"
-                    onClick={() => {
-                      if (isSelected) {
-                        // If clicking the active category, deactivate it (go to "All")
-                        setFilters({categoryId: ''});
-                      } else {
-                        // Otherwise, activate this category
-                        setFilters({categoryId: category.id});
-                      }
-                    }}
-                    className={`text-xs sm:text-sm px-3 sm:px-4 py-2 transition-all duration-300 whitespace-nowrap ${
-                      isSelected
-                        ? "bg-white text-primary shadow-lg hover:bg-white/90"
-                        : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
-                    }`}
-                  >
-                    <span className="truncate">{category.name}</span>
-                  </Button>
-                );
-              })}
-            </div>
+            {/* Search Bar */}
+            <BlogSearch 
+              onSearch={handleSearch} 
+              initialValue={filters.search}
+            />
           </div>
           
-          {/* Results Button and Clear Filters */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-            {/* View Articles Button */}
+          {/* Results Button */}
+          <div className="text-center">
             <Button 
               onClick={scrollToResults}
-              className="w-full sm:w-auto bg-accent-red hover:bg-accent-red/90 text-white px-6 sm:px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
+              className="bg-accent-red hover:bg-accent-red/90 text-white px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
               disabled={isLoading}
             >
               {isLoading 
-                ? "Loading articles..." 
-                : `View ${articleCount} ${articleText} matching your search`
+                ? "Loading guides..." 
+                : `View ${articleCount} ${articleText}`
               }
             </Button>
-            
-            {/* Clear Filters Button */}
-            {hasActiveFilters && (
-              <Button 
-                onClick={clearFilters}
-                variant="outline"
-                className="w-full sm:w-auto bg-white/20 border-white/30 text-white hover:bg-white/30 text-sm sm:text-base"
-              >
-                Clear Filter
-              </Button>
-            )}
           </div>
         </div>
       </div>
@@ -377,164 +717,97 @@ const Discover = () => {
   </div>
 </section>
 
-          {/* Blog Posts Section */}
-          <section id="articles-section" className="section-primary py-20">
+          {/* Filters Section */}
+          <section className="py-8 bg-gradient-to-b from-luxury-cream/50 to-transparent border-b">
             <div className="container mx-auto px-4 lg:px-8">
+              <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-6">
+                <h2 className="text-lg font-semibold text-primary">
+                  Filter Guides
+                </h2>
+                <SortOptions 
+                  value={filters.sort} 
+                  onChange={handleSortChange}
+                />
+              </div>
               
-              {/* Sticky Header - Always Visible - Fixed z-index */}
-              <div className="sticky top-20 z-30 bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sm:p-6 rounded-lg shadow-lg mb-8"
-                style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' }}
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-serif font-bold mb-2">
-                      {hasActiveFilters 
-                        ? (categories?.find(cat => cat.id === filters.categoryId)?.name || 'Filtered Articles')
-                        : 'All Articles'
-                      }
-                    </h2>
-                    <div className="flex items-center space-x-4 text-white/90 text-sm">
-                      {hasActiveFilters && (
-                        <span>{categories?.find(cat => cat.id === filters.categoryId)?.name}</span>
-                      )}
-                      <span>• {blogPosts?.length || 0} articles found</span>
-                    </div>
-                  </div>
-                  <div className="flex space-x-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={scrollToFilters}
-                      className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
-                    >
-                      <ArrowUp className="w-4 h-4 mr-2" />
-                      Back to Filters
-                    </Button>
-                    {hasActiveFilters && (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={clearFilters}
-                        className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
-                      >
-                        Clear Filter
-                      </Button>
-                    )}
-                  </div>
+              {filterCounts && (
+                <BlogFiltersComponent 
+                  filters={filters}
+                  filterCounts={filterCounts}
+                  onFiltersChange={handleFiltersChange}
+                />
+              )}
+              
+              {filterCounts && (
+                <ActiveFilters 
+                  filters={filters}
+                  filterCounts={filterCounts}
+                  onClear={clearAllFilters}
+                  onRemove={removeFilter}
+                />
+              )}
+            </div>
+          </section>
+
+          {/* Blog Posts Section */}
+          <section id="articles-section" className="py-16">
+            <div className="container mx-auto px-4 lg:px-8">
+              {/* Results Header */}
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h2 className="text-2xl font-serif font-bold text-primary mb-2">
+                    {hasActiveFilters ? 'Filtered Results' : 'All Guides'}
+                  </h2>
+                  <p className="text-muted-foreground">
+                    {isLoading ? 'Loading...' : `${articleCount} ${articleText} found`}
+                  </p>
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={scrollToFilters}
+                  className="hidden sm:flex items-center gap-2"
+                >
+                  <Filter className="h-4 w-4" />
+                  Back to Filters
+                </Button>
               </div>
 
               {/* Loading State */}
-              {isLoading && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {[...Array(6)].map((_, index) => (
-                    <Card key={index} className="card-luxury animate-pulse">
-                      <div className="aspect-video bg-muted rounded-t-xl"></div>
-                      <CardContent className="p-6">
-                        <div className="h-4 bg-muted rounded mb-2"></div>
-                        <div className="h-4 bg-muted rounded w-3/4 mb-4"></div>
-                        <div className="h-3 bg-muted rounded mb-2"></div>
-                        <div className="h-3 bg-muted rounded w-2/3"></div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
+              {isLoading && <BlogGridSkeleton />}
 
               {/* Blog Posts Grid */}
-              {!isLoading && blogPosts && blogPosts.length > 0 && (
+              {!isLoading && blogs && blogs.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {blogPosts.map((post) => (
-                    <Card key={post.id} className="card-luxury hover:scale-[1.02] transition-all duration-300">
-                      <Link to={`/discover-mallacoota/${post.slug}`}>
-                        <div className="aspect-video overflow-hidden rounded-t-xl">
-                          <img
-                            src={getBlogImage(post.slug)}
-                            alt={post.title || 'Blog post'}
-                            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.src = '/placeholder-blog.jpg';
-                            }}
-                          />
-                        </div>
-                        <CardContent className="p-6">
-                          {/* Category Badge */}
-                          {post.Categories_id && (
-                            <div className="mb-3">
-                              <BlogCategoryBadge categoryId={post.Categories_id} />
-                            </div>
-                          )}
-
-                          {/* Title */}
-                          <h3 className="text-xl font-serif font-bold text-primary mb-3 line-clamp-2 hover:text-accent-red transition-colors">
-                            {post.title}
-                          </h3>
-
-                          {/* Excerpt */}
-                          <p className="text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
-                            {post.excerpt}
-                          </p>
-
-                          {/* Meta Information */}
-                          <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <div className="flex items-center space-x-4">
-                              {post.published_date && (
-                                <div className="flex items-center">
-                                  <Calendar className="w-4 h-4 mr-1" />
-                                  <span>{new Date(post.published_date).toLocaleDateString('en-AU', { 
-                                    year: 'numeric', 
-                                    month: 'short', 
-                                    day: 'numeric' 
-                                  })}</span>
-                                </div>
-                              )}
-                              <div className="flex items-center">
-                                <Clock className="w-4 h-4 mr-1" />
-                                <span>5 min read</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Tags */}
-                          {(post.seasons || post.activity_levels || post.audiences) && (
-                            <div className="flex flex-wrap gap-2 mt-4">
-                              {post.seasons && (
-                                <Badge variant="outline" className="text-xs">
-                                  {post.seasons}
-                                </Badge>
-                              )}
-                              {post.activity_levels && (
-                                <Badge variant="outline" className="text-xs">
-                                  {post.activity_levels}
-                                </Badge>
-                              )}
-                              {post.audiences && (
-                                <Badge variant="outline" className="text-xs">
-                                  {post.audiences}
-                                </Badge>
-                              )}
-                            </div>
-                          )}
-                        </CardContent>
-                      </Link>
-                    </Card>
+                  {blogs.map((blog) => (
+                    <BlogCard
+                      key={blog.id}
+                      id={blog.id}
+                      title={blog.title}
+                      slug={blog.slug}
+                      excerpt={blog.excerpt}
+                      categoryId={blog.Categories_id}
+                      published_date={blog.published_date}
+                      seasons={blog.seasons}
+                      activity_levels={blog.activity_levels}
+                      audiences={blog.audiences}
+                    />
                   ))}
                 </div>
               )}
 
               {/* No Results */}
-              {!isLoading && blogPosts?.length === 0 && (
+              {!isLoading && (!blogs || blogs.length === 0) && (
                 <div className="text-center py-16">
                   <div className="max-w-md mx-auto">
                     <h3 className="text-xl font-semibold text-primary mb-4">
-                      No experiences found
+                      No guides match your filters
                     </h3>
                     <p className="text-muted-foreground mb-8">
-                      Try adjusting your filters to discover more Mallacoota experiences.
+                      Try adjusting your search terms or filters to discover more Mallacoota experiences.
                     </p>
-                    <Button onClick={clearFilters} size="lg">
-                      Clear All Filters
+                    <Button onClick={clearAllFilters} variant="outline" size="lg">
+                      Clear all filters
                     </Button>
                   </div>
                 </div>

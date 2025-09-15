@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import PropertyGrid from "@/components/PropertyGrid";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import DiscoverSection from "@/components/DiscoverSection";
+import SeasonalHighlights from "@/components/SeasonalHighlights";
 import TestimonialsHorizontalTicker from "@/components/TestimonialsHorizontalTicker";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
@@ -13,11 +14,11 @@ const Index = () => {
   // Set homepage SEO meta tags
   useEffect(() => {
     // Homepage title
-    const title = "Hammond Properties - Luxury Vacation Rentals Mallacoota";
+    const title = "Hammond Properties - Luxury Holiday Rentals Mallacoota";
     document.title = title;
     
-    // Homepage meta description
-    const description = "Experience Mallacoota's luxury vacation rentals with Hammond Properties. 14 premium properties, stunning lake and ocean views. Come as guests. Leave as family.";
+    // Updated homepage meta description to include blog content
+    const description = "Premium holiday rentals in Mallacoota with waterfront views, luxury amenities, and 32 insider guides to help you explore. Local expertise since day one. Come as guests. Leave as family.";
     
     // Update existing meta tags or create new ones
     let metaDescription = document.querySelector('meta[name="description"]');
@@ -154,7 +155,7 @@ const Index = () => {
       }
     };
 
-    updateOrCreateMeta('keywords', 'Mallacoota accommodation, luxury vacation rentals, holiday houses Victoria, lake view accommodation, pet friendly Mallacoota, Hammond Properties');
+    updateOrCreateMeta('keywords', 'Mallacoota accommodation, luxury holiday rentals, holiday houses Victoria, lake view accommodation, pet friendly Mallacoota, Hammond Properties');
     updateOrCreateMeta('author', 'Hammond Properties');
     updateOrCreateMeta('robots', 'index, follow');
     updateOrCreateMeta('viewport', 'width=device-width, initial-scale=1.0');
@@ -177,6 +178,7 @@ const Index = () => {
           <HeroSection />
           <PropertyGrid />
           <DiscoverSection />
+          <SeasonalHighlights />
           <WhyChooseUs />
           <TestimonialsHorizontalTicker />
           <CTASection />

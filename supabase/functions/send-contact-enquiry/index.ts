@@ -11,7 +11,7 @@ const corsHeaders = {
 interface ContactRequest {
   name: string;
   email: string;
-  phone?: string;
+  phone: string; // Now required
   subject?: string;
   message: string;
   enquiryType: string;
@@ -31,8 +31,8 @@ serve(async (req) => {
     console.log("Enquiry type:", contact.enquiryType);
 
     // Input validation
-    if (!contact.name || !contact.email || !contact.message) {
-      throw new Error("Missing required fields: name, email, and message are required");
+    if (!contact.name || !contact.email || !contact.phone || !contact.message) {
+      throw new Error("Missing required fields: name, email, phone, and message are required");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,17 +78,19 @@ serve(async (req) => {
     
     const notificationEmailHtml = `
       <h2>New Contact Enquiry - ${contact.enquiryType}</h2>
-      
-      <h3>Contact Information:</h3>
-      <p><strong>Name:</strong> ${contact.name}</p>
-      <p><strong>Email:</strong> ${contact.email}</p>
-      <p><strong>Phone:</strong> ${contact.phone || "Not provided"}</p>
-      <p><strong>Enquiry Type:</strong> ${contact.enquiryType}</p>
-      <p><strong>Subject:</strong> ${contact.subject || "No subject"}</p>
-      
-      <h3>Message:</h3>
-      <p>${contact.message}</p>
-      
+
+      <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px;">
+        <h3>Contact Information:</h3>
+        <p><strong>Name:</strong> ${contact.name}</p>
+        <p><strong>Email:</strong> ${contact.email}</p>
+        <p><strong>Phone:</strong> ${contact.phone}</p>
+        <p><strong>Enquiry Type:</strong> ${contact.enquiryType}</p>
+        <p><strong>Subject:</strong> ${contact.subject || "No subject"}</p>
+
+        <h3>Message:</h3>
+        <p style="white-space: pre-wrap;">${contact.message}</p>
+      </div>
+
       <hr>
       <p><em>This enquiry was submitted via the Hammond Properties contact form.</em></p>
     `;

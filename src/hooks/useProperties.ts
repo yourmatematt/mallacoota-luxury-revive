@@ -17,6 +17,8 @@ export interface Property {
   view_type?: string;    // 👈 Added view_type for display
   airbnb_rating?: string;
   image_folder?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface PropertyFilters {
@@ -32,7 +34,7 @@ export const useProperties = (filters?: PropertyFilters) => {
     queryFn: async (): Promise<Property[]> => {
       let query = supabase
         .from('Properties')
-        .select('*')
+        .select('*, latitude, longitude')
         .order('title');
 
       if (filters?.guests) {
@@ -71,7 +73,7 @@ export const usePropertyBySlug = (slug: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('Properties')
-        .select('*')
+        .select('*, latitude, longitude')
         .eq('slug', slug)
         .maybeSingle();
       

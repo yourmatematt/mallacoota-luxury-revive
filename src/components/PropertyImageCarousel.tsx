@@ -53,8 +53,10 @@ const PropertyImageCarousel = ({ images, propertyId, propertyTitle }: PropertyIm
           <img
             key={index}
             src={image}
-            alt={`${propertyTitle} - Image ${((index - 1 + images.length) % images.length) + 1}`}
+            alt={`${propertyTitle} luxury holiday rental in Mallacoota - Interior/exterior view ${((index - 1 + images.length) % images.length) + 1}`}
             className="w-full h-full object-cover flex-shrink-0"
+            loading="lazy"
+            decoding="async"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.src = '/placeholder-property.jpg';

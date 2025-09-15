@@ -11,10 +11,15 @@ export interface BlogPost {
   meta_description?: string;
   hero_image_url?: string;
   published_date: string;
+  updated_at?: string;
   seasons?: string;
   audiences?: string;
   activity_levels?: string;
   Categories_id?: string;
+  category_name?: string;
+  category_slug?: string;
+  blog_audiences?: Array<{ audience_id: string }>;
+  blog_seasons?: Array<{ season_id: string }>;
 }
 
 export const useBlogPosts = (filters?: {
@@ -28,7 +33,15 @@ export const useBlogPosts = (filters?: {
     queryFn: async () => {
       let query = supabase
         .from('Discover Mallacoota Blogs')
-        .select('*')
+        .select(`
+          *,
+          blog_audiences (
+            audience_id
+          ),
+          blog_seasons (
+            season_id
+          )
+        `)
         .order('published_date', { ascending: false });
 
       if (filters?.categoryId) {
@@ -61,13 +74,26 @@ export const useBlogPostBySlug = (slug: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('Discover Mallacoota Blogs')
-        .select('*')
+        .select(`
+          *,
+          blog_audiences (
+            audience_id
+          ),
+          blog_seasons (
+            season_id
+          )
+        `)
         .eq('slug', slug)
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching blog post:', error);
+        throw error;
+      }
+      
       return data as BlogPost;
     },
     enabled: !!slug,
+    retry: 1,
   });
 };

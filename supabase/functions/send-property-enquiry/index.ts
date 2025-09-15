@@ -13,7 +13,7 @@ interface EnquiryRequest {
   propertyTitle: string;
   name: string;
   email: string;
-  phone?: string;
+  phone: string; // Now required
   checkIn?: string;
   checkOut?: string;
   guests?: number;
@@ -35,8 +35,8 @@ serve(async (req) => {
     console.log("Email:", enquiry.email);
     
     // Input validation
-    if (!enquiry.propertyId || !enquiry.name || !enquiry.email) {
-      throw new Error("Missing required fields: propertyId, name, and email are required");
+    if (!enquiry.propertyId || !enquiry.name || !enquiry.email || !enquiry.phone) {
+      throw new Error("Missing required fields: propertyId, name, email, and phone are required");
     }
     
     // Email validation - FIXED: Call test() on the regex, not the email string
@@ -94,22 +94,20 @@ serve(async (req) => {
 
     // Send notification email to Amelia using verified domain
     const managerEmailHtml = `
-      <h2>New Property Enquiry - ${enquiry.propertyTitle}</h2>
-      
-      <h3>Guest Information:</h3>
-      <p><strong>Name:</strong> ${enquiry.name}</p>
-      <p><strong>Email:</strong> ${enquiry.email}</p>
-      <p><strong>Phone:</strong> ${enquiry.phone || "Not provided"}</p>
-      
-      <h3>Stay Details:</h3>
-      <p><strong>Property:</strong> ${enquiry.propertyTitle}</p>
-      <p><strong>Check-in:</strong> ${formatDate(enquiry.checkIn)}</p>
-      <p><strong>Check-out:</strong> ${formatDate(enquiry.checkOut)}</p>
-      <p><strong>Guests:</strong> ${enquiry.guests || "Not specified"}</p>
-      
-      <h3>Message:</h3>
-      <p>${enquiry.message || "No additional message provided."}</p>
-      
+      <h2>New Property Enquiry</h2>
+
+      <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px;">
+        <p><strong>Property:</strong> ${enquiry.propertyTitle || 'Property #' + enquiry.propertyId}</p>
+        <p><strong>Guest Name:</strong> ${enquiry.name}</p>
+        <p><strong>Email:</strong> ${enquiry.email}</p>
+        <p><strong>Phone:</strong> ${enquiry.phone}</p>
+        <p><strong>Check-in:</strong> ${formatDate(enquiry.checkIn)}</p>
+        <p><strong>Check-out:</strong> ${formatDate(enquiry.checkOut)}</p>
+        <p><strong>Number of Guests:</strong> ${enquiry.guests || 'Not specified'}</p>
+        <p><strong>Message:</strong></p>
+        <p style="white-space: pre-wrap;">${enquiry.message || 'No additional message'}</p>
+      </div>
+
       <hr>
       <p><em>This enquiry was submitted via the Hammond Properties website.</em></p>
     `;

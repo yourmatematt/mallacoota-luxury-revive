@@ -176,7 +176,7 @@ const PropertySection = ({ property, onViewAll }: {
                   block: 'center'
                 });
               }}
-              className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
+              className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
             >
               <ArrowUp className="h-4 w-4 mr-2" />
               Back to Filters
@@ -185,7 +185,7 @@ const PropertySection = ({ property, onViewAll }: {
               <Button 
                 variant="secondary" 
                 size="sm"
-                className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
+                className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
               >
                 View Property
               </Button>
@@ -415,7 +415,7 @@ const Testimonials = () => {
                   className={`transition-all duration-300 text-xs sm:text-sm px-3 sm:px-4 py-2 whitespace-nowrap ${
                     selectedProperty === "All" 
                       ? "bg-white text-primary shadow-lg" 
-                      : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
+                      : "bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
                   }`}
                 >
                   All Properties ({totalReviews})
@@ -438,7 +438,7 @@ const Testimonials = () => {
                     className={`transition-all duration-300 text-xs sm:text-sm px-3 sm:px-4 py-2 whitespace-nowrap min-w-0 ${
                       selectedProperty === property.id
                         ? "bg-white text-primary shadow-lg"
-                        : "bg-white/20 border-white/30 text-white hover:bg-white hover:text-primary"
+                        : "bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
                     }`}
                   >
                     <span className="truncate max-w-[120px] sm:max-w-none">
@@ -497,7 +497,7 @@ const Testimonials = () => {
                             block: 'center'
                           });
                         }}
-                        className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
+                        className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
                       >
                         <ArrowUp className="h-4 w-4 mr-2" />
                         Back to Filters
@@ -506,7 +506,7 @@ const Testimonials = () => {
                         <Button 
                           variant="secondary" 
                           size="sm"
-                          className="bg-white/20 border-white/30 text-white hover:bg-white hover:text-gray-800 transition-all duration-300"
+                          className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
                         >
                           View Property
                         </Button>

@@ -18,7 +18,7 @@ const CTASection = () => {
           {/* CTA Button */}
 <Button asChild variant="accent" size="default" rounded="full">
               <Link to="/properties">
-              Start Your Escape
+              Explore Our Collection
             </Link>
           </Button>
         </div>

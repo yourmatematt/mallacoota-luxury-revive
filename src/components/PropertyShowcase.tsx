@@ -77,7 +77,7 @@ const PropertyShowcaseCard = ({ property }: { property: any }) => {
         
         <Button asChild className="w-full">
           <Link to={`/properties/${property.slug}`}>
-            View Details
+            Enquire Now
           </Link>
         </Button>
       </CardContent>
@@ -133,7 +133,7 @@ const PropertyShowcase = () => {
         
         <div className="text-center mt-8">
           <Button asChild variant="outline" size="lg">
-            <Link to="/properties">View All Properties</Link>
+            <Link to="/properties">Explore Our Collection</Link>
           </Button>
         </div>
       </div>

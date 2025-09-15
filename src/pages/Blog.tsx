@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
+import { validatePhone, getPhoneValidationMessage } from "@/lib/validation";
+import { useToast } from "@/hooks/use-toast";
 
 interface BlogPost {
   id: string;
@@ -25,11 +27,19 @@ interface BlogPost {
 }
 
 const Blog = () => {
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [activeSeason, setActiveSeason] = useState("All");
   const [activeAudience, setActiveAudience] = useState("All");
   const [activeActivityLevel, setActiveActivityLevel] = useState("All");
+
+  // Newsletter form state
+  const [newsletterData, setNewsletterData] = useState({
+    email: "",
+    phone: ""
+  });
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   // Mock data - will be replaced with CMS data
   const categories = ["All", "Activities", "Dining", "Nature", "Events", "Local Tips"];
@@ -141,6 +151,61 @@ const Blog = () => {
     setActiveAudience("All");
     setActiveActivityLevel("All");
     setSearchTerm("");
+  };
+
+  const handleNewsletterInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewsletterData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubscribing(true);
+
+    // Validate required fields
+    if (!newsletterData.email || !newsletterData.phone) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      setIsSubscribing(false);
+      return;
+    }
+
+    // Validate phone format
+    if (!validatePhone(newsletterData.phone)) {
+      toast({
+        title: "Error",
+        description: getPhoneValidationMessage(),
+        variant: "destructive",
+      });
+      setIsSubscribing(false);
+      return;
+    }
+
+    try {
+      // TODO: Implement newsletter subscription API call
+      console.log("Newsletter subscription:", newsletterData);
+
+      toast({
+        title: "Subscribed!",
+        description: "Thank you for subscribing to our newsletter.",
+      });
+
+      // Reset form
+      setNewsletterData({ email: "", phone: "" });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to subscribe. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubscribing(false);
+    }
   };
 
   return (
@@ -362,15 +427,29 @@ const Blog = () => {
                   Get the latest Mallacoota insights and travel tips delivered to your inbox.
                 </p>
                 
-                <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="flex-1"
-                    required
-                  />
-                  <Button type="submit">
-                    Subscribe
+                <form onSubmit={handleNewsletterSubmit} className="space-y-4 max-w-md mx-auto">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Input
+                      type="email"
+                      name="email"
+                      placeholder="Enter your email"
+                      value={newsletterData.email}
+                      onChange={handleNewsletterInputChange}
+                      className="flex-1"
+                      required
+                    />
+                    <Input
+                      type="tel"
+                      name="phone"
+                      placeholder="Your phone number"
+                      value={newsletterData.phone}
+                      onChange={handleNewsletterInputChange}
+                      className="flex-1"
+                      required
+                    />
+                  </div>
+                  <Button type="submit" disabled={isSubscribing} className="w-full">
+                    {isSubscribing ? "Subscribing..." : "Subscribe"}
                   </Button>
                 </form>
                 

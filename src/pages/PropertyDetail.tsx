@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, Users, Bed, Bath, StarIcon, Wifi } from "lucide-react";
+import { Star, Users, Bed, Bath, StarIcon, Wifi, ChevronRight, MapPin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyAmenities from "@/components/PropertyAmenities";
@@ -17,9 +17,13 @@ import { usePropertyAmenities } from "@/hooks/usePropertyAmenities";
 import PropertyGalleryOverlay from "@/components/PropertyGalleryOverlay";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { SafeHtmlContent } from "@/components/SafeHtmlContent";
+import RelatedBlogPostsSection from "@/components/RelatedBlogPostsSection";
 import PageTransition from "@/components/PageTransition";
 import { PawPrint, Anchor, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { validatePhone, getPhoneValidationMessage } from "@/lib/validation";
+import { calculateDistance } from "@/lib/calculateDistance";
+import ExperienceMap from "@/components/ExperienceMap";
 
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
@@ -41,6 +45,7 @@ const PropertyDetail = () => {
   // Get real images from Supabase
   const { data: heroImage } = usePropertyHeroImage(property?.image_folder || '');
   const { data: galleryImages } = usePropertyGalleryImages(property?.image_folder || '');
+  
   
   const [showGallery, setShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
@@ -107,6 +112,28 @@ const PropertyDetail = () => {
       updateOrCreateTwitterMeta('twitter:description', description);
       updateOrCreateTwitterMeta('twitter:image', propertyImage);
 
+      // Calculate distances to key attractions for SEO
+      const nearbyAttractions = property.latitude && property.longitude ? [
+        { name: "Origami Coffee", lat: -37.556263, lng: 149.756987, type: "Restaurant" },
+        { name: "Scallywags Restaurant", lat: -37.556441, lng: 149.757333, type: "Restaurant" },
+        { name: "Betka Beach", lat: -37.585766, lng: 149.738400, type: "Beach" },
+        { name: "Main Wharf", lat: -37.554442, lng: 149.757181, type: "TouristAttraction" },
+        { name: "Mallacoota Town Centre", lat: -37.557734, lng: 149.757351, type: "LocalBusiness" }
+      ].map(attraction => {
+        const distance = calculateDistance(property.latitude!, property.longitude!, attraction.lat, attraction.lng);
+        return {
+          "@type": "Place",
+          "name": attraction.name,
+          "description": `${distance.display} from property`,
+          "additionalType": `schema.org/${attraction.type}`,
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": attraction.lat,
+            "longitude": attraction.lng
+          }
+        };
+      }) : [];
+
       // Structured data for better search results
       const structuredData = {
         "@context": "https://schema.org",
@@ -120,6 +147,13 @@ const PropertyDetail = () => {
           "addressRegion": "Victoria",
           "addressCountry": "AU"
         },
+        ...(property.latitude && property.longitude && {
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": property.latitude,
+            "longitude": property.longitude
+          }
+        }),
         "aggregateRating": property.airbnb_rating ? {
           "@type": "AggregateRating",
           "ratingValue": property.airbnb_rating,
@@ -128,7 +162,10 @@ const PropertyDetail = () => {
         "amenityFeature": propertyAmenities?.map(amenity => ({
           "@type": "LocationFeatureSpecification",
           "name": amenity.amenity.name
-        }))
+        })),
+        ...(nearbyAttractions.length > 0 && {
+          "nearbyAttraction": nearbyAttractions
+        })
       };
 
       // Add structured data script
@@ -144,6 +181,7 @@ const PropertyDetail = () => {
       }
     }
   }, [property, propertyAmenities, heroImage]);
+
 
   // Reset to default meta tags when component unmounts
   useEffect(() => {
@@ -246,11 +284,31 @@ const PropertyDetail = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!property) return;
-    
+
+    // Add phone validation
+    if (!formData.phone || formData.phone.trim() === '') {
+      toast({
+        title: "Error",
+        description: "Please provide your phone number",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Phone number format validation (Australian format)
+    if (!validatePhone(formData.phone)) {
+      toast({
+        title: "Error",
+        description: getPhoneValidationMessage(),
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
-    
+
     try {
       console.log('Submitting enquiry for property:', property.property_id);
       
@@ -259,7 +317,7 @@ const PropertyDetail = () => {
         propertyTitle: property.title,
         name: formData.name,
         email: formData.email,
-        phone: formData.phone || undefined, // Send undefined instead of empty string
+        phone: formData.phone, // Phone is now required
         checkIn: formData.checkIn || undefined,
         checkOut: formData.checkOut || undefined,
         guests: formData.guests ? parseInt(formData.guests) : undefined,
@@ -335,6 +393,7 @@ const PropertyDetail = () => {
     }));
   };
 
+
   if (propertyLoading) {
     return (
       <PageTransition>
@@ -357,7 +416,7 @@ const PropertyDetail = () => {
           <div className="container mx-auto px-4 py-16 text-center">
             <h1 className="text-2xl font-bold mb-4">Property not found</h1>
             <Button asChild>
-              <Link to="/properties">View All Properties</Link>
+              <Link to="/properties">Explore Our Collection</Link>
             </Button>
           </div>
           <Footer />
@@ -505,6 +564,106 @@ const PropertyDetail = () => {
                 {/* Property Amenities Section */}
                 <PropertyAmenities propertyId={property.property_id} />
 
+                {/* Distance Display Section */}
+                {property?.latitude && property?.longitude && (
+                  <div className="bg-warm-neutral/20 rounded-xl p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <MapPin className="w-5 h-5 text-primary" />
+                      <h3 className="text-xl font-bold text-primary">Perfect Location</h3>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Walking Distance Section */}
+                      <div>
+                        <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                          🚶‍♀️ Walking Distance
+                        </h4>
+                        <div className="space-y-2 text-sm">
+                          {(() => {
+                            const destinations = [
+                              { name: "Origami Coffee", lat: -37.556263, lng: 149.756987 },
+                              { name: "Town Centre", lat: -37.557734, lng: 149.757351 },
+                              { name: "Main Wharf", lat: -37.554442, lng: 149.757181 }
+                            ];
+
+                            return destinations
+                              .map(dest => ({
+                                ...dest,
+                                distance: calculateDistance(property.latitude!, property.longitude!, dest.lat, dest.lng)
+                              }))
+                              .filter(dest => dest.distance.km < 2) // Only show walkable distances
+                              .map(dest => (
+                                <div key={dest.name} className="flex justify-between items-center py-1">
+                                  <span className="text-muted-foreground">{dest.name}</span>
+                                  <span className="font-medium text-primary">
+                                    {dest.distance.walkTime || dest.distance.display}
+                                  </span>
+                                </div>
+                              ));
+                          })()}
+                        </div>
+                      </div>
+
+                      {/* Short Drive Section */}
+                      <div>
+                        <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                          🚗 Short Drive
+                        </h4>
+                        <div className="space-y-2 text-sm">
+                          {(() => {
+                            const destinations = [
+                              { name: "Betka Beach", lat: -37.585766, lng: 149.738400 },
+                              { name: "Quarry Beach", lat: -37.600677, lng: 149.727781 },
+                              { name: "Secret Beach", lat: -37.608520, lng: 149.721125 },
+                              { name: "Golf Club", lat: -37.572311, lng: 149.756682 }
+                            ];
+
+                            return destinations
+                              .map(dest => ({
+                                ...dest,
+                                distance: calculateDistance(property.latitude!, property.longitude!, dest.lat, dest.lng)
+                              }))
+                              .slice(0, 4) // Show top 4 destinations
+                              .map(dest => (
+                                <div key={dest.name} className="flex justify-between items-center py-1">
+                                  <span className="text-muted-foreground">{dest.name}</span>
+                                  <span className="font-medium text-primary">
+                                    {dest.distance.driveTime || `${dest.distance.display} drive`}
+                                  </span>
+                                </div>
+                              ));
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Interactive Experience Map Section */}
+                {property?.latitude && property?.longitude && (
+                  <section className="py-16 bg-accent/5">
+                    <div className="container mx-auto px-4 lg:px-8">
+                      <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-4">
+                          Explore from {property?.title || property?.name}
+                        </h2>
+                        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                          Discover the best of Mallacoota with distances from your accommodation
+                        </p>
+                      </div>
+
+                      {/* Interactive Map with Distance Calculations */}
+                      <ExperienceMap
+                        propertyCoordinates={{
+                          lat: property.latitude,
+                          lng: property.longitude
+                        }}
+                        propertyName={property.title || property.name}
+                      />
+                    </div>
+                  </section>
+                )}
+
                 {/* Guest Reviews Section */}
                 {reviews && reviews.length > 0 && (
                   <div>
@@ -623,13 +782,15 @@ const PropertyDetail = () => {
                       </div>
 
                       <div>
-                        <Label htmlFor="phone">Phone</Label>
+                        <Label htmlFor="phone">Phone *</Label>
                         <Input
                           id="phone"
                           name="phone"
                           type="tel"
                           value={formData.phone}
                           onChange={handleInputChange}
+                          required
+                          placeholder="Your phone number"
                         />
                       </div>
 
@@ -698,7 +859,11 @@ const PropertyDetail = () => {
             initialIndex={galleryIndex}
             propertyTitle={property.title || 'Property'}
           />
-           {/* CTA Section */}
+
+          {/* Related Blog Posts Section */}
+          <RelatedBlogPostsSection />
+
+          {/* CTA Section */}
           <section className="py-20 bg-primary text-primary-foreground">
             <div className="container mx-auto px-4 lg:px-8 text-center">
               <div className="max-w-4xl mx-auto">

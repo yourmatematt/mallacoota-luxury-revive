@@ -16,7 +16,7 @@ const About = () => {
     document.title = title;
     
     // Set meta description
-    const description = "Meet Amelia Hammond and Terry Pheeney - your local Mallacoota vacation rental experts. 40+ years combined experience, 1,000+ happy guests, 4.8★ rating. Born and raised locals providing exceptional hospitality.";
+    const description = "Meet Amelia Hammond and Terry Pheeney - your local Mallacoota holiday rental experts. 40+ years combined experience, 1,000+ happy guests, 4.8★ rating. Born and raised locals providing exceptional hospitality.";
     
     // Update existing meta tags or create new ones
     let metaDescription = document.querySelector('meta[name="description"]');
@@ -132,7 +132,7 @@ if (canonicalLink) {
           "geoRadius": "25000"
         },
         "knowsAbout": [
-          "Vacation Rental Management",
+          "Holiday Rental Management",
           "Property Management", 
           "Hospitality Services",
           "Mallacoota Tourism",
@@ -140,13 +140,13 @@ if (canonicalLink) {
         ],
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
-          "name": "Vacation Rental Services",
+          "name": "Holiday Rental Services",
           "itemListElement": [
             {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
-                "name": "Luxury Vacation Rentals",
+                "name": "Luxury Holiday Rentals",
                 "description": "Premium holiday accommodation in Mallacoota"
               }
             },
@@ -155,7 +155,7 @@ if (canonicalLink) {
               "itemOffered": {
                 "@type": "Service",
                 "name": "Property Management Services",
-                "description": "Comprehensive property management for vacation rental owners"
+                "description": "Comprehensive property management for holiday rental owners"
               }
             }
           ]
@@ -212,18 +212,18 @@ if (canonicalLink) {
       }
     };
 
-    updateOrCreateMeta('keywords', 'Hammond Properties about, Amelia Hammond, Terry Pheeney, Mallacoota property management, local experts, vacation rental owners, hospitality experience');
+    updateOrCreateMeta('keywords', 'Hammond Properties about, Amelia Hammond, Terry Pheeney, Mallacoota property management, local experts, holiday rental owners, hospitality experience');
     updateOrCreateMeta('author', 'Hammond Properties');
 
     // Cleanup function
     return () => {
       // Reset title
-      document.title = 'Hammond Properties - Luxury Vacation Rentals';
+      document.title = 'Hammond Properties - Luxury Holiday Rentals';
       
       // Reset meta description
       const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
-        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury vacation rentals with Hammond Properties. Come as guests. Leave as family.');
+        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury holiday rentals with Hammond Properties. Come as guests. Leave as family.');
       }
       
       // Remove structured data
@@ -290,7 +290,7 @@ if (canonicalLink) {
         <section className="relative h-[calc(100vh-5rem)] overflow-hidden">
           {/* Background Image with scale effect */}
           <div 
-            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-out ${
+            className={`absolute inset-0 bg-cover bg-centre bg-no-repeat transition-all duration-1000 ease-out ${
               isLoaded ? 'scale-100' : 'scale-105'
             }`}
             style={{ backgroundImage: 'url("/images/about-hero-background.jpg")' }}
@@ -326,6 +326,21 @@ if (canonicalLink) {
           </div>
         </section>
 
+        {/* Traditional Custodians Acknowledgment */}
+        <section className="py-12 bg-warm-neutral/30">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="max-w-4xl mx-auto text-center">
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed italic">
+                Hammond Properties acknowledges the Traditional Custodians of the land on which we operate, 
+                the Bidwell and Monero people of the Yuin Nation. We pay our respects to their Elders past, 
+                present and emerging, and acknowledge their continuing connection to Country, culture and community. 
+                Mallacoota has been home to Aboriginal people for thousands of years, and their rich cultural 
+                heritage enriches this special place we're privileged to share with visitors.
+              </p>
+            </div>
+          </div>
+        </section>
+
       {/* Our Story Section */}
           
 <section className="section-primary py-16">
@@ -338,25 +353,28 @@ if (canonicalLink) {
                   <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                     <p>
                       Founded with a simple belief that every guest deserves an exceptional experience, Hammond Properties
-                      has grown from a single property to a curated collection of Mallacoota's finest vacation rentals.
+                      has grown from a single property to a curated collection of Mallacoota's finest holiday rentals.
                     </p>
                     <p>
-                      What started as a passion project to share our love for this coastal paradise has evolved into
-                      East Gippsland's premier luxury accommodation provider. We understand that a holiday is more than
-                      just a getaway – it's a time to create memories that last a lifetime.
+                      What started as a passion project to share our love for this Victorian coastal paradise has evolved into
+                      East Gippsland's premier luxury accommodation provider. Located just minutes from the NSW border, 
+                      we're perfectly positioned for both Melbourne and Sydney visitors seeking an authentic coastal experience.
                     </p>
                     <p>
                       Our deep connection to Mallacoota, combined with our commitment to premium service, ensures that
                       every guest experiences the very best our region has to offer. From sunrise walks on pristine beaches
-                      to sunset dinners overlooking the inlet, we're here to help make your coastal escape extraordinary.
+                      in Croajingolong National Park to sunset dinners overlooking the inlet, we're here to help make 
+                      your Victorian coastal escape extraordinary.
                     </p>
                   </div>
                 </div>
                 <div className="relative">
                   <img
                     src="/images/luxury-property-management.jpg"
-                    alt="Mallacoota coastal view"
+                    alt="Luxury waterfront holiday rental in Mallacoota with stunning coastal views and premium amenities"
                     className="w-full h-96 object-cover rounded-2xl shadow-medium"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-soft border">
                     <div className="flex items-center space-x-4">
@@ -434,8 +452,10 @@ if (canonicalLink) {
                     <div className="flex-shrink-0">
                       <img 
                         src="/images/amelia-about-page.jpg" 
-                        alt="Amelia Hammond"
+                        alt="Amelia Hammond, Founder & Managing Director of Hammond Properties, experienced Mallacoota holiday rental specialist"
                         className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <div className="text-center md:text-left">
@@ -459,8 +479,10 @@ With over 40 years of experience in hospitality and property management, Amelia 
                     <div className="flex-shrink-0">
                       <img 
                         src="/images/terry-about-page.png" 
-                        alt="Terry"
+                        alt="Terry Pheeney, Property Maintenance & Support Manager, local Mallacoota expert with Gippsland Ports experience"
                         className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <div className="text-center md:text-left">
@@ -490,7 +512,7 @@ With over 40 years of experience in hospitality and property management, Amelia 
                   For Property Owners
                 </h2>
                 <p className="text-xl text-white/90 leading-relaxed">
-                  Turn your Mallacoota property into a thriving vacation rental with our comprehensive management service.
+                  Turn your Mallacoota property into a thriving holiday rental with our comprehensive management service.
                 </p>
               </div>
 

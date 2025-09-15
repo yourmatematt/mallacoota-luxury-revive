@@ -12,15 +12,15 @@ const TestimonialsSection = () => {
     {
       id: 1,
       name: "Dana",
-      location: "Victoria",
+      location: "Melbourne, VIC",
       date: "March 2023",
       rating: 5,
-      text: "This place was amazing and really exceeded our expectations. The views were spectacular and the property was immaculately maintained. Perfect for our family vacation!"
+      text: "This place was amazing and really exceeded our expectations. The views were spectacular and the property was immaculately maintained. Perfect for our family holiday!"
     },
     {
       id: 2,
       name: "Gail", 
-      location: "ACT",
+      location: "Canberra, ACT",
       date: "April 2023",
       rating: 5,
       text: "Brilliant location with amazing views that took our breath away every morning. The attention to detail in the property was outstanding and the service was exceptional."
@@ -28,7 +28,7 @@ const TestimonialsSection = () => {
     {
       id: 3,
       name: "Chris",
-      location: "Victoria", 
+      location: "Melbourne, VIC", 
       date: "June 2023",
       rating: 5,
       text: "We had a great stay with Alex and the team. Their local knowledge and recommendations made our holiday unforgettable. The property was perfect for our group."
@@ -36,7 +36,7 @@ const TestimonialsSection = () => {
     {
       id: 4,
       name: "Andrea",
-      location: "",
+      location: "Sydney, NSW",
       date: "June 2023", 
       rating: 5,
       text: "Fell in love at first sight when we arrived. The property is even more beautiful in person and the location is absolutely perfect for exploring Mallacoota."
@@ -44,7 +44,7 @@ const TestimonialsSection = () => {
     {
       id: 5,
       name: "James",
-      location: "Queensland",
+      location: "Brisbane, QLD",
       date: "Sept 2023",
       rating: 5,
       text: "Outstanding layout and design. I appreciated every thoughtful detail that made our stay comfortable and memorable. Will definitely return!"
@@ -52,7 +52,7 @@ const TestimonialsSection = () => {
     {
       id: 6,
       name: "Michael", 
-      location: "",
+      location: "Sydney, NSW",
       date: "May 2023",
       rating: 5,
       text: "Perfect location with great views and excellent amenities. The property management team was responsive and helpful throughout our entire stay."

@@ -2,19 +2,98 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useCategories } from "@/hooks/useBlogFilters";
-import { getBlogImage } from "@/lib/utils";
+import { getBlogImageUrl } from "@/lib/utils";
+import { getBlogImage } from '@/lib/blogImages';
+import { BlogImage } from "@/components/BlogImage";
 import BlogCategoryBadge from "@/components/BlogCategoryBadge";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
-const DiscoverSection = () => {
+interface FeaturedBlog {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  hero_image_url?: string;
+  Categories?: {
+    name: string;
+    slug: string;
+  };
+}
+
+const DiscoverSection: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState("");
   const { data: categories } = useCategories();
-  const { data: blogPosts, isLoading } = useBlogPosts({
+  
+  // Get featured blogs with fallback to regular blog posts
+  const { data: featuredBlogs, isLoading: featuredLoading } = useQuery({
+    queryKey: ['featured-blogs-homepage'],
+    queryFn: async (): Promise<FeaturedBlog[]> => {
+      try {
+        // Try to get specific featured blogs first
+        const featuredSlugs = [
+          'gabo-island',
+          'kayaking-paradise-in-mallacoota',
+          'secret-beaches-coastal-walks',
+          'origami-coffee-the-local-institution',
+          'whale-watching-winter-wildlife-spectacles',
+          'wildflower-paradise-spring-blooms-guide'
+        ];
+        
+        const { data } = await supabase
+          .from('Discover Mallacoota Blogs')
+          .select(`
+            id,
+            title,
+            slug,
+            excerpt,
+            hero_image_url,
+            Categories (name, slug)
+          `)
+          .in('slug', featuredSlugs)
+          .order('published_date', { ascending: false });
+        
+        if (data && data.length >= 4) {
+          return data.slice(0, 6) as FeaturedBlog[];
+        }
+        
+        // Fallback to most recent blogs if featured ones don't exist
+        const { data: fallbackData } = await supabase
+          .from('Discover Mallacoota Blogs')
+          .select(`
+            id,
+            title,
+            slug,
+            excerpt,
+            hero_image_url,
+            Categories (name, slug)
+          `)
+          .order('published_date', { ascending: false })
+          .limit(6);
+          
+        return (fallbackData || []) as FeaturedBlog[];
+      } catch (error) {
+        console.error('Error fetching featured blogs:', error);
+        return [];
+      }
+    },
+  });
+  
+  // Regular filtered blog posts for the filter functionality
+  const { data: blogPosts, isLoading: filterLoading } = useBlogPosts({
     categoryId: activeFilter,
   });
+  
+  // Use featured blogs when no filter is active, otherwise use filtered results
+  const displayPosts = activeFilter === "" ? 
+    (featuredBlogs || []).slice(0, 6) : 
+    (blogPosts || []).slice(0, 6);
+  
+  const isLoading = activeFilter === "" ? featuredLoading : filterLoading;
 
   const filters = [
     { id: "", name: "All Articles" },
@@ -31,19 +110,14 @@ const DiscoverSection = () => {
       key={id}
       variant={activeFilter === id ? "default" : "outline"}
       size="sm"
-      className={`rounded-full px-4 py-2 text-sm transition-all duration-300 ${
-        activeFilter === id
-          ? "bg-primary text-primary-foreground"
-          : "border-border hover:border-primary"
-      }`}
+      rounded="full"
       onClick={() => setActiveFilter(id)}
     >
       {name}
     </Button>
   );
 
-  // match Discover page (first 6 looks nicer in 3 columns)
-  const displayPosts = (blogPosts || []).slice(0, 6);
+  // Filtering logic handled above
 
   return (
     <section className="py-20 bg-luxury-cream">
@@ -54,9 +128,22 @@ const DiscoverSection = () => {
             Discover Mallacoota
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Your local’s guide to the best of Mallacoota — from hidden trails
-            and fresh seafood to seasonal adventures and family‑friendly fun.
+            Local insights and hidden gems from our 32 insider guides
           </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-4">
+            <Link
+              to="/discover-mallacoota/gabo-island"
+              className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full hover:bg-primary/20 transition-colors text-sm font-medium"
+            >
+              🏰 Gabo Island Tours
+            </Link>
+            <Link 
+              to="/discover-mallacoota"
+              className="inline-flex items-center px-4 py-2 bg-accent-red/10 text-accent-red rounded-full hover:bg-accent-red/20 transition-colors text-sm font-medium"
+            >
+              🌊 Discover More
+            </Link>
+          </div>
         </div>
 
         {/* Filter Tags — two rows (5 + 4) */}
@@ -99,12 +186,15 @@ const DiscoverSection = () => {
                   <div className="aspect-video overflow-hidden rounded-t-xl">
                     <img
                       src={getBlogImage(post.slug)}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        if (target.src.endsWith('.jpg')) {
+                          target.src = `/images/blog/${post.slug}.png`;
+                        }
+                      }}
                       alt={post.title || "Blog post"}
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        const t = e.target as HTMLImageElement;
-                        t.src = "/placeholder-blog.jpg";
-                      }}
+                      loading="lazy"
                     />
                   </div>
 
@@ -178,7 +268,7 @@ const DiscoverSection = () => {
         <div className="text-center">
           <Link to="/discover-mallacoota">
             <Button variant="accent" size="lg" rounded="full">
-              View All Articles
+              Explore All Local Guides
             </Button>
           </Link>
         </div>

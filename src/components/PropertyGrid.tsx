@@ -101,7 +101,7 @@ const HomePropertyCard = ({ property, index }: { property: any; index: number })
               
      <Button asChild variant="accent" size="default" rounded="full" className="w-full">
         <Link to={`/properties/${property.slug}`}>
-          View Details
+          Enquire Now
         </Link>
       </Button>
     </CardContent>
@@ -184,7 +184,7 @@ const PropertyGrid = () => {
         <div className="text-center mt-20 fade-in-up">
           <Button asChild variant="accent" size="lg" rounded="full" className="px-12 py-6 text-lg">
             <Link to="/properties">
-              View All Properties
+              Explore Our Collection
             </Link>
           </Button>
         </div>
