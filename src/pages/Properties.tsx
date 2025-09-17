@@ -112,6 +112,7 @@ const Properties = () => {
         "itemListElement": properties?.map((property, index) => ({
           "@type": "ListItem",
           "position": index + 1,
+          "name": property.title,
           "item": {
             "@type": "LodgingBusiness",
             "name": property.title,

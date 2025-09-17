@@ -761,9 +761,44 @@ const BlogDetail = () => {
 
   // Generate Schema Markup
   const generateSchemas = () => {
-    if (!blogPost) return null;
+    // Always provide basic breadcrumb schema, even during loading
+    const currentUrl = blogPost ? `https://hammondproperties.com.au/discover-mallacoota/${blogPost.slug}` : window.location.href;
 
-    const currentUrl = `https://hammondproperties.com.au/discover-mallacoota/${blogPost.slug}`;
+    // Basic breadcrumb schema (always available)
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.hammondproperties.com.au"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Discover Mallacoota",
+          "item": "https://www.hammondproperties.com.au/discover-mallacoota"
+        },
+        ...(blogPost ? [
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": blogPost.category_name,
+            "item": `https://www.hammondproperties.com.au/discover-mallacoota?category=${blogPost.category_slug}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": blogPost.title,
+            "item": currentUrl
+          }
+        ] : [])
+      ]
+    };
+
+    if (!blogPost) return { breadcrumbSchema };
     const extractedFAQs = extractFAQsFromContent(blogPost.content || '');
     const mentionedBusinesses = extractBusinessMentions(blogPost.content || '');
 
@@ -864,37 +899,6 @@ const BlogDetail = () => {
       "touristType": getTouristType(blogPost.category_slug)
     } : null;
 
-    // 5. BreadcrumbList Schema
-    const breadcrumbSchema = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://www.hammondproperties.com.au"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Discover Mallacoota",
-          "item": "https://www.hammondproperties.com.au/discover-mallacoota"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": blogPost.category_name,
-          "item": `https://www.hammondproperties.com.au/discover-mallacoota?category=${blogPost.category_slug}`
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "name": blogPost.title,
-          "item": currentUrl
-        }
-      ]
-    };
 
     // 6. Place Schema for Mallacoota
     const placeSchema = {
