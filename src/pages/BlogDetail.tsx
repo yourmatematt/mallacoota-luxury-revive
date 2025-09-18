@@ -768,31 +768,37 @@ const BlogDetail = () => {
     const breadcrumbSchema = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
+      "@id": `${currentUrl}#breadcrumb`,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://www.hammondproperties.com.au"
+          "item": {
+            "@id": "https://hammondproperties.com.au/"
+          }
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": "Discover Mallacoota",
-          "item": "https://www.hammondproperties.com.au/discover-mallacoota"
+          "item": {
+            "@id": "https://hammondproperties.com.au/discover-mallacoota"
+          }
         },
         ...(blogPost ? [
           {
             "@type": "ListItem",
             "position": 3,
             "name": blogPost.category_name,
-            "item": `https://www.hammondproperties.com.au/discover-mallacoota?category=${blogPost.category_slug}`
+            "item": {
+              "@id": `https://hammondproperties.com.au/discover-mallacoota?category=${blogPost.category_slug}`
+            }
           },
           {
             "@type": "ListItem",
             "position": 4,
-            "name": blogPost.title,
-            "item": currentUrl
+            "name": blogPost.title
           }
         ] : [])
       ]

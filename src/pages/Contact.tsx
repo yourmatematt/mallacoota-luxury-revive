@@ -146,23 +146,6 @@ const Contact = () => {
         "mainEntity": {
           "@type": "LocalBusiness",
           "@id": "https://hammondproperties.com.au/#localbusiness"
-        },
-        "breadcrumb": {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://hammondproperties.com.au"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Contact",
-              "item": "https://hammondproperties.com.au/contact"
-            }
-          ]
         }
       },
       {
@@ -232,6 +215,25 @@ const Contact = () => {
               "@type": "Answer",
               "text": "As locals, we love sharing our insider knowledge! We provide detailed guides about the best restaurants, activities, hidden gems, and seasonal highlights in Mallacoota."
             }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://hammondproperties.com.au/contact#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": {
+              "@id": "https://hammondproperties.com.au/"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Contact"
           }
         ]
       }

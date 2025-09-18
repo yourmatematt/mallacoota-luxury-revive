@@ -139,23 +139,6 @@ const Properties = () => {
           "worstRating": "1"
         }
       },
-      "breadcrumb": {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://hammondproperties.com.au"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Properties",
-            "item": "https://hammondproperties.com.au/properties"
-          }
-        ]
-      }
     };
 
     // Add structured data script
@@ -168,6 +151,40 @@ const Properties = () => {
       structuredDataScript.type = 'application/ld+json';
       structuredDataScript.textContent = JSON.stringify(structuredData);
       document.head.appendChild(structuredDataScript);
+    }
+
+    // Standalone Breadcrumb Schema
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "@id": "https://hammondproperties.com.au/properties#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {
+            "@id": "https://hammondproperties.com.au/"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Properties"
+        }
+      ]
+    };
+
+    // Add breadcrumb structured data script
+    let breadcrumbScript = document.querySelector('#properties-breadcrumb-data');
+    if (breadcrumbScript) {
+      breadcrumbScript.textContent = JSON.stringify(breadcrumbSchema);
+    } else {
+      breadcrumbScript = document.createElement('script');
+      breadcrumbScript.id = 'properties-breadcrumb-data';
+      breadcrumbScript.type = 'application/ld+json';
+      breadcrumbScript.textContent = JSON.stringify(breadcrumbSchema);
+      document.head.appendChild(breadcrumbScript);
     }
 
     // Additional meta tags
@@ -201,6 +218,12 @@ const Properties = () => {
       const structuredDataScript = document.querySelector('#properties-structured-data');
       if (structuredDataScript) {
         structuredDataScript.remove();
+      }
+
+      // Remove breadcrumb data
+      const breadcrumbScript = document.querySelector('#properties-breadcrumb-data');
+      if (breadcrumbScript) {
+        breadcrumbScript.remove();
       }
     };
   }, [filters, properties]);
