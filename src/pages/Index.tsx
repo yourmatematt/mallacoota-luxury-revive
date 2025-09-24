@@ -8,73 +8,18 @@ import TestimonialsHorizontalTicker from "@/components/TestimonialsHorizontalTic
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
+import SEOHead from "@/components/SEOHead";
 
 const Index = () => {
-  // Set homepage SEO meta tags
+  // Set homepage structured data and additional meta tags
   useEffect(() => {
-    // Homepage title
-    const title = "Hammond Properties - Luxury Holiday Rentals Mallacoota";
-    document.title = title;
-    
-    // Updated homepage meta description to include blog content
-    const description = "Premium holiday rentals in Mallacoota with waterfront views, luxury amenities, and 32 insider guides to help you explore. Local expertise since day one. Come as guests. Leave as family.";
-    
-    // Update existing meta tags or create new ones
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      metaDescription.setAttribute('content', description);
-      document.head.appendChild(metaDescription);
-    }
-
-    // Open Graph meta tags for social sharing
-    const updateOrCreateOGMeta = (property: string, content: string) => {
-      let ogMeta = document.querySelector(`meta[property="${property}"]`);
-      if (ogMeta) {
-        ogMeta.setAttribute('content', content);
-      } else {
-        ogMeta = document.createElement('meta');
-        ogMeta.setAttribute('property', property);
-        ogMeta.setAttribute('content', content);
-        document.head.appendChild(ogMeta);
-      }
-    };
-
-    updateOrCreateOGMeta('og:title', title);
-    updateOrCreateOGMeta('og:description', description);
-    updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/');
-    updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/hammond-properties-og.jpg');
-    updateOrCreateOGMeta('og:type', 'website');
-    updateOrCreateOGMeta('og:site_name', 'Hammond Properties');
-
-    // Twitter Card meta tags
-    const updateOrCreateTwitterMeta = (name: string, content: string) => {
-      let twitterMeta = document.querySelector(`meta[name="${name}"]`);
-      if (twitterMeta) {
-        twitterMeta.setAttribute('content', content);
-      } else {
-        twitterMeta = document.createElement('meta');
-        twitterMeta.setAttribute('name', name);
-        twitterMeta.setAttribute('content', content);
-        document.head.appendChild(twitterMeta);
-      }
-    };
-
-    updateOrCreateTwitterMeta('twitter:card', 'summary_large_image');
-    updateOrCreateTwitterMeta('twitter:title', title);
-    updateOrCreateTwitterMeta('twitter:description', description);
-    updateOrCreateTwitterMeta('twitter:image', 'https://hammondproperties.com.au/images/hammond-properties-og.jpg');
-
     // Structured data for Organization
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "LodgingBusiness",
       "name": "Hammond Properties",
       "alternateName": "Hammond Properties Mallacoota",
-      "description": description,
+      "description": "Premium holiday rentals in Mallacoota with waterfront views, luxury amenities, and 32 insider guides to help you explore. Local expertise since day one. Come as guests. Leave as family.",
       "url": "https://hammondproperties.com.au",
       "logo": "https://hammondproperties.com.au/images/hammond-properties-logo.jpg",
       "image": "https://hammondproperties.com.au/images/hammond-properties-og.jpg",
@@ -171,6 +116,11 @@ const Index = () => {
 
   return (
     <PageTransition>
+      <SEOHead
+        title="Hammond Properties - Luxury Holiday Rentals Mallacoota"
+        description="Premium holiday rentals in Mallacoota with waterfront views, luxury amenities, and 32 insider guides to help you explore. Local expertise since day one. Come as guests. Leave as family."
+        canonical="https://hammondproperties.com.au/"
+      />
       <div className="min-h-screen">
         <Header />
         <main>

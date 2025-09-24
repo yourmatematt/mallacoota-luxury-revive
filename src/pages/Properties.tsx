@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import { useProperties } from "@/hooks/useProperties";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
+import SEOHead from "@/components/SEOHead";
 
 const Properties = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -27,75 +28,30 @@ const Properties = () => {
     waterViews: filters.waterViews || undefined,
   });
 
-  // SEO Meta Tags for Properties listing page
-  useEffect(() => {
-    // Dynamic title based on filters
+  // Generate dynamic SEO values based on filters
+  const getSEOValues = () => {
     let title = "Book Mallacoota Holiday Homes | Waterfront & Pet-Friendly Properties";
     let description = "Browse 14 luxury holiday rentals in Mallacoota. From beachfront properties to pet-friendly accommodations. Book your perfect stay with Hammond Properties.";
-    
+
     // Customize based on active filters
     const activeFilters = [];
     if (filters.petFriendly) activeFilters.push("pet-friendly");
     if (filters.boatParking) activeFilters.push("boat parking");
     if (filters.waterViews) activeFilters.push("water view");
     if (filters.guests > 2) activeFilters.push(`${filters.guests} guest`);
-    
+
     if (activeFilters.length > 0) {
       title = `${activeFilters.join(', ')} Properties in Mallacoota | Hammond Properties`;
       description = `Find ${activeFilters.join(', ')} holiday rentals in Mallacoota. ${properties?.length || 0} properties available. Premium accommodations with Hammond Properties.`;
-    } else {
-      title = "Book Mallacoota Holiday Homes | Waterfront & Pet-Friendly Properties";
     }
 
-    document.title = title;
-    
-    // Update existing meta tags or create new ones
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      metaDescription.setAttribute('content', description);
-      document.head.appendChild(metaDescription);
-    }
+    return { title, description };
+  };
 
-    // Open Graph meta tags for social sharing
-    const updateOrCreateOGMeta = (property: string, content: string) => {
-      let ogMeta = document.querySelector(`meta[property="${property}"]`);
-      if (ogMeta) {
-        ogMeta.setAttribute('content', content);
-      } else {
-        ogMeta = document.createElement('meta');
-        ogMeta.setAttribute('property', property);
-        ogMeta.setAttribute('content', content);
-        document.head.appendChild(ogMeta);
-      }
-    };
+  const { title, description } = getSEOValues();
 
-    updateOrCreateOGMeta('og:title', title);
-    updateOrCreateOGMeta('og:description', description);
-    updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/properties');
-    updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/properties-hero-background.jpg');
-    updateOrCreateOGMeta('og:type', 'website');
-
-    // Twitter Card meta tags
-    const updateOrCreateTwitterMeta = (name: string, content: string) => {
-      let twitterMeta = document.querySelector(`meta[name="${name}"]`);
-      if (twitterMeta) {
-        twitterMeta.setAttribute('content', content);
-      } else {
-        twitterMeta = document.createElement('meta');
-        twitterMeta.setAttribute('name', name);
-        twitterMeta.setAttribute('content', content);
-        document.head.appendChild(twitterMeta);
-      }
-    };
-
-    updateOrCreateTwitterMeta('twitter:card', 'summary_large_image');
-    updateOrCreateTwitterMeta('twitter:title', title);
-    updateOrCreateTwitterMeta('twitter:description', description);
-    updateOrCreateTwitterMeta('twitter:image', 'https://hammondproperties.com.au/images/properties-hero-background.jpg');
+  // Handle structured data and additional meta tags
+  useEffect(() => {
 
     // Structured data for properties listing
     const structuredData = {
@@ -187,33 +143,8 @@ const Properties = () => {
       document.head.appendChild(breadcrumbScript);
     }
 
-    // Additional meta tags
-    const updateOrCreateMeta = (name: string, content: string) => {
-      let meta = document.querySelector(`meta[name="${name}"]`);
-      if (meta) {
-        meta.setAttribute('content', content);
-      } else {
-        meta = document.createElement('meta');
-        meta.setAttribute('name', name);
-        meta.setAttribute('content', content);
-        document.head.appendChild(meta);
-      }
-    };
-
-    updateOrCreateMeta('keywords', 'Mallacoota accommodation, holiday rentals Mallacoota, holiday houses Victoria, beachfront rentals, pet friendly accommodation Mallacoota, boat parking properties');
-    updateOrCreateMeta('author', 'Hammond Properties');
-
     // Cleanup function
     return () => {
-      // Reset title
-      document.title = 'Hammond Properties - Luxury Holiday Rentals';
-      
-      // Reset meta description
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury holiday rentals with Hammond Properties. Come as guests. Leave as family.');
-      }
-      
       // Remove structured data
       const structuredDataScript = document.querySelector('#properties-structured-data');
       if (structuredDataScript) {
@@ -254,6 +185,11 @@ const Properties = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={title}
+        description={description}
+        ogImage="https://hammondproperties.com.au/images/properties-hero-background.jpg"
+      />
       <Header />
       <main>
         {/* Hero Section with Animations - Mobile Optimized */}
