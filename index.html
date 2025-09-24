@@ -9,11 +9,11 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="shortcut icon" href="/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<meta name="apple-mobile-web-app-title" content="Hammond Properties" />
-<link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Hammond Properties" />
+    <link rel="manifest" href="/site.webmanifest" />
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,6 +88,14 @@
       "checkoutTime": "10:00",
       "petsAllowed": true
     }
+    </script>
+
+    <script>
+      // Emergency canonical tag fix
+      const link = document.createElement('link');
+      link.rel = 'canonical';
+      link.href = window.location.href;
+      document.head.appendChild(link);
     </script>
   </head>
 
