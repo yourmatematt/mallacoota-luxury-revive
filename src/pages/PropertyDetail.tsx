@@ -24,6 +24,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { validatePhone, getPhoneValidationMessage } from "@/lib/validation";
 import { calculateDistance } from "@/lib/calculateDistance";
 import ExperienceMap from "@/components/ExperienceMap";
+import SEOHead from "@/components/SEOHead";
 
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
@@ -427,6 +428,11 @@ const PropertyDetail = () => {
 
   return (
     <PageTransition>
+      <SEOHead
+        title={`${property.title} - ${property.bedrooms}BR ${property.bedrooms > 1 ? 'Bedrooms' : 'Bedroom'} Luxury Mallacoota Holiday Rental | Hammond Properties`}
+        description={property.description}
+        ogImage={getHeroImage(property.property_id)}
+      />
       <div className="min-h-screen bg-background">
         <Header />
         

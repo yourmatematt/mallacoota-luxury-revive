@@ -70,17 +70,17 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       }
     };
 
-    // Update or create canonical link
+    // Update or create canonical link - enhanced version
     const updateOrCreateCanonical = (href: string) => {
-      let canonical = document.querySelector('link[rel="canonical"]');
-      if (canonical) {
-        canonical.setAttribute('href', href);
-      } else {
-        canonical = document.createElement('link');
-        canonical.setAttribute('rel', 'canonical');
-        canonical.setAttribute('href', href);
-        document.head.appendChild(canonical);
-      }
+      // Remove any existing canonical tags
+      const existingCanonicals = document.querySelectorAll('link[rel="canonical"]');
+      existingCanonicals.forEach(link => link.remove());
+
+      // Create new canonical tag
+      const canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      canonical.setAttribute('href', href);
+      document.head.appendChild(canonical);
     };
 
     // Update all meta tags
@@ -102,7 +102,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     // Canonical URL
     updateOrCreateCanonical(canonicalUrl);
 
-  }, [finalTitle, finalDescription, canonicalUrl, ogImage]);
+  }, [finalTitle, finalDescription, canonicalUrl, ogImage, location.pathname]);
 
   // This component doesn't render anything visible
   return null;
