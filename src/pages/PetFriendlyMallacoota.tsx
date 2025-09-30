@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PawPrint, Heart, Shield, MapPin, Phone, Star, ChevronRight } from "lucide-react";
+import { PawPrint, Heart, Shield, MapPin, Phone, Star, ChevronRight, Hospital, Utensils, Coffee } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
@@ -23,15 +23,17 @@ interface LocalService {
   type: string;
   address: string;
   phone: string;
-  description: string;
+  description: string
+  url: string;
 }
 
 const PetFriendlyMallacoota = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Fetch pet-friendly properties
-  const { data: allProperties, isLoading: propertiesLoading } = useProperties();
-  const petFriendlyProperties = allProperties?.filter(property => property.pet_friendly) || [];
+  // Fetch only pet-friendly properties directly from Supabase
+  const { data: petFriendlyProperties, isLoading: propertiesLoading, error: propertiesError } = useProperties({
+    petFriendly: true
+  });
 
   // Fetch relevant blog posts
   const { data: allBlogs, isLoading: blogLoading } = useBlogPosts({});
@@ -98,7 +100,20 @@ const PetFriendlyMallacoota = () => {
     updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/pet-friendly-mallacoota');
     updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/pet-friendly-og.jpg');
 
-    // Structured data
+    return () => {
+      if (document.head.contains(link)) {
+        document.head.removeChild(link);
+      }
+    };
+  }, []);
+
+  // Update structured data when pet-friendly properties load
+  useEffect(() => {
+    if (!petFriendlyProperties) return;
+
+    const description = "Bring your furry family to Mallacoota's finest pet-friendly holiday rentals. Luxury properties with dog beaches, fenced yards & premium pet amenities. Local pet services included.";
+
+    // Structured data with dynamic property count
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "LodgingBusiness",
@@ -117,7 +132,16 @@ const PetFriendlyMallacoota = () => {
         { "@type": "LocationFeatureSpecification", "name": "Fenced Yards" },
         { "@type": "LocationFeatureSpecification", "name": "Dog Beaches Nearby" },
         { "@type": "LocationFeatureSpecification", "name": "Pet Amenities Provided" }
-      ]
+      ],
+      "numberOfRooms": petFriendlyProperties.length,
+      "makesOffer": petFriendlyProperties.map(property => ({
+        "@type": "Offer",
+        "name": property.title,
+        "description": property.excerpt || property.subtitle,
+        "url": `https://hammondproperties.com.au/properties/${property.slug}`,
+        "priceCurrency": "AUD",
+        "availability": "https://schema.org/InStock"
+      }))
     };
 
     let structuredDataScript = document.querySelector('#pet-friendly-structured-data');
@@ -132,17 +156,18 @@ const PetFriendlyMallacoota = () => {
     }
 
     return () => {
-      if (document.head.contains(link)) {
-        document.head.removeChild(link);
+      const script = document.querySelector('#pet-friendly-structured-data');
+      if (script) {
+        script.remove();
       }
     };
-  }, []);
+  }, [petFriendlyProperties]);
 
   const petAmenities: PetAmenity[] = [
     {
       icon: PawPrint,
-      title: "Pet Accessories",
-      description: "Premium pet stainless steel feeding bowls provided in every pet-friendly property."
+      title: "Pet Safe Interiors",
+      description: "Non-toxic cleaners and pet-friendly surfaces for a stress-free, mess-friendly stay."
     },
     {
       icon: Shield,
@@ -167,28 +192,32 @@ const PetFriendlyMallacoota = () => {
       type: "Veterinarian in Orbost",
       address: "32 Salisbury St, Orbost VIC",
       phone: "(03) 5154 2387",
-      description: "24/7 emergency veterinary care and routine services for your peace of mind."
+      description: "24/7 emergency veterinary care and routine services for your peace of mind.",
+      url: "https://www.thevetandco.au/"
     },
     {
       name: "Eden Veterinary Clinic",
       type: "Veterinarian in Eden",
       address: "2 Irene Cres, Eden NSW",
       phone: "(02) 6496 1252",
-      description: "Give your beloved companions the gift of exceptional care at Eden Veterinary Clinic."
+      description: "Give your beloved companions the gift of exceptional care at Eden Veterinary Clinic.",
+      url: "https://www.apiam.com.au/locations/fur-life-vet-eden/"
     },
     {
       name: "Origami Coffee",
       type: "Pet-Friendly Outdoor Cafe",
       address: "17 Dorron Ave, Mallacoota VIC",
       phone: "n/a",
-      description: "Local favorite cafe with outdoor seating perfect for you and your furry friend."
+      description: "Local favorite cafe with outdoor seating perfect for you and your furry friend.",
+      url: "https://www.instagram.com/origamicoffeemallacoota"
     },
     {
       name: "Scallywags Mallacoota",
       type: "Pet-Friendly Outdoor Dining ",
       address: "14 Allan Dr, Mallacoota VIC 3892",
       phone: "(03) 4110 2059",
-      description: "Ahoy there, matey! Welcome aboard to Scallywags, where the sea meets the plate and adventure awaits!"
+      description: "Ahoy there, matey! Welcome aboard to Scallywags, where the sea meets the plate and adventure awaits!",
+      url: "https://scallywagsmallacoota.com.au/"
     }
   ];
 
@@ -311,6 +340,11 @@ const PetFriendlyMallacoota = () => {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
                 Pet-Friendly Luxury Properties
+                {petFriendlyProperties && !propertiesLoading && (
+                  <span className="block text-lg font-normal text-muted-foreground mt-2">
+                    {petFriendlyProperties.length} {petFriendlyProperties.length === 1 ? 'Property' : 'Properties'} Available
+                  </span>
+                )}
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Carefully selected properties that welcome pets without compromising on luxury and comfort.
@@ -323,7 +357,30 @@ const PetFriendlyMallacoota = () => {
                   <div key={i} className="h-96 bg-gray-200 animate-pulse rounded-lg" />
                 ))}
               </div>
-            ) : petFriendlyProperties.length > 0 ? (
+            ) : propertiesError ? (
+              <div className="text-center py-12">
+                <PawPrint className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-primary mb-4">
+                  Unable to Load Pet-Friendly Properties
+                </h3>
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                  We're experiencing technical difficulties. Please try refreshing the page or contact us directly for assistance.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button
+                    onClick={() => window.location.reload()}
+                    variant="outline"
+                  >
+                    Refresh Page
+                  </Button>
+                  <Button asChild variant="accent">
+                    <Link to="/contact">
+                      Contact Us
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            ) : petFriendlyProperties && petFriendlyProperties.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {petFriendlyProperties.map((property) => (
                   <div key={property.id} className="relative">
@@ -340,7 +397,24 @@ const PetFriendlyMallacoota = () => {
             ) : (
               <div className="text-center py-12">
                 <PawPrint className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Pet-friendly properties loading...</p>
+                <h3 className="text-xl font-semibold text-primary mb-4">
+                  No Pet-Friendly Properties Available
+                </h3>
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                  We currently don't have any pet-friendly properties available. Please check back later or contact us to discuss your pet accommodation needs.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button asChild variant="outline">
+                    <Link to="/properties">
+                      View All Properties
+                    </Link>
+                  </Button>
+                  <Button asChild variant="accent">
+                    <Link to="/contact">
+                      Contact Our Team
+                    </Link>
+                  </Button>
+                </div>
               </div>
             )}
 
@@ -416,44 +490,62 @@ const PetFriendlyMallacoota = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {localServices.map((service, index) => (
-                <Card key={index} className="card-luxury">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-accent-red/10 rounded-full flex items-center justify-center flex-shrink-0">
-                        {service.type === 'Emergency Vet' && <Shield className="w-6 h-6 text-accent-red" />}
-                        {service.type === 'Pet Store' && <PawPrint className="w-6 h-6 text-accent-red" />}
-                        {service.type === 'Pet-Friendly Cafe' && <Heart className="w-6 h-6 text-accent-red" />}
-                        {service.type === 'Pet Grooming' && <Star className="w-6 h-6 text-accent-red" />}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-serif font-semibold text-primary">
-                            {service.name}
-                          </h3>
-                          <Badge variant="secondary" className="text-xs">
-                            {service.type}
-                          </Badge>
-                        </div>
-                        <p className="text-muted-foreground text-sm mb-3">
-                          {service.description}
-                        </p>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <MapPin className="w-4 h-4" />
-                            {service.address}
-                          </div>
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <Phone className="w-4 h-4" />
-                            {service.phone}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+    <div className="grid md:grid-cols-2 gap-8">
+  {localServices.map((service, index) => {
+    let Icon = PawPrint; // default fallback
+
+    if (service.name.includes("Vet")) {
+      Icon = Hospital;
+    } else if (service.name.includes("Origami Coffee")) {
+      Icon = Coffee;
+    } else if (service.name.includes("Scallywags")) {
+      Icon = Utensils;
+    }
+
+    return (
+      <a
+        key={index}
+        href={service.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block"
+      >
+        <Card className="card-luxury hover:shadow-lg transition">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-accent-red/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <Icon className="w-6 h-6 text-accent-red" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-lg font-serif font-semibold text-primary">
+                    {service.name}
+                  </h3>
+                  <Badge variant="secondary" className="text-xs">
+                    {service.type}
+                  </Badge>
+                </div>
+                <p className="text-muted-foreground text-sm mb-3">
+                  {service.description}
+                </p>
+                <div className="space-y-1 text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <MapPin className="w-4 h-4" />
+                    {service.address}
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Phone className="w-4 h-4" />
+                    {service.phone}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </a>
+    );
+  })}
+
             </div>
 
             <div className="mt-16 p-8 bg-accent-red/5 rounded-2xl border border-accent-red/10">

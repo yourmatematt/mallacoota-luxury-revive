@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+'nnul
+nul
+
+seo_tools/seo_env/
+scripts/
+*.pyc
+__pycache__/

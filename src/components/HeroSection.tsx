@@ -54,7 +54,7 @@ return (
               Premium holiday rentals with unparalleled local knowledge
             </div>
             <div className="text-boutique-accent font-serif italic text-lg md:text-xl lg:text-2xl animate-slide-up">
-              Victoria's hidden coastal gem • 4.5 hours from Melbourne CBD
+              Victoria's hidden coastal gem • 6 hours from Melbourne CBD
             </div>
           </div>
           

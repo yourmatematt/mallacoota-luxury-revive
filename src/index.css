@@ -504,3 +504,50 @@
     box-shadow: var(--shadow-xl);
   }
 }
+
+/* Enhanced Blog Content Styles */
+.blog-content h1 {
+  @apply text-4xl md:text-5xl font-serif font-bold text-primary mt-0 mb-8;
+}
+
+.blog-content h2:first-of-type,
+.blog-content > h2:first-child {
+  @apply text-3xl font-serif font-bold text-primary mt-0 mb-6;
+}
+
+.blog-content h2 {
+  @apply text-3xl font-serif font-bold text-primary mt-12 mb-6;
+}
+
+.blog-content h3 {
+  @apply text-2xl font-serif font-semibold text-primary mt-8 mb-4;
+}
+
+.blog-content h4 {
+  @apply text-xl font-semibold text-primary mt-6 mb-3;
+}
+
+.blog-content p {
+  @apply text-lg text-muted-foreground leading-relaxed mb-6;
+}
+
+.blog-content ul {
+  @apply space-y-3 mb-8;
+}
+
+.blog-content li {
+  @apply text-lg leading-relaxed pl-8;
+}
+
+.blog-content li strong {
+  @apply text-primary font-semibold;
+}
+
+/* Section spacing */
+.blog-content > *:first-child {
+  @apply mt-0;
+}
+
+.blog-content > *:last-child {
+  @apply mb-0;
+}

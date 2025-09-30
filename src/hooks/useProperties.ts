@@ -14,6 +14,7 @@ export interface Property {
   pet_friendly: boolean;
   boat_parking: boolean;
   water_views: boolean;  // 👈 Changed from view to water_views (boolean)
+  waterfront?: boolean;  // 👈 Added for direct waterfront access
   view_type?: string;    // 👈 Added view_type for display
   airbnb_rating?: string;
   image_folder?: string;
@@ -26,6 +27,7 @@ interface PropertyFilters {
   petFriendly?: boolean;
   boatParking?: boolean;
   waterViews?: boolean;  // 👈 Changed from viewType to waterViews (boolean)
+  waterfront?: boolean;  // 👈 Added for direct waterfront access filtering
 }
 
 export const useProperties = (filters?: PropertyFilters) => {
@@ -52,6 +54,11 @@ export const useProperties = (filters?: PropertyFilters) => {
       // Add water views filter (boolean)
       if (filters?.waterViews !== undefined) {
         query = query.eq('water_views', filters.waterViews);
+      }
+
+      // Add waterfront filter (if the field exists in database)
+      if (filters?.waterfront !== undefined) {
+        query = query.eq('waterfront', filters.waterfront);
       }
 
       const { data, error } = await query;

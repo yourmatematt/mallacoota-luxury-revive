@@ -97,3 +97,39 @@ export const useBlogPostBySlug = (slug: string) => {
     retry: 1,
   });
 };
+
+export const useBlogPostsBySlugs = (slugs: string[]) => {
+  return useQuery({
+    queryKey: ['blog-posts-by-slugs', slugs],
+    queryFn: async () => {
+      if (!slugs || slugs.length === 0) return [];
+
+      const { data, error } = await supabase
+        .from('Discover Mallacoota Blogs')
+        .select(`
+          id,
+          title,
+          slug,
+          excerpt,
+          meta_title,
+          meta_description,
+          hero_image_url,
+          published_date,
+          Categories_id,
+          category_name,
+          category_slug
+        `)
+        .in('slug', slugs)
+        .order('published_date', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching related blog posts:', error);
+        throw error;
+      }
+
+      return data as BlogPost[];
+    },
+    enabled: slugs && slugs.length > 0,
+    retry: 1,
+  });
+};

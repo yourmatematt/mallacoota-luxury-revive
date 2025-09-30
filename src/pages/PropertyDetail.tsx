@@ -25,6 +25,8 @@ import { validatePhone, getPhoneValidationMessage } from "@/lib/validation";
 import { calculateDistance } from "@/lib/calculateDistance";
 import ExperienceMap from "@/components/ExperienceMap";
 import SEOHead from "@/components/SEOHead";
+import { getPropertyContent } from "@/data/propertyContent";
+import { getPropertyFallbackImage } from "@/lib/imageUtils";
 
 // Keep stock images as fallbacks
 import propertyHero1 from "@/assets/property-hero-1.jpg";
@@ -42,6 +44,9 @@ const PropertyDetail = () => {
   const { data: reviews } = usePropertyReviews(property?.id);
   const { data: propertyAmenities } = usePropertyAmenities(property?.property_id);
   const { toast } = useToast();
+
+  // Get unique content for this property
+  const propertyContent = property?.slug ? getPropertyContent(property.slug) : null;
   
   // Get real images from Supabase
   const { data: heroImage } = usePropertyHeroImage(property?.image_folder || '');
@@ -244,9 +249,8 @@ const PropertyDetail = () => {
     if (heroImage?.url) {
       return heroImage.url;
     }
-    // Fallback to stock image
-    const index = parseInt(propertyId?.slice(-1) || '0') % heroImages.length;
-    return heroImages[index];
+    // Use consistent fallback logic
+    return getPropertyFallbackImage(property?.image_folder || property?.slug || propertyId);
   };
 
   // Get gallery images - use real images if available, otherwise fallback to stock
@@ -429,8 +433,8 @@ const PropertyDetail = () => {
   return (
     <PageTransition>
       <SEOHead
-        title={`${property.title} - ${property.bedrooms}BR ${property.bedrooms > 1 ? 'Bedrooms' : 'Bedroom'} Luxury Mallacoota Holiday Rental | Hammond Properties`}
-        description={property.description}
+        title={propertyContent?.metaTitle || `${property.title} - ${property.bedrooms}BR ${property.bedrooms > 1 ? 'Bedrooms' : 'Bedroom'} Luxury Mallacoota Holiday Rental | Hammond Properties`}
+        description={propertyContent?.metaDescription || property.description || property.excerpt}
         ogImage={getHeroImage(property.property_id)}
       />
       <div className="min-h-screen bg-background">
@@ -444,6 +448,11 @@ const PropertyDetail = () => {
                 src={getHeroImage(property.property_id)}
                 alt={property.title || 'Property'}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  // Additional fallback if Supabase image fails
+                  const target = e.target as HTMLImageElement;
+                  target.src = getPropertyFallbackImage(property?.image_folder || property?.slug || property.property_id);
+                }}
               />
               <div className="hero-overlay"></div>
             </div>
@@ -555,14 +564,119 @@ const PropertyDetail = () => {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold mb-4">About This Property</h2>
-                  <div className="content-html">
-                    {property.description ? (
-                      <SafeHtmlContent 
-                        htmlContent={property.description} 
-                        className="prose max-w-none" 
-                      />
+                  <div className="content-html prose max-w-none">
+                    {propertyContent ? (
+                      <>
+                        {/* Unique Property Description */}
+                        <div className="text-muted-foreground leading-relaxed mb-6 text-base space-y-4">
+                          {propertyContent.uniqueDescription.split('\n\n').map((paragraph, index) => (
+                            <p key={index}>{paragraph}</p>
+                          ))}
+                        </div>
+
+                        {/* Key Features */}
+                        {propertyContent.keyFeatures && propertyContent.keyFeatures.length > 0 && (
+                          <div className="mt-8">
+                            <h3 className="text-xl font-semibold text-primary mb-4">Key Features</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              {propertyContent.keyFeatures.map((feature, index) => (
+                                <div key={index} className="flex items-start gap-2">
+                                  <span className="text-primary mt-1">✓</span>
+                                  <span className="text-muted-foreground">{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Location Highlights */}
+                        {propertyContent.locationHighlights && propertyContent.locationHighlights.length > 0 && (
+                          <div className="mt-8">
+                            <h3 className="text-xl font-semibold text-primary mb-4">Location Highlights</h3>
+                            <div className="space-y-2">
+                              {propertyContent.locationHighlights.map((highlight, index) => (
+                                <div key={index} className="flex items-start gap-2">
+                                  <span className="text-primary mt-1">📍</span>
+                                  <span className="text-muted-foreground">{highlight}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Nearby Attractions */}
+                        {propertyContent.nearbyAttractions && propertyContent.nearbyAttractions.length > 0 && (
+                          <div className="mt-8">
+                            <h3 className="text-xl font-semibold text-primary mb-4">What's Nearby</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {propertyContent.nearbyAttractions.map((attraction, index) => (
+                                <div key={index} className="bg-luxury-cream/30 p-4 rounded-lg">
+                                  <div className="flex justify-between items-start mb-2">
+                                    <h4 className="font-medium text-primary">{attraction.name}</h4>
+                                    <span className="text-sm text-accent-red font-medium">{attraction.distance}</span>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">{attraction.description}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Ideal For */}
+                        {propertyContent.idealFor && propertyContent.idealFor.length > 0 && (
+                          <div className="mt-8">
+                            <h3 className="text-xl font-semibold text-primary mb-4">Perfect For</h3>
+                            <div className="flex flex-wrap gap-2">
+                              {propertyContent.idealFor.map((category, index) => (
+                                <span key={index} className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+                                  {category}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Seasonal Highlights */}
+                        {propertyContent.seasonalHighlights && propertyContent.seasonalHighlights.length > 0 && (
+                          <div className="mt-8">
+                            <h3 className="text-xl font-semibold text-primary mb-4">Year-Round Appeal</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {propertyContent.seasonalHighlights.map((season, index) => (
+                                <div key={index} className="border border-primary/20 p-4 rounded-lg">
+                                  <h4 className="font-medium text-primary mb-3">{season.season}</h4>
+                                  <ul className="space-y-1 list-disc list-inside">
+                                    {season.highlights.map((highlight, hIndex) => (
+                                      <li key={hIndex} className="text-sm text-muted-foreground">
+                                        {highlight}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Property Story */}
+                        {propertyContent.propertyStory && (
+                          <div className="mt-8 bg-gradient-to-r from-luxury-cream/50 to-transparent p-6 rounded-xl">
+                            <h3 className="text-xl font-semibold text-primary mb-4">The Story</h3>
+                            <p className="text-muted-foreground leading-relaxed italic">{propertyContent.propertyStory}</p>
+                          </div>
+                        )}
+                      </>
                     ) : (
-                      <p className="text-muted-foreground leading-relaxed">{property.excerpt}</p>
+                      // Fallback to original content if no unique content available
+                      <>
+                        {property.description ? (
+                          <SafeHtmlContent
+                            htmlContent={property.description}
+                            className="prose max-w-none"
+                          />
+                        ) : (
+                          <p className="text-muted-foreground leading-relaxed">{property.excerpt}</p>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

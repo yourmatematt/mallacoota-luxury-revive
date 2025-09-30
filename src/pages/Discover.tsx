@@ -799,16 +799,88 @@ const Discover = () => {
               {/* No Results */}
               {!isLoading && (!blogs || blogs.length === 0) && (
                 <div className="text-center py-16">
-                  <div className="max-w-md mx-auto">
-                    <h3 className="text-xl font-semibold text-primary mb-4">
-                      No guides match your filters
+                  <div className="max-w-4xl mx-auto">
+                    <h3 className="text-2xl font-serif font-bold text-primary mb-6">
+                      No Guides Match Your Search
                     </h3>
-                    <p className="text-muted-foreground mb-8">
-                      Try adjusting your search terms or filters to discover more Mallacoota experiences.
+                    <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                      We couldn't find guides matching your current search, but Mallacoota has so much more to explore!
                     </p>
-                    <Button onClick={clearAllFilters} variant="outline" size="lg">
-                      Clear all filters
-                    </Button>
+
+                    <div className="bg-luxury-cream p-8 rounded-2xl mb-12 text-left">
+                      <h4 className="text-xl font-serif font-semibold text-primary mb-6 text-center">
+                        Discover Mallacoota's Hidden Treasures
+                      </h4>
+
+                      <div className="grid md:grid-cols-2 gap-8">
+                        <div>
+                          <h5 className="font-semibold text-primary mb-3">🏖️ Pristine Beaches & Coastal Adventures</h5>
+                          <p className="text-muted-foreground mb-4">
+                            Explore kilometres of unspoiled coastline from Betka Beach to Quarry Beach. Perfect for swimming, surfing, beachcombing, and sunset photography. Each beach offers unique character and experiences.
+                          </p>
+
+                          <h5 className="font-semibold text-primary mb-3">🎣 World-Class Fishing</h5>
+                          <p className="text-muted-foreground mb-4">
+                            Cast a line in some of Australia's best fishing waters. From beach fishing to deep-sea excursions, Mallacoota offers incredible opportunities for anglers of all levels.
+                          </p>
+
+                          <h5 className="font-semibold text-primary mb-3">🥾 Bushwalking & Nature Trails</h5>
+                          <p className="text-muted-foreground mb-4">
+                            Discover native wildlife and stunning scenery on well-maintained trails. From easy lakeside strolls to challenging coastal hikes, there's a path for every fitness level.
+                          </p>
+                        </div>
+
+                        <div>
+                          <h5 className="font-semibold text-primary mb-3">🍽️ Local Dining & Cafes</h5>
+                          <p className="text-muted-foreground mb-4">
+                            Savour fresh seafood, local produce, and artisan coffee. Our restaurant guides help you discover everything from casual beachside eats to fine dining experiences.
+                          </p>
+
+                          <h5 className="font-semibold text-primary mb-3">🏰 Gabo Island Lighthouse Tours</h5>
+                          <p className="text-muted-foreground mb-4">
+                            Experience Australia's second-tallest lighthouse on this historic island. Tour the museum, enjoy panoramic views, and learn about maritime history.
+                          </p>
+
+                          <h5 className="font-semibold text-primary mb-3">🦘 Wildlife Watching</h5>
+                          <p className="text-muted-foreground mb-4">
+                            Spot kangaroos, echidnas, diverse bird species, and marine life. Mallacoota's pristine environment offers exceptional wildlife viewing opportunities year-round.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-8 p-6 bg-white rounded-xl border border-primary/10">
+                        <h5 className="font-semibold text-primary mb-3 text-center">Local Insider Tips</h5>
+                        <div className="grid md:grid-cols-3 gap-4 text-center">
+                          <div>
+                            <p className="font-medium text-primary">Best Photography Spots</p>
+                            <p className="text-sm text-muted-foreground">Sunrise at Bastion Point, sunset at Betka Beach</p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-primary">Hidden Swimming Holes</p>
+                            <p className="text-sm text-muted-foreground">Secret freshwater pools and secluded coves</p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-primary">Seasonal Highlights</p>
+                            <p className="text-sm text-muted-foreground">Whale watching, wildflower blooms, fishing seasons</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <Button onClick={clearAllFilters} size="lg" variant="accent">
+                        Browse All Guides
+                      </Button>
+                      <Button asChild size="lg" variant="outline">
+                        <Link to="/properties">
+                          Book Your Stay
+                        </Link>
+                      </Button>
+                    </div>
+
+                    <p className="text-sm text-muted-foreground mt-6">
+                      New to Mallacoota? Start with our popular guides for first-time visitors, or contact our local experts for personalized recommendations.
+                    </p>
                   </div>
                 </div>
               )}

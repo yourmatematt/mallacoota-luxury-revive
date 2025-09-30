@@ -9,8 +9,15 @@ import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import SEOHead from "@/components/SEOHead";
+import { getAvailablePropertySlugs } from "@/data/propertyContent";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useSignatureProperties } from "@/hooks/useSignatureProperties";
+import { getPropertyFallbackImage } from "@/lib/imageUtils";
 
 const Index = () => {
+  const { data: signatureProperties, isLoading: propertiesLoading } = useSignatureProperties();
   // Set homepage structured data and additional meta tags
   useEffect(() => {
     // Structured data for Organization
@@ -126,6 +133,159 @@ const Index = () => {
         <main>
           <HeroSection />
           <PropertyGrid />
+
+          {/* Featured Properties Section - Internal Linking for SEO */}
+          <section className="py-20 bg-gradient-to-b from-luxury-cream/30 to-transparent">
+            <div className="container mx-auto px-4 lg:px-8">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
+                  Signature Properties
+                </h2>
+                <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                  Discover our most exceptional properties, each offering unique experiences and unmatched luxury in Mallacoota's most coveted locations.
+                </p>
+              </div>
+
+              {propertiesLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {[1, 2, 3].map((i) => (
+                    <Card key={i} className="overflow-hidden animate-pulse">
+                      <div className="aspect-video bg-gray-200"></div>
+                      <CardContent className="p-6">
+                        <div className="h-4 bg-gray-200 rounded mb-4"></div>
+                        <div className="h-20 bg-gray-200 rounded mb-4"></div>
+                        <div className="flex gap-2 mb-4">
+                          <div className="h-6 w-20 bg-gray-200 rounded"></div>
+                          <div className="h-6 w-24 bg-gray-200 rounded"></div>
+                        </div>
+                        <div className="h-10 bg-gray-200 rounded"></div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {signatureProperties?.map((property, index) => {
+                    // Define the themes and content for each property
+                    const propertyInfo = {
+                      '7-allan-drive': {
+                        theme: 'Waterfront Luxury',
+                        subtitle: 'Direct waterfront access • Panoramic lake views',
+                        description: 'Wake to breathtaking sunrises over Mallacoota Inlet from this stunning waterfront home. Private water access, expansive deck, and uninterrupted views create the ultimate coastal escape.',
+                        features: ['Water Access', 'Town Walk'],
+                        ctaText: 'Explore This Property'
+                      },
+                      'four-on-stingray-point': {
+                        theme: 'Glass Architecture',
+                        subtitle: 'Stunning glass design • Waterfront location',
+                        description: 'Experience architectural excellence where stunning glass design meets waterfront luxury. This remarkable home seamlessly blends contemporary design with natural beauty at prestigious Stingray Point.',
+                        features: property.boatParking ? ['Boat Parking'] : [], // Dynamic boat parking
+                        ctaText: 'Discover the Architecture'
+                      },
+                      'bella-views': {
+                        theme: 'Panoramic Views',
+                        subtitle: '270° panoramic vistas • Elevated position',
+                        description: 'Perched majestically above Mallacoota with spectacular 270-degree views. Watch sunrise over the Pacific and sunset over the inlet from your private elevated sanctuary.',
+                        features: ['Ocean Views', 'Photography'],
+                        ctaText: 'See the Views'
+                      }
+                    }[property.slug] || {
+                      theme: 'Luxury Property',
+                      subtitle: 'Premium accommodation',
+                      description: 'Experience luxury accommodation in Mallacoota.',
+                      features: [],
+                      ctaText: 'Explore Property'
+                    };
+
+                    return (
+                      <Card key={property.slug} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
+                        <div className="aspect-video relative overflow-hidden">
+                          <img
+                            src={property.heroImageUrl || getPropertyFallbackImage(property.imageFolder)}
+                            alt={property.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              // Fallback to placeholder if Supabase image fails
+                              const target = e.target as HTMLImageElement;
+                              target.src = getPropertyFallbackImage(property.imageFolder);
+                            }}
+                          />
+                          {/* Base overlay for general darkening */}
+                          <div className="absolute inset-0 bg-black/20"></div>
+
+                          {/* Gradient overlay for better text readability */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+                          {/* Top badge with enhanced backdrop */}
+                          <div className="absolute top-4 left-4">
+                            <span className="bg-black/40 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium border border-white/20 shadow-lg">
+                              {propertyInfo.theme}
+                            </span>
+                          </div>
+
+                          {/* Bottom text with enhanced readability */}
+                          <div className="absolute bottom-4 left-4 text-white">
+                            <h3 className="text-xl font-serif font-bold mb-1 drop-shadow-lg" style={{
+                              textShadow: '0 2px 4px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9)'
+                            }}>
+                              {property.title}
+                            </h3>
+                            <p className="text-sm opacity-95 drop-shadow-md" style={{
+                              textShadow: '0 1px 3px rgba(0,0,0,0.8)'
+                            }}>
+                              {propertyInfo.subtitle}
+                            </p>
+                          </div>
+                        </div>
+                        <CardContent className="p-6">
+                          <p className="text-muted-foreground mb-4 leading-relaxed">
+                            {propertyInfo.description}
+                          </p>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                              {property.bedrooms} Bedroom{property.bedrooms !== 1 ? 's' : ''}
+                            </span>
+                            {propertyInfo.features.map((feature, idx) => (
+                              <span key={idx} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                                {feature}
+                              </span>
+                            ))}
+                            {property.petFriendly && (
+                              <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">Pet Friendly</span>
+                            )}
+                          </div>
+                          <Button asChild variant="outline" className="w-full group-hover:bg-primary group-hover:text-white transition-colors">
+                            <Link to={`/properties/${property.slug}`}>
+                              {propertyInfo.ctaText}
+                            </Link>
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Additional Internal Links */}
+              <div className="text-center mt-12">
+                <p className="text-muted-foreground mb-6">
+                  Each property offers unique advantages and carefully curated experiences
+                </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button asChild variant="outline">
+                    <Link to="/properties">View All 14 Properties</Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link to="/mallacoota-holiday-rentals">All Holiday Rentals</Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link to="/pet-friendly-mallacoota">Pet-Friendly Options</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <DiscoverSection />
           <WhyChooseUs />
           <TestimonialsHorizontalTicker />

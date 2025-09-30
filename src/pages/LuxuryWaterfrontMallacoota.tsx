@@ -29,9 +29,10 @@ interface Testimonial {
 const LuxuryWaterfrontMallacoota = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Fetch waterfront properties (properties with water views)
-  const { data: allProperties, isLoading: propertiesLoading } = useProperties();
-  const waterfrontProperties = allProperties?.filter(property => property.water_views) || [];
+  // Fetch waterfront properties directly from Supabase (with water views for luxury waterfront experience)
+  const { data: waterfrontProperties, isLoading: propertiesLoading, error: propertiesError } = useProperties({
+    waterViews: true  // Use water_views as proxy for waterfront until waterfront field is added to database
+  });
 
   // Fetch relevant blog posts about waterfront experiences
   const { data: allBlogs, isLoading: blogLoading } = useBlogPosts({});
@@ -100,8 +101,8 @@ const LuxuryWaterfrontMallacoota = () => {
     updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/luxury-waterfront-mallacoota');
     updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/luxury-waterfront-estate-og.jpg');
 
-    // Structured data
-    const structuredData = {
+    // Basic structured data (will be enhanced when properties load)
+    const basicStructuredData = {
       "@context": "https://schema.org",
       "@type": "LodgingBusiness",
       "name": "Luxury Waterfront Estates Mallacoota - Hammond Properties",
@@ -130,12 +131,12 @@ const LuxuryWaterfrontMallacoota = () => {
 
     let structuredDataScript = document.querySelector('#waterfront-luxury-structured-data');
     if (structuredDataScript) {
-      structuredDataScript.textContent = JSON.stringify(structuredData);
+      structuredDataScript.textContent = JSON.stringify(basicStructuredData);
     } else {
       structuredDataScript = document.createElement('script');
       structuredDataScript.id = 'waterfront-luxury-structured-data';
       structuredDataScript.type = 'application/ld+json';
-      structuredDataScript.textContent = JSON.stringify(structuredData);
+      structuredDataScript.textContent = JSON.stringify(basicStructuredData);
       document.head.appendChild(structuredDataScript);
     }
 
@@ -145,6 +146,70 @@ const LuxuryWaterfrontMallacoota = () => {
       }
     };
   }, []);
+
+  // Update structured data when waterfront properties load
+  useEffect(() => {
+    if (!waterfrontProperties) return;
+
+    const description = "Experience Mallacoota's finest luxury waterfront estates. Premium ocean view properties with private beaches, infinity pools & exclusive amenities. Unparalleled coastal luxury awaits.";
+
+    // Enhanced structured data with dynamic property count and offers
+    const enhancedStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "LodgingBusiness",
+      "name": "Luxury Waterfront Estates Mallacoota - Hammond Properties",
+      "description": description,
+      "url": "https://hammondproperties.com.au/luxury-waterfront-mallacoota",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Mallacoota",
+        "addressRegion": "Victoria",
+        "addressCountry": "AU"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "500",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "amenityFeature": [
+        { "@type": "LocationFeatureSpecification", "name": "Oceanfront Location" },
+        { "@type": "LocationFeatureSpecification", "name": "Private Beach Access" },
+        { "@type": "LocationFeatureSpecification", "name": "Infinity Pool" },
+        { "@type": "LocationFeatureSpecification", "name": "Premium Amenities" },
+        { "@type": "LocationFeatureSpecification", "name": "Luxury Waterfront Estates" }
+      ],
+      "numberOfRooms": waterfrontProperties.length,
+      "makesOffer": waterfrontProperties.map(property => ({
+        "@type": "Offer",
+        "name": property.title,
+        "description": property.excerpt || property.subtitle || "Luxury waterfront accommodation",
+        "url": `https://hammondproperties.com.au/properties/${property.slug}`,
+        "priceCurrency": "AUD",
+        "availability": "https://schema.org/InStock",
+        "category": "Luxury Waterfront Estate"
+      }))
+    };
+
+    let structuredDataScript = document.querySelector('#waterfront-luxury-structured-data');
+    if (structuredDataScript) {
+      structuredDataScript.textContent = JSON.stringify(enhancedStructuredData);
+    } else {
+      structuredDataScript = document.createElement('script');
+      structuredDataScript.id = 'waterfront-luxury-structured-data';
+      structuredDataScript.type = 'application/ld+json';
+      structuredDataScript.textContent = JSON.stringify(enhancedStructuredData);
+      document.head.appendChild(structuredDataScript);
+    }
+
+    return () => {
+      const script = document.querySelector('#waterfront-luxury-structured-data');
+      if (script) {
+        script.remove();
+      }
+    };
+  }, [waterfrontProperties]);
 
   const luxuryFeatures: LuxuryFeature[] = [
     {
@@ -315,6 +380,11 @@ const LuxuryWaterfrontMallacoota = () => {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
                 Exclusive Waterfront Estates
+                {waterfrontProperties && !propertiesLoading && (
+                  <span className="block text-lg font-normal text-muted-foreground mt-2">
+                    {waterfrontProperties.length} Premium {waterfrontProperties.length === 1 ? 'Estate' : 'Estates'} Available
+                  </span>
+                )}
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Our most prestigious collection of luxury waterfront properties, each offering unparalleled ocean access and amenities.
@@ -327,7 +397,30 @@ const LuxuryWaterfrontMallacoota = () => {
                   <div key={i} className="h-96 bg-gray-200 animate-pulse rounded-lg" />
                 ))}
               </div>
-            ) : waterfrontProperties.length > 0 ? (
+            ) : propertiesError ? (
+              <div className="text-center py-12">
+                <Waves className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-primary mb-4">
+                  Unable to Load Waterfront Estates
+                </h3>
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                  We're experiencing technical difficulties loading our luxury waterfront properties. Please try refreshing the page or contact us for assistance.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button
+                    onClick={() => window.location.reload()}
+                    variant="outline"
+                  >
+                    Refresh Page
+                  </Button>
+                  <Button asChild variant="accent">
+                    <Link to="/contact">
+                      Contact Our Team
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            ) : waterfrontProperties && waterfrontProperties.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {waterfrontProperties.map((property) => (
                   <div key={property.id} className="relative">
@@ -344,7 +437,24 @@ const LuxuryWaterfrontMallacoota = () => {
             ) : (
               <div className="text-center py-12">
                 <Waves className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Waterfront properties loading...</p>
+                <h3 className="text-xl font-semibold text-primary mb-4">
+                  No Waterfront Estates Currently Available
+                </h3>
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                  Our luxury waterfront estates are currently unavailable. Please check back later or contact us to discuss alternative premium properties with water views.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button asChild variant="outline">
+                    <Link to="/properties">
+                      View All Properties
+                    </Link>
+                  </Button>
+                  <Button asChild variant="accent">
+                    <Link to="/contact">
+                      Speak to Our Specialists
+                    </Link>
+                  </Button>
+                </div>
               </div>
             )}
 

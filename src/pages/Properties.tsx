@@ -474,16 +474,78 @@ const Properties = () => {
             {/* No Results */}
             {!isLoading && properties?.length === 0 && (
               <div className="text-center py-16">
-                <div className="max-w-md mx-auto">
-                  <h3 className="text-xl font-semibold text-primary mb-4">
-                    No properties found
+                <div className="max-w-4xl mx-auto">
+                  <h3 className="text-2xl font-serif font-bold text-primary mb-6">
+                    No Properties Match Your Current Filters
                   </h3>
-                  <p className="text-muted-foreground mb-8">
-                    Try adjusting your filters to see more options.
+                  <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                    We couldn't find any properties matching your specific criteria, but don't worry - we have amazing alternatives!
                   </p>
-                  <Button onClick={resetFilters} size="lg">
-                    Reset Filters
-                  </Button>
+
+                  <div className="bg-luxury-cream p-8 rounded-2xl mb-12 text-left">
+                    <h4 className="text-xl font-serif font-semibold text-primary mb-6 text-center">
+                      Consider These Popular Options in Mallacoota
+                    </h4>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div>
+                        <h5 className="font-semibold text-primary mb-3">🏖️ Waterfront Properties</h5>
+                        <p className="text-muted-foreground mb-4">
+                          Wake up to stunning water views in our premium beachfront and lakefront homes. These properties offer direct access to Mallacoota's pristine waters, perfect for swimming, kayaking, and fishing right from your doorstep.
+                        </p>
+
+                        <h5 className="font-semibold text-primary mb-3">🐕 Pet-Friendly Stays</h5>
+                        <p className="text-muted-foreground mb-4">
+                          Bring your four-legged family members! Our pet-friendly properties feature secure yards, easy beach access, and welcoming policies so everyone can enjoy the Mallacoota experience together.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h5 className="font-semibold text-primary mb-3">⛵ Boat Parking Available</h5>
+                        <p className="text-muted-foreground mb-4">
+                          Launch your adventure from home base. Select properties offer secure boat parking and easy water access, making them ideal for fishing enthusiasts and water sports lovers.
+                        </p>
+
+                        <h5 className="font-semibold text-primary mb-3">👨‍👩‍👧‍👦 Large Group Accommodations</h5>
+                        <p className="text-muted-foreground mb-4">
+                          Planning a family reunion or group getaway? Our spacious properties accommodate up to 14 guests with multiple bedrooms, large living areas, and outdoor entertaining spaces.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-8 p-6 bg-white rounded-xl border border-primary/10">
+                      <h5 className="font-semibold text-primary mb-3 text-center">Why Choose Hammond Properties?</h5>
+                      <div className="grid md:grid-cols-3 gap-4 text-center">
+                        <div>
+                          <p className="font-medium text-primary">500+ Five-Star Reviews</p>
+                          <p className="text-sm text-muted-foreground">Consistently rated #1 in Mallacoota</p>
+                        </div>
+                        <div>
+                          <p className="font-medium text-primary">Personal Concierge Service</p>
+                          <p className="text-sm text-muted-foreground">24/7 support and local expertise</p>
+                        </div>
+                        <div>
+                          <p className="font-medium text-primary">Premium Properties</p>
+                          <p className="text-sm text-muted-foreground">Luxury amenities and prime locations</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Button onClick={resetFilters} size="lg" variant="accent">
+                      View All 14 Properties
+                    </Button>
+                    <Button asChild size="lg" variant="outline">
+                      <Link to="/contact">
+                        Speak to Our Team
+                      </Link>
+                    </Button>
+                  </div>
+
+                  <p className="text-sm text-muted-foreground mt-6">
+                    Can't find exactly what you're looking for? Our property experts can help you find the perfect Mallacoota accommodation for your needs.
+                  </p>
                 </div>
               </div>
             )}
