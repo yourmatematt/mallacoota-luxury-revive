@@ -1,0 +1,20 @@
+# Hammond Properties Canonical Fix
+# CRITICAL: Add proper canonical tags to all pages
+
+# Block search engines from asset files
+<FilesMatch "\.(js|css|json)$">
+    Header set X-Robots-Tag "noindex, nofollow"
+</FilesMatch>
+
+# For React/Vue SPA - Enable proper rendering
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Don't rewrite files or directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Rewrite everything to index.html for SPA
+    RewriteRule ^.*$ /index.html [L]
+</IfModule>

@@ -12,7 +12,9 @@
       "Bash(npm install:*)",
       "Bash(npm uninstall:*)",
       "Bash(node:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "WebFetch(domain:hammondproperties.com.au)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []

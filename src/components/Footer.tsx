@@ -115,7 +115,7 @@ const Footer = () => {
             <div className="text-center">
               <p className="text-xs text-muted-foreground mb-1">
                 Website Designed by{" "}
-                <span className="text-ocean-blue font-medium">Your Mate Agency</span>
+                <a href="https://yourmateagency.com.au" target="_blank" rel="noopener noreferrer" className="text-ocean-blue font-medium hover:text-ocean-blue/80 transition-colors duration-200">Your Mate Agency</a>
               </p>
               <p className="text-xs text-muted-foreground">
                 Email{" "}
