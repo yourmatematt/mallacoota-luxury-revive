@@ -1,15 +1,16 @@
+const SUPABASE_STORAGE_BASE = 'https://iqdmesndmfphlevakgqe.supabase.co/storage/v1/object/public/hammond-properties/Discover%20Mallacoota';
+
 export const getBlogImage = (slug: string): string => {
-  // First try the specific blog image
-  return `/images/blog/${slug}.jpg`;
+  return `${SUPABASE_STORAGE_BASE}/${slug}.jpg`;
 };
 
 export const getBlogImageWithFallback = (slug: string): string[] => {
-  // Return array of image sources to try in order
   return [
+    `${SUPABASE_STORAGE_BASE}/${slug}.jpg`,
     `/images/blog/${slug}.jpg`,
     `/images/blog/${slug}.jpeg`,
     `/images/blog/${slug}.png`,
-    `/images/placeholder-hero.jpg`, // Main fallback
-    `/images/discover-mallacoota-hero-background.jpg` // Final fallback
+    `/images/placeholder-hero.jpg`,
+    `/images/discover-mallacoota-hero-background.jpg`
   ];
 };
