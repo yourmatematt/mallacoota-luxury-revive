@@ -274,7 +274,7 @@ const BlogDetail = () => {
       return [heroUrl, ...getBlogImageWithFallback(blogPost.slug)];
     }
     return getBlogImageWithFallback(blogPost.slug);
-  }, [blogPost]);
+  }, [blogPost?.hero_image, blogPost?.slug]);
 
   // Set initial image and handle fallbacks
   useEffect(() => {
