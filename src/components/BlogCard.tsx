@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import BlogCategoryBadge from "@/components/BlogCategoryBadge";
-import { getBlogImage } from "@/lib/utils";
+import { getBlogImage } from "@/lib/blogImages";
 
 interface BlogCardProps {
   id: string;

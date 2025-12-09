@@ -14,7 +14,9 @@
       "Bash(node:*)",
       "Bash(find:*)",
       "WebFetch(domain:hammondproperties.com.au)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "WebFetch(domain:iqdmesndmfphlevakgqe.supabase.co)",
+      "Read(//d/**)"
     ],
     "deny": [],
     "ask": []
