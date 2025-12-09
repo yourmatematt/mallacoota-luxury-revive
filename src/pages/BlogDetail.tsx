@@ -263,8 +263,16 @@ const BlogDetail = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [heroImageUrl, setHeroImageUrl] = useState('');
 
+  const SUPABASE_STORAGE_BASE = 'https://iqdmesndmfphlevakgqe.supabase.co/storage/v1/object/public/hammond-properties';
+
   const imageOptions = useMemo(() => {
     if (!blogPost) return [];
+    if (blogPost.hero_image) {
+      const heroUrl = blogPost.hero_image.startsWith('http')
+        ? blogPost.hero_image
+        : `${SUPABASE_STORAGE_BASE}/${blogPost.hero_image}`;
+      return [heroUrl, ...getBlogImageWithFallback(blogPost.slug)];
+    }
     return getBlogImageWithFallback(blogPost.slug);
   }, [blogPost]);
 

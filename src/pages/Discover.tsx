@@ -791,6 +791,7 @@ const Discover = () => {
                       seasons={blog.seasons}
                       activity_levels={blog.activity_levels}
                       audiences={blog.audiences}
+                      card_image={blog.card_image}
                     />
                   ))}
                 </div>

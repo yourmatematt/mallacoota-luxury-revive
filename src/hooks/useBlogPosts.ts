@@ -10,6 +10,8 @@ export interface BlogPost {
   meta_title?: string;
   meta_description?: string;
   hero_image_url?: string;
+  card_image?: string;
+  hero_image?: string;
   published_date: string;
   updated_at?: string;
   seasons?: string;

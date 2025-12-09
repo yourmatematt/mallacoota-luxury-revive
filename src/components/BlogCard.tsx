@@ -16,12 +16,15 @@ interface BlogCardProps {
   date?: string;
   published_date?: string;
   readTime?: string;
-  linkPrefix?: string; // For different blog routes
+  linkPrefix?: string;
   seasons?: string;
   activity_levels?: string;
   audiences?: string;
   className?: string;
+  card_image?: string;
 }
+
+const SUPABASE_STORAGE_BASE = 'https://iqdmesndmfphlevakgqe.supabase.co/storage/v1/object/public/hammond-properties';
 
 export const BlogCard = ({
   id,
@@ -38,8 +41,12 @@ export const BlogCard = ({
   seasons,
   activity_levels,
   audiences,
-  className = ""
+  className = "",
+  card_image
 }: BlogCardProps) => {
+  const imageUrl = card_image
+    ? (card_image.startsWith('http') ? card_image : `${SUPABASE_STORAGE_BASE}/${card_image}`)
+    : getBlogImage(slug);
   const displayDate = published_date || date;
 
   return (
@@ -47,7 +54,7 @@ export const BlogCard = ({
       <Link to={`${linkPrefix}/${slug}`}>
         <div className="aspect-video overflow-hidden rounded-t-xl">
           <img
-            src={getBlogImage(slug)}
+            src={imageUrl}
             alt={title || 'Blog post'}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             onError={(e) => {
