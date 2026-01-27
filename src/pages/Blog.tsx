@@ -240,12 +240,13 @@ const Blog = () => {
           </section>
 
           {/* Filter Bar */}
-          <section className="py-8 bg-card border-b">
+          <section className="py-8 bg-card border-b" aria-labelledby="filter-heading">
             <div className="container mx-auto px-4 lg:px-8">
+              <h2 id="filter-heading" className="sr-only">Filter Articles</h2>
               <div className="space-y-6">
                 {/* Categories */}
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3">Category</h3>
+                  <span className="text-sm font-semibold text-foreground mb-3 block">Category</span>
                   <div className="flex flex-wrap gap-2">
                     {categories.map((category) => (
                       <Button
@@ -262,7 +263,7 @@ const Blog = () => {
 
                 {/* Season */}
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3">Season</h3>
+                  <span className="text-sm font-semibold text-foreground mb-3 block">Season</span>
                   <div className="flex flex-wrap gap-2">
                     {seasons.map((season) => (
                       <Button
@@ -279,7 +280,7 @@ const Blog = () => {
 
                 {/* Audience */}
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3">Audience</h3>
+                  <span className="text-sm font-semibold text-foreground mb-3 block">Audience</span>
                   <div className="flex flex-wrap gap-2">
                     {audiences.map((audience) => (
                       <Button
@@ -296,7 +297,7 @@ const Blog = () => {
 
                 {/* Activity Level */}
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3">Activity Level</h3>
+                  <span className="text-sm font-semibold text-foreground mb-3 block">Activity Level</span>
                   <div className="flex flex-wrap gap-2">
                     {activityLevels.map((level) => (
                       <Button
