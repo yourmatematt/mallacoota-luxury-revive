@@ -28,7 +28,7 @@ const Contact = () => {
 
   // SEO Data
   const seoData = {
-    title: "Contact Hammond Properties | Book Your Mallacoota Holiday Accommodation",
+    title: "Contact Hammond Properties | Book Mallacoota Holidays",
     description: "Contact Hammond Properties for luxury holiday accommodation in Mallacoota, VIC. Expert local knowledge, 24-hour support, and personalized service. Call 0401 825 547 today.",
     canonical: "https://hammondproperties.com.au/contact",
     keywords: "contact Hammond Properties, Mallacoota accommodation booking, holiday rental enquiry, Mallacoota property management, East Gippsland accommodation contact",

@@ -111,6 +111,30 @@ const Index = () => {
     updateOrCreateMeta('robots', 'index, follow');
     updateOrCreateMeta('viewport', 'width=device-width, initial-scale=1.0');
 
+    // Add geo tags for local SEO
+    updateOrCreateMeta('geo.region', 'AU-VIC');
+    updateOrCreateMeta('geo.placename', 'Mallacoota');
+    updateOrCreateMeta('geo.position', '-37.5642;149.7544');
+    updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
+
+    // Add og:image attributes
+    const updateOrCreateOGMeta = (property: string, content: string) => {
+      let ogMeta = document.querySelector(`meta[property="${property}"]`);
+      if (ogMeta) {
+        ogMeta.setAttribute('content', content);
+      } else {
+        ogMeta = document.createElement('meta');
+        ogMeta.setAttribute('property', property);
+        ogMeta.setAttribute('content', content);
+        document.head.appendChild(ogMeta);
+      }
+    };
+
+    updateOrCreateOGMeta('og:image:width', '1200');
+    updateOrCreateOGMeta('og:image:height', '630');
+    updateOrCreateOGMeta('og:image:alt', 'Luxury waterfront holiday homes in Mallacoota with stunning ocean views');
+    updateOrCreateMeta('twitter:image:alt', 'Hammond Properties - Mallacoota luxury holiday rentals');
+
     // Cleanup function
     return () => {
       // Remove homepage structured data when component unmounts
@@ -125,13 +149,14 @@ const Index = () => {
     <PageTransition>
       <SEOHead
         title="Hammond Properties - Luxury Holiday Rentals Mallacoota"
-        description="Premium holiday rentals in Mallacoota with waterfront views, luxury amenities, and 32 insider guides to help you explore. Local expertise since day one. Come as guests. Leave as family."
+        description="Premium Mallacoota holiday rentals with waterfront views & luxury amenities. 32 insider guides. Local expertise. Come as guests, leave as family."
         canonical="https://hammondproperties.com.au/"
       />
       <div className="min-h-screen">
         <Header />
         <main>
           <HeroSection />
+          <h1 className="sr-only">Luxury Holiday Rentals in Mallacoota - Hammond Properties</h1>
           <PropertyGrid />
 
           {/* Featured Properties Section - Internal Linking for SEO */}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Accordion,
@@ -22,6 +22,40 @@ const FAQSection: React.FC<FAQSectionProps> = ({
   faqs,
   title = "Frequently Asked Questions"
 }) => {
+  // Inject FAQPage structured data for SEO
+  useEffect(() => {
+    if (!faqs || faqs.length === 0) return;
+
+    const faqSchema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer.replace(/<[^>]*>/g, '') // Strip HTML tags for schema
+        }
+      }))
+    };
+
+    let schemaScript = document.querySelector('#faq-structured-data');
+    if (schemaScript) {
+      schemaScript.textContent = JSON.stringify(faqSchema);
+    } else {
+      schemaScript = document.createElement('script');
+      schemaScript.id = 'faq-structured-data';
+      schemaScript.type = 'application/ld+json';
+      schemaScript.textContent = JSON.stringify(faqSchema);
+      document.head.appendChild(schemaScript);
+    }
+
+    return () => {
+      const script = document.querySelector('#faq-structured-data');
+      if (script) script.remove();
+    };
+  }, [faqs]);
+
   if (!faqs || faqs.length === 0) {
     return null;
   }

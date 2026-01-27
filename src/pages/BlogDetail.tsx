@@ -364,31 +364,73 @@ const BlogDetail = () => {
         <meta property="og:title" content={blogPost.title} />
         <meta property="og:description" content={blogPost.excerpt} />
         <meta property="og:image" content={heroImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`${blogPost.title} - Mallacoota travel guide`} />
         <meta property="og:type" content="article" />
+        <meta name="twitter:image:alt" content={`${blogPost.title} - Discover Mallacoota`} />
+        <meta name="geo.region" content="AU-VIC" />
+        <meta name="geo.placename" content="Mallacoota" />
+        <meta name="geo.position" content="-37.5642;149.7544" />
+        <meta name="ICBM" content="-37.5642, 149.7544" />
         <link rel="canonical" href={`https://hammondproperties.com.au/discover-mallacoota/${blogPost.slug}`} />
 
-        {/* Article Schema */}
+        {/* Article Schema with BreadcrumbList */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": blogPost.title,
-            "description": blogPost.excerpt,
-            "image": heroImageUrl,
-            "author": {
-              "@type": "Organization",
-              "name": "Hammond Properties"
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "Hammond Properties",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "https://hammondproperties.com.au/images/hammond-properties-logo.jpg"
+            "@graph": [
+              {
+                "@type": "Article",
+                "@id": `https://hammondproperties.com.au/discover-mallacoota/${blogPost.slug}#article`,
+                "headline": blogPost.title,
+                "description": blogPost.excerpt,
+                "image": heroImageUrl,
+                "author": {
+                  "@type": "Organization",
+                  "name": "Hammond Properties",
+                  "@id": "https://hammondproperties.com.au/#organization"
+                },
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "Hammond Properties",
+                  "@id": "https://hammondproperties.com.au/#organization",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://hammondproperties.com.au/images/hammond-properties-logo.jpg"
+                  }
+                },
+                "datePublished": blogPost.created_at,
+                "dateModified": blogPost.updated_at || blogPost.created_at,
+                "mainEntityOfPage": {
+                  "@type": "WebPage",
+                  "@id": `https://hammondproperties.com.au/discover-mallacoota/${blogPost.slug}`
+                }
+              },
+              {
+                "@type": "BreadcrumbList",
+                "@id": `https://hammondproperties.com.au/discover-mallacoota/${blogPost.slug}#breadcrumb`,
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://hammondproperties.com.au/"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Discover Mallacoota",
+                    "item": "https://hammondproperties.com.au/discover-mallacoota"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": blogPost.title
+                  }
+                ]
               }
-            },
-            "datePublished": blogPost.created_at,
-            "dateModified": blogPost.updated_at || blogPost.created_at
+            ]
           })}
         </script>
       </Helmet>

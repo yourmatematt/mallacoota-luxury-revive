@@ -542,7 +542,7 @@ const Discover = () => {
     document.title = title;
     
     // Set meta description
-    const description = "Your complete guide to exploring Mallacoota. Discover the best beaches, restaurants, activities, and hidden gems in Australia's coastal paradise. Local insider tips and recommendations.";
+    const description = "Your guide to Mallacoota. Best beaches, restaurants, activities & hidden gems. Local insider tips for Australia's coastal paradise.";
     
     // Update existing meta tags or create new ones
     let metaDescription = document.querySelector('meta[name="description"]');
@@ -591,6 +591,30 @@ const Discover = () => {
     updateOrCreateTwitterMeta('twitter:title', title);
     updateOrCreateTwitterMeta('twitter:description', description);
     updateOrCreateTwitterMeta('twitter:image', 'https://hammondproperties.com.au/images/discover-mallacoota-hero-background.jpg');
+    updateOrCreateTwitterMeta('twitter:image:alt', 'Discover Mallacoota - travel guide and local tips');
+
+    // Add og:image attributes
+    updateOrCreateOGMeta('og:image:width', '1200');
+    updateOrCreateOGMeta('og:image:height', '630');
+    updateOrCreateOGMeta('og:image:alt', 'Discover Mallacoota - beaches, restaurants, activities and hidden gems');
+
+    // Add geo tags for local SEO
+    const updateOrCreateMeta = (name: string, content: string) => {
+      let meta = document.querySelector(`meta[name="${name}"]`);
+      if (meta) {
+        meta.setAttribute('content', content);
+      } else {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        meta.setAttribute('content', content);
+        document.head.appendChild(meta);
+      }
+    };
+
+    updateOrCreateMeta('geo.region', 'AU-VIC');
+    updateOrCreateMeta('geo.placename', 'Mallacoota');
+    updateOrCreateMeta('geo.position', '-37.5642;149.7544');
+    updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
 
     // Cleanup function
     return () => {

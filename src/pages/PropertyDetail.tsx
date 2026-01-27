@@ -98,7 +98,10 @@ const PropertyDetail = () => {
       updateOrCreateOGMeta('og:description', description);
       updateOrCreateOGMeta('og:url', `https://hammondproperties.com.au/properties/${property.slug}`);
       updateOrCreateOGMeta('og:image', propertyImage);
-      updateOrCreateOGMeta('og:type', 'website');
+      updateOrCreateOGMeta('og:type', 'place');
+      updateOrCreateOGMeta('og:image:width', '1200');
+      updateOrCreateOGMeta('og:image:height', '630');
+      updateOrCreateOGMeta('og:image:alt', `${property.title} - Luxury holiday rental in Mallacoota`);
 
       // Twitter Card meta tags
       const updateOrCreateTwitterMeta = (name: string, content: string) => {
@@ -117,6 +120,30 @@ const PropertyDetail = () => {
       updateOrCreateTwitterMeta('twitter:title', title);
       updateOrCreateTwitterMeta('twitter:description', description);
       updateOrCreateTwitterMeta('twitter:image', propertyImage);
+      updateOrCreateTwitterMeta('twitter:image:alt', `${property.title} - Mallacoota holiday rental`);
+
+      // Add geo tags for local SEO
+      const updateOrCreateMeta = (name: string, content: string) => {
+        let meta = document.querySelector(`meta[name="${name}"]`);
+        if (meta) {
+          meta.setAttribute('content', content);
+        } else {
+          meta = document.createElement('meta');
+          meta.setAttribute('name', name);
+          meta.setAttribute('content', content);
+          document.head.appendChild(meta);
+        }
+      };
+
+      updateOrCreateMeta('geo.region', 'AU-VIC');
+      updateOrCreateMeta('geo.placename', 'Mallacoota');
+      if (property.latitude && property.longitude) {
+        updateOrCreateMeta('geo.position', `${property.latitude};${property.longitude}`);
+        updateOrCreateMeta('ICBM', `${property.latitude}, ${property.longitude}`);
+      } else {
+        updateOrCreateMeta('geo.position', '-37.5642;149.7544');
+        updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
+      }
 
       // Calculate distances to key attractions for SEO
       const nearbyAttractions = property.latitude && property.longitude ? [

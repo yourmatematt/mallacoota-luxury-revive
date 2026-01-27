@@ -143,6 +143,40 @@ const Properties = () => {
       document.head.appendChild(breadcrumbScript);
     }
 
+    // Add og:image attributes and geo tags
+    const updateOrCreateOGMeta = (property: string, content: string) => {
+      let ogMeta = document.querySelector(`meta[property="${property}"]`);
+      if (ogMeta) {
+        ogMeta.setAttribute('content', content);
+      } else {
+        ogMeta = document.createElement('meta');
+        ogMeta.setAttribute('property', property);
+        ogMeta.setAttribute('content', content);
+        document.head.appendChild(ogMeta);
+      }
+    };
+
+    const updateOrCreateMeta = (name: string, content: string) => {
+      let meta = document.querySelector(`meta[name="${name}"]`);
+      if (meta) {
+        meta.setAttribute('content', content);
+      } else {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        meta.setAttribute('content', content);
+        document.head.appendChild(meta);
+      }
+    };
+
+    updateOrCreateOGMeta('og:image:width', '1200');
+    updateOrCreateOGMeta('og:image:height', '630');
+    updateOrCreateOGMeta('og:image:alt', 'Luxury holiday rental properties in Mallacoota');
+    updateOrCreateMeta('twitter:image:alt', 'Mallacoota holiday rentals collection');
+    updateOrCreateMeta('geo.region', 'AU-VIC');
+    updateOrCreateMeta('geo.placename', 'Mallacoota');
+    updateOrCreateMeta('geo.position', '-37.5642;149.7544');
+    updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
+
     // Cleanup function
     return () => {
       // Remove structured data

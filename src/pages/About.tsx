@@ -16,11 +16,114 @@ const About = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // SEO enhancements: og:image attributes, geo tags, and Person schema
+  useEffect(() => {
+    // Helper function to update or create meta tags
+    const updateOrCreateMeta = (name: string, content: string) => {
+      let meta = document.querySelector(`meta[name="${name}"]`);
+      if (meta) {
+        meta.setAttribute('content', content);
+      } else {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        meta.setAttribute('content', content);
+        document.head.appendChild(meta);
+      }
+    };
+
+    const updateOrCreateOGMeta = (property: string, content: string) => {
+      let ogMeta = document.querySelector(`meta[property="${property}"]`);
+      if (ogMeta) {
+        ogMeta.setAttribute('content', content);
+      } else {
+        ogMeta = document.createElement('meta');
+        ogMeta.setAttribute('property', property);
+        ogMeta.setAttribute('content', content);
+        document.head.appendChild(ogMeta);
+      }
+    };
+
+    // Add og:image attributes
+    updateOrCreateOGMeta('og:image:width', '1200');
+    updateOrCreateOGMeta('og:image:height', '630');
+    updateOrCreateOGMeta('og:image:alt', 'Amelia Hammond and Terry Pheeney - Hammond Properties owners');
+
+    // Add Twitter image alt
+    updateOrCreateMeta('twitter:image:alt', 'Hammond Properties owners in Mallacoota');
+
+    // Add geo tags for local SEO
+    updateOrCreateMeta('geo.region', 'AU-VIC');
+    updateOrCreateMeta('geo.placename', 'Mallacoota');
+    updateOrCreateMeta('geo.position', '-37.5642;149.7544');
+    updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
+
+    // Person schema for Amelia Hammond and Terry Pheeney
+    const personSchema = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://hammondproperties.com.au/about#amelia-hammond",
+          "name": "Amelia Hammond",
+          "jobTitle": "Founder & Managing Director",
+          "description": "With over 40 years of experience in hospitality and property management, Amelia brings natural warmth and attention to detail to every property.",
+          "worksFor": {
+            "@type": "LocalBusiness",
+            "@id": "https://hammondproperties.com.au/#localbusiness",
+            "name": "Hammond Properties"
+          },
+          "image": "https://hammondproperties.com.au/images/amelia-about-page.jpg"
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hammondproperties.com.au/about#terry-pheeney",
+          "name": "Terry Pheeney",
+          "jobTitle": "Property Maintenance & Support",
+          "description": "Born and raised in Mallacoota, Terry brings local wisdom and hands-on experience to ensure every property is perfectly maintained.",
+          "worksFor": {
+            "@type": "LocalBusiness",
+            "@id": "https://hammondproperties.com.au/#localbusiness",
+            "name": "Hammond Properties"
+          },
+          "image": "https://hammondproperties.com.au/images/terry-about-page.png"
+        },
+        {
+          "@type": "AboutPage",
+          "@id": "https://hammondproperties.com.au/about",
+          "url": "https://hammondproperties.com.au/about",
+          "name": "About Hammond Properties",
+          "description": "Meet the team behind Hammond Properties - local Mallacoota experts providing exceptional holiday rental experiences.",
+          "mainEntity": {
+            "@type": "LocalBusiness",
+            "@id": "https://hammondproperties.com.au/#localbusiness"
+          }
+        }
+      ]
+    };
+
+    let schemaScript = document.querySelector('#about-structured-data');
+    if (schemaScript) {
+      schemaScript.textContent = JSON.stringify(personSchema);
+    } else {
+      schemaScript = document.createElement('script');
+      schemaScript.id = 'about-structured-data';
+      schemaScript.type = 'application/ld+json';
+      schemaScript.textContent = JSON.stringify(personSchema);
+      document.head.appendChild(schemaScript);
+    }
+
+    // Cleanup function
+    return () => {
+      const script = document.querySelector('#about-structured-data');
+      if (script) script.remove();
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="About Hammond Properties - 40+ Years Mallacoota Experience | Local Experts"
-        description="Meet Amelia Hammond and Terry Pheeney - your local Mallacoota holiday rental experts. 40+ years combined experience, 1,000+ happy guests, 4.8★ rating. Born and raised locals providing exceptional hospitality."
+        title="About Hammond Properties | Local Mallacoota Experts"
+        description="Meet Amelia Hammond & Terry Pheeney - Mallacoota locals with 40+ years experience. 1,000+ happy guests, 4.8★ rating. Your holiday rental experts."
         ogImage="https://hammondproperties.com.au/images/about-hero-background.jpg"
       />
       <Header />

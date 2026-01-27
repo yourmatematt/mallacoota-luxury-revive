@@ -42,7 +42,7 @@ const MallacootaHolidayRentals = () => {
     const title = "Mallacoota Holiday Rentals | Hammond Properties";
     document.title = title;
 
-    const description = "Discover Mallacoota's finest holiday rentals. Choose from 14 luxury properties including waterfront homes, pet-friendly cottages, and spacious family estates. Book your perfect getaway.";
+    const description = "Mallacoota's finest holiday rentals. 14 luxury waterfront homes, pet-friendly cottages & family estates. Book your perfect getaway.";
     
     // Update meta description
     let metaDescription = document.querySelector('meta[name="description"]');
@@ -84,6 +84,28 @@ const MallacootaHolidayRentals = () => {
     updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/mallacoota-holiday-rentals');
     updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/mallacoota-holiday-rentals-hero.jpg');
     updateOrCreateOGMeta('og:type', 'website');
+    updateOrCreateOGMeta('og:image:width', '1200');
+    updateOrCreateOGMeta('og:image:height', '630');
+    updateOrCreateOGMeta('og:image:alt', 'Luxury waterfront holiday rental in Mallacoota with stunning ocean views');
+
+    // Add geo tags for local SEO
+    const updateOrCreateMeta = (name: string, content: string) => {
+      let meta = document.querySelector(`meta[name="${name}"]`);
+      if (meta) {
+        meta.setAttribute('content', content);
+      } else {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        meta.setAttribute('content', content);
+        document.head.appendChild(meta);
+      }
+    };
+
+    updateOrCreateMeta('geo.region', 'AU-VIC');
+    updateOrCreateMeta('geo.placename', 'Mallacoota');
+    updateOrCreateMeta('geo.position', '-37.5642;149.7544');
+    updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
+    updateOrCreateMeta('twitter:image:alt', 'Mallacoota luxury holiday rentals');
 
     // Structured data
     const structuredData = {
@@ -180,7 +202,7 @@ const MallacootaHolidayRentals = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Mallacoota Holiday Rentals | Hammond Properties"
-        description="Discover Mallacoota's finest holiday rentals. Choose from 14 luxury properties including waterfront homes, pet-friendly cottages, and spacious family estates. Book your perfect getaway."
+        description="Mallacoota's finest holiday rentals. 14 luxury waterfront homes, pet-friendly cottages & family estates. Book your perfect getaway."
         canonical="https://hammondproperties.com.au/mallacoota-holiday-rentals"
       />
       
