@@ -248,14 +248,14 @@ const Properties = () => {
               <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6 transition-all duration-800 delay-200 leading-tight ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}>
-                Stays with Hammond Properties
+                Luxury Holiday Rentals in Mallacoota
               </h1>
-              
+
               {/* Subtitle */}
               <p className={`text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed transition-all duration-800 delay-400 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}>
-                Discover your dream coastal escape in Mallacoota — from beachfront luxury to hidden retreats.
+                Discover your dream East Gippsland coastal escape — from oceanfront waterfront estates to family beach vacation retreats.
               </p>
               
               <div className={`flex flex-wrap justify-center gap-3 mb-6 sm:mb-8 transition-all duration-800 delay-600 ${
@@ -518,31 +518,31 @@ const Properties = () => {
 
                   <div className="bg-luxury-cream p-8 rounded-2xl mb-12 text-left">
                     <h4 className="text-xl font-serif font-semibold text-primary mb-6 text-center">
-                      Consider These Popular Options in Mallacoota
+                      Consider These Popular Coastal Accommodation Options
                     </h4>
 
                     <div className="grid md:grid-cols-2 gap-8">
                       <div>
-                        <h5 className="font-semibold text-primary mb-3">🏖️ Waterfront Properties</h5>
+                        <h5 className="font-semibold text-primary mb-3">🏖️ Oceanfront Waterfront Estates</h5>
                         <p className="text-muted-foreground mb-4">
-                          Wake up to stunning water views in our premium beachfront and lakefront homes. These properties offer direct access to Mallacoota's pristine waters, perfect for swimming, kayaking, and fishing right from your doorstep.
+                          Wake up to stunning East Gippsland water views in our premium beachfront estates and lakefront homes. These coastal properties offer direct access to Mallacoota's pristine waters, perfect for swimming, kayaking, and fishing.
                         </p>
 
-                        <h5 className="font-semibold text-primary mb-3">🐕 Pet-Friendly Stays</h5>
+                        <h5 className="font-semibold text-primary mb-3">🐕 Pet-Friendly Beach Vacation</h5>
                         <p className="text-muted-foreground mb-4">
-                          Bring your four-legged family members! Our pet-friendly properties feature secure yards, easy beach access, and welcoming policies so everyone can enjoy the Mallacoota experience together.
+                          Bring your four-legged family members! Our pet-friendly coastal properties feature secure yards, easy beach access, and welcoming policies so everyone can enjoy the Mallacoota family vacation together.
                         </p>
                       </div>
 
                       <div>
-                        <h5 className="font-semibold text-primary mb-3">⛵ Boat Parking Available</h5>
+                        <h5 className="font-semibold text-primary mb-3">⛵ Boat Parking & Fishing Access</h5>
                         <p className="text-muted-foreground mb-4">
-                          Launch your adventure from home base. Select properties offer secure boat parking and easy water access, making them ideal for fishing enthusiasts and water sports lovers.
+                          Launch your fishing adventure from home base. Select waterfront properties offer secure boat parking and easy water access, making them ideal for fishing charters and water sports enthusiasts.
                         </p>
 
-                        <h5 className="font-semibold text-primary mb-3">👨‍👩‍👧‍👦 Large Group Accommodations</h5>
+                        <h5 className="font-semibold text-primary mb-3">👨‍👩‍👧‍👦 Family Holiday Accommodation</h5>
                         <p className="text-muted-foreground mb-4">
-                          Planning a family reunion or group getaway? Our spacious properties accommodate up to 14 guests with multiple bedrooms, large living areas, and outdoor entertaining spaces.
+                          Planning a family reunion or coastal group getaway? Our spacious East Gippsland properties accommodate up to 14 guests with multiple bedrooms and outdoor entertaining spaces.
                         </p>
                       </div>
                     </div>
@@ -591,11 +591,11 @@ const Properties = () => {
           <div className="container mx-auto px-4 lg:px-8 text-center">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
-                Uncover Mallacoota's best-kept secrets
+                Discover East Gippsland's Coastal Secrets
               </h2>
-              
+
               <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
-                From pristine beaches to local hotspots - get the insider's guide.
+                From pristine beaches and fishing spots to family activities - get the insider's guide to your coastal vacation.
               </p>
               
               <Button asChild variant="accent" size="default" rounded="full">

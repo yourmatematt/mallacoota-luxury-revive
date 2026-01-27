@@ -151,22 +151,22 @@ const MallacootaHolidayRentals = () => {
     {
       icon: MapPin,
       title: "Unparalleled Local Knowledge",
-      description: "Born and raised locals with insider access to Mallacoota's hidden gems and exclusive experiences."
+      description: "Born and raised East Gippsland locals with insider access to Mallacoota's hidden gems, best fishing spots, and exclusive coastal experiences."
     },
     {
       icon: Award,
       title: "Premium Amenities",
-      description: "Every property features luxury amenities designed for comfort and style, such as gourmet kitchens and stunning waterfront decks."
+      description: "Every waterfront estate features luxury amenities designed for comfort and style - gourmet kitchens, stunning oceanfront decks, and boat parking facilities."
     },
     {
       icon: Heart,
       title: "Personally Curated Experiences",
-      description: "Bespoke recommendations and arrangements tailored to your preferences by our local experts."
+      description: "Bespoke recommendations for fishing charters, kayaking adventures, and coastal walks tailored to your family vacation preferences."
     },
     {
       icon: Shield,
-      title: "Exclusive Properties",
-      description: "Access to premium homes not available elsewhere, carefully selected for luxury and location."
+      title: "Exclusive Coastal Properties",
+      description: "Access to premium beachfront homes and waterfront estates not available elsewhere, carefully selected for luxury, location, and family appeal."
     }
   ];
 
@@ -174,27 +174,27 @@ const MallacootaHolidayRentals = () => {
   const amenities = [
     {
       title: "Personal Concierge Service",
-      description: "Dedicated concierge support before and during your stay. From restaurant reservations to activity bookings, local recommendations, and special occasion arrangements - we handle every detail to ensure your Mallacoota experience exceeds expectations."
+      description: "Dedicated concierge support for your East Gippsland vacation. From restaurant reservations to fishing charter bookings, kayaking adventures, and special occasion arrangements - we handle every detail to ensure your coastal getaway exceeds expectations."
     },
     {
       title: "Premium Linens & Amenities",
-      description: "All properties feature luxury hotel-grade linens, premium towels, gourmet kitchen supplies and high-end toiletries. Every comfort is thoughtfully provided for a truly luxurious stay."
+      description: "All waterfront estates feature luxury hotel-grade linens, premium towels, gourmet kitchen supplies and high-end toiletries. Every comfort is thoughtfully provided for a truly luxurious coastal accommodation experience."
     },
     {
-      title: "Pet-Friendly Options",
-      description: "Select properties welcome well-behaved pets with dedicated amenities including fenced yards, and nearby off-leash areas. We also provide comprehensive guides to pet-friendly activities, beaches, and local services."
+      title: "Pet-Friendly Beach Vacation",
+      description: "Select oceanfront properties welcome well-behaved pets with dedicated amenities including fenced yards and nearby off-leash beaches. We provide comprehensive guides to pet-friendly coastal walks, beaches, and local services."
     },
     {
       title: "Boat Parking & Water Access",
-      description: "Many properties offer boat parking facilities, and equipment storage. Perfect for fishing enthusiasts, boating families, or those wanting to explore Mallacoota's pristine waterways and secluded beaches."
+      description: "Many waterfront properties offer boat parking facilities and equipment storage. Perfect for fishing enthusiasts, boating families, or those wanting to explore Mallacoota Inlet's pristine waterways and secluded coastal beaches."
     },
     {
-      title: "Family-Focused Features",
-      description: "Many properties are equipped with children's amenities including high chairs, cots, toys, games, and safety features. Many homes offer fenced yards, shallow water access, and are walking distance to family-friendly beaches and playgrounds."
+      title: "Family Holiday Features",
+      description: "Our family vacation rentals are equipped with children's amenities including high chairs, cots, toys, games, and safety features. Many beachfront homes offer fenced yards, shallow water access, and walking distance to family-friendly beaches."
     },
     {
       title: "Local Experience Curation",
-      description: "Access to exclusive local experiences and insider knowledge. From private fishing charters and guided nature walks to seasonal activity recommendations and hidden gem discoveries - we share our local expertise to create unforgettable memories."
+      description: "Access to exclusive East Gippsland experiences and insider knowledge. From private fishing charters and guided bushwalks to kayaking adventures and seasonal activity recommendations - we share our local expertise to create unforgettable family memories."
     }
   ];
 
@@ -234,7 +234,7 @@ const MallacootaHolidayRentals = () => {
                 <p className={`text-xl md:text-2xl lg:text-3xl font-light mb-8 transition-all duration-800 delay-400 ${
                   isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}>
-                  Exceptional Properties. Unforgettable Experiences.
+                  Premium Coastal Estates in East Gippsland. Unforgettable Experiences.
                 </p>
                 
                 <div className={`flex flex-col sm:flex-row gap-4 transition-all duration-800 delay-600 ${
@@ -271,11 +271,11 @@ const MallacootaHolidayRentals = () => {
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-6">
-                Luxury Properties Collection
+                Luxury Coastal Properties Collection
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Discover our curated selection of premium waterfront estates and luxury homes, 
-                each offering unique amenities and breathtaking locations.
+                Discover our curated selection of premium waterfront estates, oceanfront vacation homes,
+                and luxury coastal accommodation in East Gippsland - each offering unique amenities and breathtaking beachfront locations.
               </p>
             </div>
 
@@ -312,7 +312,7 @@ const MallacootaHolidayRentals = () => {
                 The Hammond Properties Difference
               </h2>
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                Experience unparalleled luxury and service that sets us apart from ordinary holiday rentals.
+                Experience unparalleled coastal luxury and personalised service that sets us apart from ordinary East Gippsland holiday rentals.
               </p>
             </div>
 
@@ -347,7 +347,7 @@ const MallacootaHolidayRentals = () => {
                 Experiences Await
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Discover the magic of Mallacoota through our insider's guide to unforgettable experiences.
+                Discover the magic of Mallacoota through our insider's guide - from fishing and kayaking adventures to coastal walks and family beach activities.
               </p>
             </div>
 
@@ -447,10 +447,10 @@ const MallacootaHolidayRentals = () => {
           <div className="container mx-auto px-4 lg:px-8 text-center">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">
-                Ready for Your Luxury Mallacoota Experience?
+                Ready for Your Luxury Coastal Escape?
               </h2>
               <p className="text-xl mb-8 text-primary-foreground/90">
-                Book your exclusive holiday rental today and discover why discerning guests choose Hammond Properties.
+                Book your exclusive East Gippsland waterfront estate today and discover why discerning guests choose Hammond Properties for their Mallacoota vacation.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 

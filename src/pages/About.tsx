@@ -164,12 +164,12 @@ const About = () => {
                 </h2>
                 <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                   <p>
-                    Founded with a simple belief that every guest deserves an exceptional experience, Hammond Properties
-                    has grown from a single property to a curated collection of Mallacoota's finest holiday rentals.
+                    Founded with a simple belief that every guest deserves an exceptional coastal experience, Hammond Properties
+                    has grown from a single property to a curated collection of Mallacoota's finest waterfront estates and luxury holiday rentals.
                   </p>
                   <p>
-                    Our deep connection to Mallacoota, combined with our commitment to premium service, ensures that
-                    every guest experiences the very best our region has to offer.
+                    Our deep connection to East Gippsland, combined with our commitment to premium service, ensures that
+                    every guest experiences the very best of coastal living - from fishing and kayaking to family beach vacations.
                   </p>
                 </div>
               </div>
@@ -199,22 +199,22 @@ const About = () => {
                 {
                   icon: Heart,
                   title: "Personal Care",
-                  description: "We treat every guest like family, ensuring your comfort from booking to departure."
+                  description: "We treat every guest like family, ensuring your comfort from booking to departure at our coastal properties."
                 },
                 {
                   icon: Shield,
                   title: "Trust & Reliability",
-                  description: "With years of experience, you can count on us for exceptional service."
+                  description: "With years of East Gippsland experience, you can count on us for exceptional oceanfront accommodation service."
                 },
                 {
                   icon: Star,
                   title: "Premium Quality",
-                  description: "Our properties are maintained to the highest standards of luxury and comfort."
+                  description: "Our waterfront estates are maintained to the highest standards of luxury and coastal comfort."
                 },
                 {
                   icon: Home,
                   title: "Local Expertise",
-                  description: "As locals, we provide insider knowledge to make your stay unforgettable."
+                  description: "As Mallacoota locals, we provide insider knowledge on fishing, kayaking, and family activities."
                 }
               ].map((value, index) => {
                 const Icon = value.icon;
@@ -265,7 +265,7 @@ const About = () => {
                         Founder & Managing Director
                       </p>
                       <p className="text-muted-foreground leading-relaxed">
-                        With over 40 years of experience in hospitality and property management, Amelia brings natural warmth and attention to detail to every property.
+                        With over 40 years of experience in East Gippsland hospitality and coastal property management, Amelia brings natural warmth and attention to detail to every waterfront estate.
                       </p>
                     </div>
                   </div>
@@ -289,7 +289,7 @@ const About = () => {
                         Property Maintenance & Support
                       </p>
                       <p className="text-muted-foreground leading-relaxed">
-                        Born and raised in Mallacoota, Terry brings local wisdom and hands-on experience to ensure every property is perfectly maintained.
+                        Born and raised in Mallacoota, Terry brings East Gippsland local wisdom and hands-on experience to ensure every coastal property is perfectly maintained for your family vacation.
                       </p>
                     </div>
                   </div>

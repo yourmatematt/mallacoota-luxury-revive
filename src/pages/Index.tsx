@@ -164,10 +164,10 @@ const Index = () => {
             <div className="container mx-auto px-4 lg:px-8">
               <div className="text-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
-                  Signature Properties
+                  Signature Coastal Estates
                 </h2>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                  Discover our most exceptional properties, each offering unique experiences and unmatched luxury in Mallacoota's most coveted locations.
+                  Discover our most exceptional waterfront properties in East Gippsland, each offering unique experiences and unmatched luxury in Mallacoota's most coveted oceanfront locations.
                 </p>
               </div>
 
@@ -196,28 +196,28 @@ const Index = () => {
                       '7-allan-drive': {
                         theme: 'Waterfront Luxury',
                         subtitle: 'Direct waterfront access • Panoramic lake views',
-                        description: 'Wake to breathtaking sunrises over Mallacoota Inlet from this stunning waterfront home. Private water access, expansive deck, and uninterrupted views create the ultimate coastal escape.',
+                        description: 'Wake to breathtaking sunrises over Mallacoota Inlet from this stunning oceanfront estate. Private water access for fishing and kayaking, expansive deck, and uninterrupted East Gippsland coastal views.',
                         features: ['Water Access', 'Town Walk'],
                         ctaText: 'Explore This Property'
                       },
                       'four-on-stingray-point': {
                         theme: 'Glass Architecture',
-                        subtitle: 'Stunning glass design • Waterfront location',
-                        description: 'Experience architectural excellence where stunning glass design meets waterfront luxury. This remarkable home seamlessly blends contemporary design with natural beauty at prestigious Stingray Point.',
+                        subtitle: 'Stunning glass design • Beachfront location',
+                        description: 'Experience architectural excellence where stunning glass design meets oceanfront luxury. This remarkable coastal estate blends contemporary design with East Gippsland natural beauty at Stingray Point.',
                         features: property.boatParking ? ['Boat Parking'] : [], // Dynamic boat parking
                         ctaText: 'Discover the Architecture'
                       },
                       'bella-views': {
                         theme: 'Panoramic Views',
-                        subtitle: '270° panoramic vistas • Elevated position',
-                        description: 'Perched majestically above Mallacoota with spectacular 270-degree views. Watch sunrise over the Pacific and sunset over the inlet from your private elevated sanctuary.',
+                        subtitle: '270° panoramic vistas • Elevated coastal position',
+                        description: 'Perched majestically above Mallacoota with spectacular 270-degree East Gippsland views. Watch sunrise over the Pacific and sunset over the inlet from your private elevated coastal retreat.',
                         features: ['Ocean Views', 'Photography'],
                         ctaText: 'See the Views'
                       }
                     }[property.slug] || {
                       theme: 'Luxury Property',
-                      subtitle: 'Premium accommodation',
-                      description: 'Experience luxury accommodation in Mallacoota.',
+                      subtitle: 'Premium coastal accommodation',
+                      description: 'Experience luxury waterfront accommodation in Mallacoota, East Gippsland.',
                       features: [],
                       ctaText: 'Explore Property'
                     };
@@ -294,7 +294,7 @@ const Index = () => {
               {/* Additional Internal Links */}
               <div className="text-center mt-12">
                 <p className="text-muted-foreground mb-6">
-                  Each property offers unique advantages and carefully curated experiences
+                  Each coastal estate offers unique advantages - from fishing and kayaking access to family beach vacations
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
                   <Button asChild variant="outline">
