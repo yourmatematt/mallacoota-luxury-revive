@@ -18,6 +18,11 @@ import MallacootaHolidayRentals from "./pages/MallacootaHolidayRentals";
 import ThingsToDoMallacoota from "./pages/ThingsToDoMallacoota";
 import PetFriendlyMallacoota from "./pages/PetFriendlyMallacoota";
 import GaboIsland from "./pages/GaboIsland";
+import MallacootaFishing from "./pages/MallacootaFishing";
+import MallacootaKayaking from "./pages/MallacootaKayaking";
+import MallacootaFamily from "./pages/MallacootaFamily";
+import MallacootaSummer from "./pages/MallacootaSummer";
+import MallacootaWinter from "./pages/MallacootaWinter";
 import Redirect from "./components/Redirect";
 
 const queryClient = new QueryClient();
@@ -47,6 +52,11 @@ const App = () => (
             <Route path="/mallacoota-holiday-rentals" element={<MallacootaHolidayRentals />} />
             <Route path="/things-to-do-mallacoota" element={<ThingsToDoMallacoota />} />
             <Route path="/pet-friendly-mallacoota" element={<PetFriendlyMallacoota />} />
+            <Route path="/mallacoota-fishing-accommodation" element={<MallacootaFishing />} />
+            <Route path="/mallacoota-kayaking-holidays" element={<MallacootaKayaking />} />
+            <Route path="/mallacoota-family-holidays" element={<MallacootaFamily />} />
+            <Route path="/mallacoota-summer-holidays" element={<MallacootaSummer />} />
+            <Route path="/mallacoota-winter-getaway" element={<MallacootaWinter />} />
             <Route path="/luxury-waterfront-mallacoota" element={<Redirect to="/mallacoota-holiday-rentals" />} />
             <Route path="/discover-mallacoota/gabo-island" element={<GaboIsland />} />
             <Route path="*" element={<NotFound />} />

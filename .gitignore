@@ -32,3 +32,6 @@ __pycache__/
 
 # SEO Tools and Documentation
 seo/
+
+# Claude Code files
+claude.md

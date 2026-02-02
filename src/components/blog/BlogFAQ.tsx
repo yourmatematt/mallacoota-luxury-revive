@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -17,6 +18,40 @@ interface BlogFAQProps {
 }
 
 export const BlogFAQ = ({ faqs, title = "Frequently Asked Questions" }: BlogFAQProps) => {
+  // Inject FAQPage structured data for SEO
+  useEffect(() => {
+    if (!faqs || faqs.length === 0) return;
+
+    const faqSchema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer.replace(/<[^>]*>/g, '') // Strip HTML tags for schema
+        }
+      }))
+    };
+
+    let schemaScript = document.querySelector('#blog-faq-structured-data');
+    if (schemaScript) {
+      schemaScript.textContent = JSON.stringify(faqSchema);
+    } else {
+      schemaScript = document.createElement('script');
+      schemaScript.id = 'blog-faq-structured-data';
+      schemaScript.type = 'application/ld+json';
+      schemaScript.textContent = JSON.stringify(faqSchema);
+      document.head.appendChild(schemaScript);
+    }
+
+    return () => {
+      const script = document.querySelector('#blog-faq-structured-data');
+      if (script) script.remove();
+    };
+  }, [faqs]);
+
   if (!faqs || faqs.length === 0) return null;
 
   return (

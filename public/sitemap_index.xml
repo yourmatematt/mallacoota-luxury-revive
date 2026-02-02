@@ -45,6 +45,42 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- Activity & Seasonal Landing Pages - Phase 2C (Feb 2026) -->
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-fishing-accommodation</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-kayaking-holidays</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-family-holidays</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-summer-holidays</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-winter-getaway</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Property Pages -->
   <url>
     <loc>https://hammondproperties.com.au/properties/27-mirrabooka-rd</loc>

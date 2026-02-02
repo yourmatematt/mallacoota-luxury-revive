@@ -31,21 +31,59 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- New Landing Pages - Missing from Current Sitemap -->
+  <!-- Landing Pages -->
   <url>
     <loc>https://hammondproperties.com.au/mallacoota-holiday-rentals</loc>
-    <lastmod>2025-01-01</lastmod>
+    <lastmod>2026-02-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-
   <url>
     <loc>https://hammondproperties.com.au/pet-friendly-mallacoota</loc>
-    <lastmod>2025-01-01</lastmod>
+    <lastmod>2026-02-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
+  <!-- Activity Landing Pages - Phase 2C -->
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-fishing-accommodation</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-kayaking-holidays</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-family-holidays</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Seasonal Landing Pages - Phase 2C -->
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-summer-holidays</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://hammondproperties.com.au/mallacoota-winter-getaway</loc>
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Content Pages -->
 
   <url>
     <loc>https://hammondproperties.com.au/best-time-to-visit-mallacoota</loc>

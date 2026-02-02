@@ -8,6 +8,7 @@ import { MapPin, Calendar, Star, Waves, TreePine, Users, ChefHat, Snowflake } fr
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import FAQSection from "@/components/FAQSection";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import BlogCard from "@/components/BlogCard";
 import ExperienceMap from "@/components/ExperienceMap";
@@ -605,6 +606,49 @@ const ThingsToDoMallacoota = () => {
             </div>
           </div>
         </section>
+
+        {/* FAQ Section for Activities - Featured Snippet Optimization */}
+        <FAQSection
+          title="Mallacoota Activities - Your Questions Answered"
+          faqs={[
+            {
+              question: "What are the best water activities in Mallacoota?",
+              answer: "Mallacoota's inlet and coastline offer exceptional kayaking, fishing, swimming, and boating. The calm inlet waters are perfect for beginners, while experienced kayakers can explore hidden coves. Fishing is world-class year-round, with options for beach, inlet, and offshore fishing in East Gippsland."
+            },
+            {
+              question: "Where are the best fishing spots in Mallacoota?",
+              answer: "Top fishing spots include Mallacoota Inlet for flathead and bream, Main Wharf for mullet and salmon, Betka Beach for beach fishing, and offshore for kingfish and tuna. Our insider guides provide detailed seasonal fishing information and local expert tips for the best East Gippsland catches."
+            },
+            {
+              question: "Can I go whale watching in Mallacoota?",
+              answer: "Yes! Whale watching season runs from May to November in Mallacoota. Humpback and Southern Right whales migrate along the East Gippsland coast. The best viewing spots are Bastion Point, Betka Beach, and various coastal lookouts. Peak season is September-October."
+            },
+            {
+              question: "What bushwalking trails are available in Mallacoota?",
+              answer: "Mallacoota offers diverse bushwalking experiences: Bastion Point walking track (coastal views), Genoa Peak (mountain summit), Croajingolong National Park trails, and Betka Beach coastal walks. Trails range from easy 30-minute strolls to challenging full-day hikes through pristine East Gippsland wilderness."
+            },
+            {
+              question: "Is Mallacoota good for families with children?",
+              answer: "Absolutely! Mallacoota is exceptionally family-friendly with calm inlet waters perfect for young swimmers, safe beaches, abundant wildlife spotting, playgrounds, and gentle bushwalks. Our holiday rentals offer family-focused amenities, and the town has a relaxed, welcoming atmosphere ideal for coastal family vacations."
+            },
+            {
+              question: "What wildlife can I see in Mallacoota?",
+              answer: "Mallacoota's diverse ecosystems host kangaroos, wallabies, echidnas, wombats, over 300 bird species including sea eagles and lyrebirds, seals, dolphins, and seasonal whales. Croajingolong National Park is a UNESCO Biosphere Reserve with rare and endemic species in pristine East Gippsland habitats."
+            },
+            {
+              question: "Are there restaurants and cafes in Mallacoota?",
+              answer: "Yes! Mallacoota has excellent dining options including Origami Coffee (breakfast and lunch), Scallywags Restaurant (fresh seafood), Lucy's (local favorites), Mallacoota Hotel, and takeaway options. Our concierge provides detailed restaurant recommendations, seasonal menus, and local insider tips for the best East Gippsland dining."
+            },
+            {
+              question: "What should I do on a rainy day in Mallacoota?",
+              answer: "Rainy day activities include visiting the Mallacoota & District Historical Society Museum, enjoying cozy cafe culture, indoor games at your luxury rental, scenic drives through rainforest, visiting local art galleries, and planning future adventures with our 32 insider guides covering all Mallacoota experiences."
+            },
+            {
+              question: "Can I visit Gabo Island from Mallacoota?",
+              answer: "Yes! Gabo Island lighthouse tours operate seasonally (typically September-April) from Mallacoota. This historic offshore island features a working lighthouse, seal colonies, seabird rookeries, and spectacular East Gippsland coastal views. Tours must be booked in advance and are weather-dependent."
+            }
+          ]}
+        />
       </main>
 
       <Footer />
