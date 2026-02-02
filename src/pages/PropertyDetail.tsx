@@ -193,7 +193,8 @@ const PropertyDetail = () => {
             "aggregateRating": property.airbnb_rating ? {
               "@type": "AggregateRating",
               "ratingValue": property.airbnb_rating,
-              "bestRating": "5"
+              "bestRating": "5",
+              "reviewCount": reviews?.length || property.airbnb_review_count || 1
             } : undefined,
             "amenityFeature": propertyAmenities?.map(amenity => ({
               "@type": "LocationFeatureSpecification",
