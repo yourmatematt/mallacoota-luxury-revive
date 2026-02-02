@@ -386,6 +386,9 @@ const BlogDetail = () => {
                 "headline": blogPost.title,
                 "description": blogPost.excerpt,
                 "image": heroImageUrl,
+                "inLanguage": "en-AU",
+                "keywords": `Mallacoota, ${blogPost.category_name || 'travel'}, ${blogPost.season_name || 'holiday'}, local guide`,
+                "articleBody": blogPost.content?.substring(0, 5000) || blogPost.excerpt,
                 "author": {
                   "@type": "Organization",
                   "name": "Hammond Properties",

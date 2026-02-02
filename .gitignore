@@ -29,3 +29,6 @@ seo_tools/seo_env/
 scripts/
 *.pyc
 __pycache__/
+
+# SEO Tools and Documentation
+seo/

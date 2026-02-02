@@ -98,7 +98,7 @@ const PropertyDetail = () => {
       updateOrCreateOGMeta('og:description', description);
       updateOrCreateOGMeta('og:url', `https://hammondproperties.com.au/properties/${property.slug}`);
       updateOrCreateOGMeta('og:image', propertyImage);
-      updateOrCreateOGMeta('og:type', 'place');
+      updateOrCreateOGMeta('og:type', 'website');
       updateOrCreateOGMeta('og:image:width', '1200');
       updateOrCreateOGMeta('og:image:height', '630');
       updateOrCreateOGMeta('og:image:alt', `${property.title} - Luxury holiday rental in Mallacoota`);
@@ -170,35 +170,63 @@ const PropertyDetail = () => {
       // Structured data for better search results
       const structuredData = {
         "@context": "https://schema.org",
-        "@type": "LodgingBusiness",
-        "name": property.title,
-        "description": description,
-        "image": propertyImage,
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Mallacoota",
-          "addressRegion": "Victoria",
-          "addressCountry": "AU"
-        },
-        ...(property.latitude && property.longitude && {
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": property.latitude,
-            "longitude": property.longitude
+        "@graph": [
+          {
+            "@type": "LodgingBusiness",
+            "@id": `https://hammondproperties.com.au/properties/${property.slug}#lodging`,
+            "name": property.title,
+            "description": description,
+            "image": propertyImage,
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mallacoota",
+              "addressRegion": "Victoria",
+              "addressCountry": "AU"
+            },
+            ...(property.latitude && property.longitude && {
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": property.latitude,
+                "longitude": property.longitude
+              }
+            }),
+            "aggregateRating": property.airbnb_rating ? {
+              "@type": "AggregateRating",
+              "ratingValue": property.airbnb_rating,
+              "bestRating": "5"
+            } : undefined,
+            "amenityFeature": propertyAmenities?.map(amenity => ({
+              "@type": "LocationFeatureSpecification",
+              "name": amenity.amenity.name
+            })),
+            ...(nearbyAttractions.length > 0 && {
+              "nearbyAttraction": nearbyAttractions
+            })
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": `https://hammondproperties.com.au/properties/${property.slug}#breadcrumb`,
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": { "@id": "https://hammondproperties.com.au/" }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Properties",
+                "item": { "@id": "https://hammondproperties.com.au/properties" }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": property.title
+              }
+            ]
           }
-        }),
-        "aggregateRating": property.airbnb_rating ? {
-          "@type": "AggregateRating",
-          "ratingValue": property.airbnb_rating,
-          "bestRating": "5"
-        } : undefined,
-        "amenityFeature": propertyAmenities?.map(amenity => ({
-          "@type": "LocationFeatureSpecification",
-          "name": amenity.amenity.name
-        })),
-        ...(nearbyAttractions.length > 0 && {
-          "nearbyAttraction": nearbyAttractions
-        })
+        ]
       };
 
       // Add structured data script

@@ -30,7 +30,7 @@ const Properties = () => {
 
   // Generate dynamic SEO values based on filters
   const getSEOValues = () => {
-    let title = "Book Mallacoota Holiday Homes | Waterfront & Pet-Friendly Properties";
+    let title = "Mallacoota Holiday Homes | Waterfront & Pet-Friendly";
     let description = "Browse 14 luxury holiday rentals in Mallacoota. From beachfront properties to pet-friendly accommodations. Book your perfect stay with Hammond Properties.";
 
     // Customize based on active filters

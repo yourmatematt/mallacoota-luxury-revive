@@ -107,31 +107,57 @@ const MallacootaHolidayRentals = () => {
     updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
     updateOrCreateMeta('twitter:image:alt', 'Mallacoota luxury holiday rentals');
 
-    // Structured data
+    // Structured data - CollectionPage with BreadcrumbList
     const structuredData = {
       "@context": "https://schema.org",
-      "@type": "LodgingBusiness",
-      "name": "Hammond Properties - Luxury Holiday Rentals Mallacoota",
-      "description": description,
-      "url": "https://hammondproperties.com.au/mallacoota-holiday-rentals",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Mallacoota",
-        "addressRegion": "Victoria",
-        "addressCountry": "AU"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "reviewCount": "500",
-        "bestRating": "5",
-        "worstRating": "1"
-      },
-      "amenityFeature": [
-        { "@type": "LocationFeatureSpecification", "name": "Waterfront Location" },
-        { "@type": "LocationFeatureSpecification", "name": "Premium Amenities" },
-        { "@type": "LocationFeatureSpecification", "name": "Personal Concierge" },
-        { "@type": "LocationFeatureSpecification", "name": "Pet Friendly Options" }
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": "https://hammondproperties.com.au/mallacoota-holiday-rentals#collectionpage",
+          "name": "Mallacoota Holiday Rentals Guide",
+          "description": description,
+          "url": "https://hammondproperties.com.au/mallacoota-holiday-rentals",
+          "inLanguage": "en-AU",
+          "mainEntity": {
+            "@type": "ItemList",
+            "name": "Hammond Properties Holiday Rentals Collection",
+            "description": "Curated collection of luxury holiday rentals in Mallacoota",
+            "numberOfItems": featuredProperties.length || 14,
+            "itemListElement": featuredProperties.slice(0, 6).map((property: any, index: number) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "item": {
+                "@type": "LodgingBusiness",
+                "name": property.title,
+                "url": `https://hammondproperties.com.au/properties/${property.slug}`
+              }
+            }))
+          },
+          "provider": {
+            "@type": "LocalBusiness",
+            "@id": "https://hammondproperties.com.au/#localbusiness",
+            "name": "Hammond Properties"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://hammondproperties.com.au/mallacoota-holiday-rentals#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": {
+                "@id": "https://hammondproperties.com.au/"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Holiday Rentals Guide"
+            }
+          ]
+        }
       ]
     };
 

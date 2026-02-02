@@ -97,6 +97,23 @@ const About = () => {
             "@type": "LocalBusiness",
             "@id": "https://hammondproperties.com.au/#localbusiness"
           }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://hammondproperties.com.au/about#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": { "@id": "https://hammondproperties.com.au/" }
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "About"
+            }
+          ]
         }
       ]
     };

@@ -32,7 +32,8 @@
       "mcp__plugin_serena_serena__write_memory",
       "Bash(ls:*)",
       "Bash(wc:*)",
-      "Bash(du:*)"
+      "Bash(du:*)",
+      "mcp__plugin_serena_serena__find_symbol"
     ],
     "deny": [],
     "ask": []
