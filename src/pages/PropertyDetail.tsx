@@ -173,7 +173,7 @@ const PropertyDetail = () => {
         "@graph": [
           {
             "@type": "VacationRental",
-            "additionalType": "EntirePlace",
+            "additionalType": "https://schema.org/EntirePlace",
             "@id": `https://hammondproperties.com.au/properties/${property.slug}#vacationrental`,
             "name": property.title,
             "description": description,
@@ -199,10 +199,16 @@ const PropertyDetail = () => {
             }),
             "containsPlace": {
               "@type": "Accommodation",
-              "additionalType": "EntirePlace",
+              "additionalType": "https://schema.org/EntirePlace",
+              "amenityFeature": propertyAmenities?.map(amenity => ({
+                "@type": "LocationFeatureSpecification",
+                "name": amenity.amenity.name,
+                "value": true
+              })),
               "bed": {
                 "@type": "BedDetails",
-                "numberOfBeds": property.bedrooms
+                "numberOfBeds": property.bedrooms,
+                "typeOfBed": "Other"
               },
               "numberOfBedrooms": property.bedrooms,
               "numberOfBathroomsTotal": property.bathrooms,
@@ -226,6 +232,9 @@ const PropertyDetail = () => {
             "review": reviews && reviews.length > 0
               ? reviews.slice(0, 5).map((review: any) => ({
                   "@type": "Review",
+                  "datePublished": review.review_date
+                    ? new Date(review.review_date).toISOString().split('T')[0]
+                    : undefined,
                   "reviewRating": {
                     "@type": "Rating",
                     "ratingValue": review.rating || 5,
