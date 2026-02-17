@@ -172,15 +172,22 @@ const PropertyDetail = () => {
         "@context": "https://schema.org",
         "@graph": [
           {
-            "@type": "LodgingBusiness",
-            "@id": `https://hammondproperties.com.au/properties/${property.slug}#lodging`,
+            "@type": "VacationRental",
+            "additionalType": "EntirePlace",
+            "@id": `https://hammondproperties.com.au/properties/${property.slug}#vacationrental`,
             "name": property.title,
             "description": description,
-            "image": propertyImage,
+            "url": `https://hammondproperties.com.au/properties/${property.slug}`,
+            "identifier": property.property_id,
+            "image": galleryImages && galleryImages.length > 0
+              ? galleryImages.slice(0, 10).map(img => img.url)
+              : propertyImage ? [propertyImage] : undefined,
             "address": {
               "@type": "PostalAddress",
+              "streetAddress": property.title,
               "addressLocality": "Mallacoota",
               "addressRegion": "Victoria",
+              "postalCode": "3892",
               "addressCountry": "AU"
             },
             ...(property.latitude && property.longitude && {
@@ -190,15 +197,51 @@ const PropertyDetail = () => {
                 "longitude": property.longitude
               }
             }),
+            "containsPlace": {
+              "@type": "Accommodation",
+              "additionalType": "EntirePlace",
+              "bed": {
+                "@type": "BedDetails",
+                "numberOfBeds": property.bedrooms
+              },
+              "numberOfBedrooms": property.bedrooms,
+              "numberOfBathroomsTotal": property.bathrooms,
+              "occupancy": {
+                "@type": "QuantitativeValue",
+                "value": property.guests
+              }
+            },
+            "numberOfBedrooms": property.bedrooms,
+            "numberOfBathroomsTotal": property.bathrooms,
+            "occupancy": {
+              "@type": "QuantitativeValue",
+              "value": property.guests
+            },
             "aggregateRating": property.airbnb_rating ? {
               "@type": "AggregateRating",
               "ratingValue": property.airbnb_rating,
               "bestRating": "5",
               "reviewCount": reviews?.length || property.airbnb_review_count || 1
             } : undefined,
+            "review": reviews && reviews.length > 0
+              ? reviews.slice(0, 5).map((review: any) => ({
+                  "@type": "Review",
+                  "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": review.rating || 5,
+                    "bestRating": 5
+                  },
+                  "author": {
+                    "@type": "Person",
+                    "name": review.reviewer || "Guest"
+                  },
+                  ...(review.review ? { "reviewBody": review.review } : {})
+                }))
+              : undefined,
             "amenityFeature": propertyAmenities?.map(amenity => ({
               "@type": "LocationFeatureSpecification",
-              "name": amenity.amenity.name
+              "name": amenity.amenity.name,
+              "value": true
             })),
             ...(nearbyAttractions.length > 0 && {
               "nearbyAttraction": nearbyAttractions
@@ -242,7 +285,7 @@ const PropertyDetail = () => {
         document.head.appendChild(structuredDataScript);
       }
     }
-  }, [property, propertyAmenities, heroImage]);
+  }, [property, propertyAmenities, heroImage, galleryImages, reviews]);
 
 
   // Reset to default meta tags when component unmounts
