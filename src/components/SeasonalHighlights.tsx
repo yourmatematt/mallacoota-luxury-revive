@@ -6,7 +6,7 @@ import { Calendar, ArrowRight, Thermometer, Sun, Leaf, Snowflake } from "lucide-
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { getBlogImageUrl } from "@/lib/utils";
+import { BlogImage } from "@/components/BlogImage";
 
 interface SeasonalBlog {
   id: string;
@@ -241,15 +241,12 @@ const SeasonalHighlights: React.FC = () => {
                   >
                     <Card className="h-full bg-white hover:shadow-md transition-all duration-300">
                       <div className="aspect-video overflow-hidden rounded-t-lg">
-                        <img 
-                          src={blog.hero_image_url || '/placeholder-blog.jpg'}
+                        <BlogImage
+                          src={blog.hero_image_url}
                           alt={blog.title}
+                          slug={blog.slug}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           loading="lazy"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = '/placeholder-blog.jpg';
-                          }}
                         />
                       </div>
                       <CardContent className="p-4">
@@ -287,9 +284,10 @@ const SeasonalHighlights: React.FC = () => {
                         <CardContent className="p-4">
                           <div className="flex gap-4">
                             <div className="flex-shrink-0 w-24 h-16 overflow-hidden rounded-lg">
-                              <img 
-                                src={seasonalBlogs[2].hero_image_url || '/placeholder-blog.jpg'}
+                              <BlogImage
+                                src={seasonalBlogs[2].hero_image_url}
                                 alt={seasonalBlogs[2].title}
+                                slug={seasonalBlogs[2].slug}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 loading="lazy"
                               />

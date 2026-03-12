@@ -6,8 +6,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useCategories } from "@/hooks/useBlogFilters";
-import { getBlogImageUrl } from "@/lib/utils";
-import { getBlogImage } from '@/lib/blogImages';
 import { BlogImage } from "@/components/BlogImage";
 import BlogCategoryBadge from "@/components/BlogCategoryBadge";
 import { useQuery } from "@tanstack/react-query";
@@ -184,15 +182,10 @@ const DiscoverSection: React.FC = () => {
               >
                 <Link to={`/discover-mallacoota/${post.slug}`}>
                   <div className="aspect-video overflow-hidden rounded-t-xl">
-                    <img
-                      src={getBlogImage(post.slug)}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        if (target.src.endsWith('.jpg')) {
-                          target.src = `/images/blog/${post.slug}.png`;
-                        }
-                      }}
+                    <BlogImage
+                      src={post.hero_image_url}
                       alt={post.title || "Blog post"}
+                      slug={post.slug}
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                       loading="lazy"
                     />

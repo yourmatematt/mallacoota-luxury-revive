@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import BlogCategoryBadge from "@/components/BlogCategoryBadge";
-import { getBlogImage } from "@/lib/blogImages";
+import { BlogImage } from "@/components/BlogImage";
 
 interface BlogCardProps {
   id: string;
@@ -24,8 +24,6 @@ interface BlogCardProps {
   card_image?: string;
 }
 
-const SUPABASE_STORAGE_BASE = 'https://iqdmesndmfphlevakgqe.supabase.co/storage/v1/object/public/hammond-properties';
-
 export const BlogCard = ({
   id,
   title,
@@ -44,35 +42,17 @@ export const BlogCard = ({
   className = "",
   card_image
 }: BlogCardProps) => {
-  const imageUrl = card_image
-    ? (card_image.startsWith('http') ? card_image : `${SUPABASE_STORAGE_BASE}/${card_image}`)
-    : getBlogImage(slug);
   const displayDate = published_date || date;
 
   return (
     <Card className={`card-luxury hover:scale-[1.02] transition-all duration-300 group ${className}`}>
       <Link to={`${linkPrefix}/${slug}`}>
         <div className="aspect-video overflow-hidden rounded-t-xl">
-          <img
-            src={imageUrl}
+          <BlogImage
+            src={card_image}
             alt={title || 'Blog post'}
+            slug={slug}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              const currentSrc = target.src;
-
-              // Try different extensions
-              if (currentSrc.endsWith('.jpg')) {
-                target.src = currentSrc.replace('.jpg', '.jpeg');
-              } else if (currentSrc.endsWith('.jpeg')) {
-                target.src = currentSrc.replace('.jpeg', '.png');
-              } else if (currentSrc.endsWith('.png')) {
-                target.src = currentSrc.replace('.png', '.webp');
-              } else {
-                // Final fallback
-                target.src = '/placeholder-blog.jpg';
-              }
-            }}
             loading="lazy"
           />
         </div>

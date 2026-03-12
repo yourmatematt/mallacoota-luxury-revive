@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-// Remove getBlogImage import - using direct URLs now
-
-// Default fallback image for blogs
-const DEFAULT_BLOG_IMAGE = "/images/blog/default-blog-image.jpg";
+import React, { useState, useMemo } from 'react';
+import { getBlogImageFallbacks } from '@/lib/blogImages';
 
 // Blog image component props
 export interface BlogImageProps {
@@ -13,35 +10,34 @@ export interface BlogImageProps {
   loading?: 'lazy' | 'eager';
 }
 
-// Reusable blog image component with error handling
-export const BlogImage: React.FC<BlogImageProps> = ({ 
-  src, 
-  alt, 
-  slug, 
-  className = "", 
-  loading = 'lazy' 
+// Reusable blog image component with Supabase Storage fallback chain
+export const BlogImage: React.FC<BlogImageProps> = ({
+  src,
+  alt,
+  slug,
+  className = "",
+  loading = 'lazy'
 }) => {
-  // Determine initial image source - use hero_image_url directly
-  const getInitialSrc = () => {
-    return src || DEFAULT_BLOG_IMAGE;
-  };
+  const fallbacks = useMemo(() => {
+    if (slug) {
+      return getBlogImageFallbacks(slug, src);
+    }
+    // No slug — use src directly with a placeholder fallback
+    return [src || '/images/blog-placeholder.jpg'];
+  }, [slug, src]);
 
-  const [imgSrc, setImgSrc] = useState<string>(getInitialSrc());
-  const [hasError, setHasError] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleError = () => {
-    if (!hasError) {
-      setHasError(true);
-      // Use fallback image if current image fails
-      if (imgSrc !== DEFAULT_BLOG_IMAGE) {
-        setImgSrc(DEFAULT_BLOG_IMAGE);
-      }
+    const nextIndex = currentIndex + 1;
+    if (nextIndex < fallbacks.length) {
+      setCurrentIndex(nextIndex);
     }
   };
 
   return (
     <img
-      src={imgSrc}
+      src={fallbacks[currentIndex]}
       alt={alt}
       className={className}
       loading={loading}
