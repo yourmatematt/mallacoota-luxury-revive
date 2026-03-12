@@ -41,7 +41,7 @@ export const usePropertyImages = (imageFolder: string) => {
 
       const validImages: PropertyImage[] = files
         .filter(file => {
-          return file.name && /^image_\d+\.jpg$/i.test(file.name); // Only exact match
+          return file.name && /^image_\d+\.jpe?g$/i.test(file.name); // Match .jpg and .jpeg
         })
         .map(file => {
           const match = file.name.match(/image_(\d+)/i);
