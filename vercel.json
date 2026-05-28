@@ -1,0 +1,32 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/category/:path*", "destination": "/", "permanent": true },
+    { "source": "/2020/:path*", "destination": "/", "permanent": true },
+    { "source": "/2021/:path*", "destination": "/", "permanent": true },
+    { "source": "/2023/:path*", "destination": "/", "permanent": true },
+    { "source": "/2025/:path*", "destination": "/", "permanent": true },
+
+    { "source": "/holiday-rentals", "destination": "/mallacoota-holiday-rentals", "permanent": true },
+    { "source": "/accommodation", "destination": "/mallacoota-holiday-rentals", "permanent": true },
+    { "source": "/rentals", "destination": "/mallacoota-holiday-rentals", "permanent": true },
+
+    { "source": "/things-to-do", "destination": "/things-to-do-mallacoota", "permanent": true },
+    { "source": "/activities", "destination": "/things-to-do-mallacoota", "permanent": true },
+
+    { "source": "/pet-friendly", "destination": "/pet-friendly-mallacoota", "permanent": true },
+    { "source": "/pets", "destination": "/pet-friendly-mallacoota", "permanent": true },
+    { "source": "/pet-accommodation", "destination": "/pet-friendly-mallacoota", "permanent": true },
+
+    { "source": "/luxury", "destination": "/mallacoota-holiday-rentals", "permanent": true },
+    { "source": "/waterfront", "destination": "/mallacoota-holiday-rentals", "permanent": true },
+    { "source": "/luxury-accommodation", "destination": "/mallacoota-holiday-rentals", "permanent": true },
+
+    { "source": "/blog/:path*", "destination": "/discover-mallacoota/:path*", "permanent": true },
+    { "source": "/guides/:path*", "destination": "/discover-mallacoota/:path*", "permanent": true },
+    { "source": "/local-guides/:path*", "destination": "/discover-mallacoota/:path*", "permanent": true },
+
+    { "source": "/property/:path*", "destination": "/properties/:path*", "permanent": true },
+    { "source": "/listing/:path*", "destination": "/properties/:path*", "permanent": true }
+  ]
+}
