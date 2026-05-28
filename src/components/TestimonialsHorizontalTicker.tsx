@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
@@ -72,11 +73,11 @@ const TestimonialsHorizontalTicker = () => {
     }
   ];
 
-  // Use real reviews if available, otherwise use fallback
-  const testimonialsData = (!isLoading && reviews && reviews.length > 0) ? reviews : fallbackTestimonials;
-  
-  // Create duplicated array for seamless loop (duplicate the array)
-  const duplicatedTestimonials = [...testimonialsData, ...testimonialsData];
+  const duplicatedTestimonials = useMemo(() => {
+    const data = (!isLoading && reviews && reviews.length > 0) ? reviews : fallbackTestimonials;
+    return [...data, ...data];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, reviews]);
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-background/50 overflow-hidden">
@@ -154,4 +155,4 @@ const TestimonialsHorizontalTicker = () => {
   );
 };
 
-export default TestimonialsHorizontalTicker;
+export default memo(TestimonialsHorizontalTicker);

@@ -19,17 +19,32 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  esbuild: {
+    drop: mode === 'production' ? ['console', 'debugger'] : [],
+  },
   build: {
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
-          routing: ['react-router-dom'],
-          utils: ['lucide-react', 'clsx', 'tailwind-merge']
-        }
-      }
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'radix': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-select',
+            '@radix-ui/react-navigation-menu',
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-tabs',
+          ],
+          'supabase': ['@supabase/supabase-js'],
+          'query': ['@tanstack/react-query'],
+          'leaflet': ['leaflet', 'react-leaflet'],
+          'forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
+          'utils': ['lucide-react', 'clsx', 'tailwind-merge', 'date-fns', 'class-variance-authority'],
+        },
+      },
     },
-    chunkSizeWarningLimit: 1000
-  }
+    chunkSizeWarningLimit: 1000,
+  },
 }));

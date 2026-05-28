@@ -3,34 +3,40 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const rotatingTexts = ["Beauty in every sunrise", "Peace in the gentle sway of the inlet", "Magic in the changing tides", "Freedom in open waters", "Wonder in every hidden trail"]
 
   useEffect(() => {
-    // Trigger animations after component mounts
     const timer = setTimeout(() => setIsLoaded(true), 100);
-    
-    const interval = setInterval(() => {
-      setCurrentTextIndex((prevIndex) => 
-        (prevIndex + 1) % rotatingTexts.length
-      );
-    }, 4000);
-
-    return () => {
-      clearTimeout(timer);
-      clearInterval(interval);
-    };
+    return () => clearTimeout(timer);
   }, []);
 
 return (
   <section id="home" className="relative flex items-center justify-center overflow-hidden" style={{ height: 'calc(100vh - 80px)' }}>
-    {/* Enhanced Background Image with parallax effect */}
-    <div 
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(/lovable-uploads/cdbaf109-97df-45fa-9df9-9d08463fa265.png)` }}
-    />
-      
+    <picture>
+      <source
+        type="image/avif"
+        srcSet="/images/hero/hero-640.avif 640w, /images/hero/hero-1024.avif 1024w, /images/hero/hero-1600.avif 1600w, /images/hero/hero-2400.avif 2400w"
+        sizes="100vw"
+      />
+      <source
+        type="image/webp"
+        srcSet="/images/hero/hero-640.webp 640w, /images/hero/hero-1024.webp 1024w, /images/hero/hero-1600.webp 1600w, /images/hero/hero-2400.webp 2400w"
+        sizes="100vw"
+      />
+      <img
+        src="/images/hero/hero-1600.jpg"
+        srcSet="/images/hero/hero-640.jpg 640w, /images/hero/hero-1024.jpg 1024w, /images/hero/hero-1600.jpg 1600w, /images/hero/hero-2400.jpg 2400w"
+        sizes="100vw"
+        alt="Sunrise over Mallacoota's inlet with calm waters and forested headlands"
+        fetchpriority="high"
+        decoding="async"
+        loading="eager"
+        width={1920}
+        height={1200}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+    </picture>
+
       {/* Enhanced Overlay with boutique gradient */}
       <div className="hero-overlay" />
       

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mallacoota Holiday Rentals | Luxury Waterfront Homes | Hammond Properties</title>
-    <meta name="description" content="Experience Mallacoota's finest holiday homes. Waterfront luxury properties with premium amenities, pet-friendly options, personal concierge. ⭐ 500+ 5-star reviews." />
+    <title>Hammond Properties - Luxury Holiday Rentals Mallacoota</title>
+    <meta name="description" content="Discover Mallacoota's finest luxury holiday homes — waterfront rentals, pet-friendly options, premium amenities. 500+ 5-star reviews. Book your coastal escape today." />
     <meta name="author" content="Hammond Properties" />
     
     <!-- Favicon -->
@@ -15,6 +15,17 @@
 <meta name="apple-mobile-web-app-title" content="Hammond Properties" />
 <link rel="manifest" href="/site.webmanifest" />
     
+    <!-- Hero image preload (above-the-fold LCP) -->
+    <link
+      rel="preload"
+      as="image"
+      href="/images/hero/hero-1600.webp"
+      imagesrcset="/images/hero/hero-640.webp 640w, /images/hero/hero-1024.webp 1024w, /images/hero/hero-1600.webp 1600w, /images/hero/hero-2400.webp 2400w"
+      imagesizes="100vw"
+      type="image/webp"
+      fetchpriority="high"
+    />
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,20 +34,21 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://hammondproperties.com.au/" />
-    <meta property="og:title" content="Mallacoota Holiday Rentals | Luxury Waterfront Homes" />
-    <meta property="og:description" content="Experience Mallacoota's finest holiday homes. Waterfront luxury properties with premium amenities and personal concierge service." />
+    <meta property="og:title" content="Hammond Properties - Luxury Holiday Rentals Mallacoota" />
+    <meta property="og:description" content="Discover Mallacoota's finest luxury holiday homes — waterfront rentals, pet-friendly options, premium amenities. 500+ 5-star reviews." />
     <meta property="og:image" content="https://hammondproperties.com.au/images/hammond-properties-og.jpg" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://hammondproperties.com.au/" />
-    <meta property="twitter:title" content="Mallacoota Holiday Rentals | Luxury Waterfront Homes" />
-    <meta property="twitter:description" content="Experience Mallacoota's finest holiday homes. Waterfront luxury properties with premium amenities and personal concierge service." />
+    <meta property="twitter:title" content="Hammond Properties - Luxury Holiday Rentals Mallacoota" />
+    <meta property="twitter:description" content="Discover Mallacoota's finest luxury holiday homes — waterfront rentals, pet-friendly options, premium amenities. 500+ 5-star reviews." />
     <meta property="twitter:image" content="https://hammondproperties.com.au/images/hammond-properties-og.jpg" />
     
-    <!-- Canonical URL will be set dynamically by SEOHead component -->
-    
-    <!-- Schema.org Structured Data injected dynamically per page via React components -->
+    <!-- Self-referencing canonical for the static shell — Helmet overrides per route. -->
+    <link rel="canonical" href="https://hammondproperties.com.au/" />
+
+    <!-- Schema.org Structured Data injected dynamically per page via React components (react-helmet-async). -->
   </head>
 
   <body>
@@ -60,8 +72,8 @@
 
         <div style="margin-top: 40px;">
           <p><strong>Contact Hammond Properties:</strong></p>
-          <p>📞 (03) 5158 0350</p>
-          <p>✉️ stay@hammondproperties.com.au</p>
+          <p>📞 0401 825 547</p>
+          <p>✉️ amelia@hammondproperties.com.au</p>
           <p>📍 Mallacoota, Victoria, Australia</p>
         </div>
       </div>
