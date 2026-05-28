@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import SEOHead from "@/components/SEOHead";
+import { Helmet } from "react-helmet-async";
 import { useRandomProperties } from "@/hooks/useProperties";
 
 const NotFound = () => {
@@ -16,10 +17,12 @@ const NotFound = () => {
   const { data: popularProperties, isLoading } = useRandomProperties(3);
 
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
+    if (import.meta.env.DEV) {
+      console.error(
+        "404 Error: User attempted to access non-existent route:",
+        location.pathname
+      );
+    }
   }, [location.pathname]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -32,11 +35,16 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead 
+      <SEOHead
         title="Page Not Found | Hammond Properties Mallacoota"
         description="The page you're looking for doesn't exist. Find luxury holiday rentals in Mallacoota or contact us for assistance."
       />
-      
+      {/* Prerender / hosting hint: serve this page with HTTP 404 so search engines don't index it. */}
+      <Helmet>
+        <meta name="prerender-status-code" content="404" />
+        <meta name="robots" content="noindex,follow" />
+      </Helmet>
+
       <Header />
       
       <main className="py-16">
@@ -147,14 +155,18 @@ const NotFound = () => {
                       <Phone className="w-4 h-4 mr-3 mt-1 text-primary" />
                       <div>
                         <p className="font-medium text-primary">Call Us</p>
-                        <p className="text-sm text-muted-foreground">(03) 5158 0350</p>
+                        <a href="tel:0401825547" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                          0401 825 547
+                        </a>
                       </div>
                     </div>
                     <div className="flex items-start">
                       <Mail className="w-4 h-4 mr-3 mt-1 text-primary" />
                       <div>
                         <p className="font-medium text-primary">Email Us</p>
-                        <p className="text-sm text-muted-foreground">stay@hammondproperties.com.au</p>
+                        <a href="mailto:amelia@hammondproperties.com.au" className="text-sm text-muted-foreground hover:text-primary transition-colors break-all">
+                          amelia@hammondproperties.com.au
+                        </a>
                       </div>
                     </div>
                     <Button asChild variant="outline" className="w-full mt-4">

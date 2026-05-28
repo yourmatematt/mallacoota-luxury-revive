@@ -46,7 +46,7 @@ const Contact = () => {
         "alternateName": "Hammond Properties Mallacoota",
         "description": "Premium holiday accommodation and property management services in Mallacoota, East Gippsland. Local expertise with personalized service for unforgettable getaways.",
         "url": "https://hammondproperties.com.au",
-        "telephone": "+61401825547",
+        "telephone": "+61 401 825 547",
         "email": "amelia@hammondproperties.com.au",
         "address": {
           "@type": "PostalAddress",
@@ -95,17 +95,12 @@ const Contact = () => {
           "Local Area Expertise",
           "Guest Services"
         ],
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.8",
-          "reviewCount": "500",
-          "bestRating": "5",
-          "worstRating": "1"
-        },
+        // aggregateRating removed — no real LocalBusiness-level review data;
+        // per-property AggregateRating in PropertyDetail uses real airbnb_rating.
         "contactPoint": [
           {
             "@type": "ContactPoint",
-            "telephone": "+61401825547",
+            "telephone": "+61 401 825 547",
             "contactType": "customer service",
             "areaServed": "AU",
             "availableLanguage": "English",
@@ -132,10 +127,8 @@ const Contact = () => {
             "availableLanguage": "English"
           }
         ],
-        "sameAs": [
-          "https://www.facebook.com/hammondproperties",
-          "https://www.instagram.com/hammondproperties"
-        ]
+        // sameAs intentionally omitted — placeholder social URLs removed.
+        // Add real Facebook/Instagram URLs when confirmed (TODO matt).
       },
       {
         "@type": "ContactPage",

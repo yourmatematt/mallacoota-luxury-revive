@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import FAQSection from "@/components/FAQSection";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
+import RelatedPropertiesForBlog from "@/components/RelatedPropertiesForBlog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -287,25 +288,8 @@ const BlogDetail = () => {
   };
 
 
-  // Set meta tags when blog post loads
-  useEffect(() => {
-    if (blogPost) {
-      const title = blogPost.meta_title || blogPost.title || 'Hammond Properties Blog';
-      document.title = title;
-
-      const description = blogPost.meta_description || blogPost.excerpt || 'Discover Mallacoota with Hammond Properties';
-
-      let metaDescription = document.querySelector('meta[name="description"]') as HTMLMetaElement;
-      if (metaDescription) {
-        metaDescription.content = description;
-      } else {
-        metaDescription = document.createElement('meta');
-        metaDescription.name = 'description';
-        metaDescription.content = description;
-        document.head.appendChild(metaDescription);
-      }
-    }
-  }, [blogPost]);
+  // Meta tags handled by the <Helmet> block in the render — imperative useEffect removed
+  // so the head can't drift between routes.
 
   if (isLoading) {
     return (
@@ -614,10 +598,17 @@ const BlogDetail = () => {
             </section>
           )}
 
-          {/* Related Posts */}
+          {/* Property cross-links: pair each blog post with 3 contextually relevant Hammond Properties rentals.
+              Mapping rules live in src/data/blogPropertyMapping.ts. */}
+          <RelatedPropertiesForBlog blogSlug={blogPost.slug} />
+
+          {/* Related Posts — use blogPost.id (DB UUID) so the relevance query can exclude self;
+              audiences/seasons default to [] in the component (category-only matching). */}
           <RelatedBlogPosts
-            currentSlug={blogPost.slug}
-            categoryId={blogPost.Categories_id}
+            currentBlogId={blogPost.id}
+            currentCategoryId={blogPost.Categories_id}
+            currentAudiences={[]}
+            currentSeasons={[]}
           />
 
           {/* Bottom CTA Section */}

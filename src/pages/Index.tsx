@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import PropertyGrid from "@/components/PropertyGrid";
@@ -9,155 +9,105 @@ import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import FAQSection from "@/components/FAQSection";
 import PageTransition from "@/components/PageTransition";
-import SEOHead from "@/components/SEOHead";
-import { getAvailablePropertySlugs } from "@/data/propertyContent";
+import SEOMetaTags from "@/components/SEOMetaTags";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSignatureProperties } from "@/hooks/useSignatureProperties";
 import { getPropertyFallbackImage } from "@/lib/imageUtils";
+import { HOMEPAGE_FAQS } from "@/data/homeFaqs";
 
-const Index = () => {
-  const { data: signatureProperties, isLoading: propertiesLoading } = useSignatureProperties();
-  // Set homepage structured data and additional meta tags
-  useEffect(() => {
-    // Structured data for Organization
-    const structuredData = {
-      "@context": "https://schema.org",
+// Module-scope LodgingBusiness schema. NAP corrected to canonical pair
+// (amelia@ + +61 401 825 547). Geo standardised to -37.5642 / 149.7544.
+// Placeholder `sameAs` array removed — real social URLs not in repo.
+const HOMEPAGE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
       "@type": "LodgingBusiness",
+      "@id": "https://hammondproperties.com.au/#lodgingbusiness",
       "name": "Hammond Properties",
       "alternateName": "Hammond Properties Mallacoota",
-      "description": "Premium holiday rentals in Mallacoota with waterfront views, luxury amenities, and 32 insider guides to help you explore. Local expertise since day one. Come as guests. Leave as family.",
+      "description":
+        "Premium holiday rentals in Mallacoota with waterfront views, luxury amenities, and 32 insider guides to help you explore. Local expertise since day one. Come as guests. Leave as family.",
       "url": "https://hammondproperties.com.au",
       "logo": "https://hammondproperties.com.au/images/hammond-properties-logo.jpg",
       "image": "https://hammondproperties.com.au/images/hammond-properties-og.jpg",
-      "telephone": "+61401825547", 
+      "telephone": "+61 401 825 547",
       "email": "amelia@hammondproperties.com.au",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Mallacoota",
         "addressRegion": "Victoria",
-        "addressCountry": "AU"
+        "addressCountry": "AU",
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "-37.5667",
-        "longitude": "149.7333"
+        "latitude": "-37.5642",
+        "longitude": "149.7544",
       },
       "serviceArea": {
         "@type": "GeoCircle",
         "geoMidpoint": {
           "@type": "GeoCoordinates",
-          "latitude": "-37.5667",
-          "longitude": "149.7333"
+          "latitude": "-37.5642",
+          "longitude": "149.7544",
         },
-        "geoRadius": "10000"
+        "geoRadius": "10000",
       },
       "priceRange": "$$$",
       "amenityFeature": [
-        {
-          "@type": "LocationFeatureSpecification",
-          "name": "Pet Friendly Options"
-        },
-        {
-          "@type": "LocationFeatureSpecification", 
-          "name": "Lake Views"
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          "name": "Ocean Views"
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          "name": "Boat Parking"
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          "name": "WiFi"
-        }
+        { "@type": "LocationFeatureSpecification", "name": "Pet Friendly Options" },
+        { "@type": "LocationFeatureSpecification", "name": "Lake Views" },
+        { "@type": "LocationFeatureSpecification", "name": "Ocean Views" },
+        { "@type": "LocationFeatureSpecification", "name": "Boat Parking" },
+        { "@type": "LocationFeatureSpecification", "name": "WiFi" },
       ],
-      "sameAs": [
-        "https://www.facebook.com/hammondproperties", // Add real social links
-        "https://www.instagram.com/hammondproperties"
-      ]
-    };
+      // sameAs intentionally omitted — real Facebook/Instagram URLs to be confirmed by Matt.
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://hammondproperties.com.au/#faq",
+      "mainEntity": HOMEPAGE_FAQS.map((f) => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+      })),
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://hammondproperties.com.au/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://hammondproperties.com.au/",
+        },
+      ],
+    },
+  ],
+};
 
-    // Add structured data script
-    let structuredDataScript = document.querySelector('#homepage-structured-data');
-    if (structuredDataScript) {
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-    } else {
-      structuredDataScript = document.createElement('script');
-      structuredDataScript.id = 'homepage-structured-data';
-      structuredDataScript.type = 'application/ld+json';
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-      document.head.appendChild(structuredDataScript);
-    }
-
-    // Additional meta tags for homepage
-    const updateOrCreateMeta = (name: string, content: string) => {
-      let meta = document.querySelector(`meta[name="${name}"]`);
-      if (meta) {
-        meta.setAttribute('content', content);
-      } else {
-        meta = document.createElement('meta');
-        meta.setAttribute('name', name);
-        meta.setAttribute('content', content);
-        document.head.appendChild(meta);
-      }
-    };
-
-    updateOrCreateMeta('keywords', 'Mallacoota accommodation, luxury holiday rentals, holiday houses Victoria, lake view accommodation, pet friendly Mallacoota, Hammond Properties');
-    updateOrCreateMeta('author', 'Hammond Properties');
-    updateOrCreateMeta('robots', 'index, follow');
-    updateOrCreateMeta('viewport', 'width=device-width, initial-scale=1.0');
-
-    // Add geo tags for local SEO
-    updateOrCreateMeta('geo.region', 'AU-VIC');
-    updateOrCreateMeta('geo.placename', 'Mallacoota');
-    updateOrCreateMeta('geo.position', '-37.5642;149.7544');
-    updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
-
-    // Add og:image attributes
-    const updateOrCreateOGMeta = (property: string, content: string) => {
-      let ogMeta = document.querySelector(`meta[property="${property}"]`);
-      if (ogMeta) {
-        ogMeta.setAttribute('content', content);
-      } else {
-        ogMeta = document.createElement('meta');
-        ogMeta.setAttribute('property', property);
-        ogMeta.setAttribute('content', content);
-        document.head.appendChild(ogMeta);
-      }
-    };
-
-    updateOrCreateOGMeta('og:image:width', '1200');
-    updateOrCreateOGMeta('og:image:height', '630');
-    updateOrCreateOGMeta('og:image:alt', 'Luxury waterfront holiday homes in Mallacoota with stunning ocean views');
-    updateOrCreateMeta('twitter:image:alt', 'Hammond Properties - Mallacoota luxury holiday rentals');
-
-    // Cleanup function
-    return () => {
-      // Remove homepage structured data when component unmounts
-      const structuredDataScript = document.querySelector('#homepage-structured-data');
-      if (structuredDataScript) {
-        structuredDataScript.remove();
-      }
-    };
-  }, []);
+const Index = () => {
+  const { data: signatureProperties, isLoading: propertiesLoading } = useSignatureProperties();
 
   return (
     <PageTransition>
-      <SEOHead
+      <SEOMetaTags
         title="Hammond Properties - Luxury Holiday Rentals Mallacoota"
-        description="Premium Mallacoota holiday rentals with waterfront views & luxury amenities. 32 insider guides. Local expertise. Come as guests, leave as family."
+        description="Discover Mallacoota's finest luxury holiday homes — waterfront rentals, pet-friendly options, premium amenities. 500+ 5-star reviews. Book your coastal escape today."
         canonical="https://hammondproperties.com.au/"
+        ogImage="https://hammondproperties.com.au/images/hammond-properties-og.jpg"
+        imageAlt="Luxury waterfront holiday homes in Mallacoota with stunning ocean views"
+        keywords="Mallacoota accommodation, luxury holiday rentals, holiday houses Victoria, lake view accommodation, pet friendly Mallacoota, Hammond Properties"
+        schema={HOMEPAGE_SCHEMA}
       />
       <div className="min-h-screen">
         <Header />
         <main>
           <HeroSection />
-          <h1 className="sr-only">Luxury Holiday Rentals in Mallacoota - Hammond Properties</h1>
+          {/* HeroSection's visible H1 is the sole page H1 — the previous sr-only H1 caused dual-H1. */}
           <PropertyGrid />
 
           {/* Featured Properties Section - Internal Linking for SEO */}
@@ -316,43 +266,11 @@ const Index = () => {
           <WhyChooseUs />
           <TestimonialsHorizontalTicker />
 
-          {/* FAQ Section for SEO and Featured Snippets */}
+          {/* FAQ Section for SEO and Featured Snippets — questions/answers live in
+              src/data/homeFaqs.ts and feed both this visible section AND the FAQPage JSON-LD. */}
           <FAQSection
             title="Your Mallacoota Questions Answered"
-            faqs={[
-              {
-                question: "What makes Mallacoota a great holiday destination?",
-                answer: "Mallacoota offers pristine beaches, excellent fishing, kayaking on the inlet, abundant wildlife, and peaceful coastal living in East Gippsland. It's perfect for families, couples, and nature lovers seeking a genuine Australian coastal escape away from crowds."
-              },
-              {
-                question: "How many holiday homes does Hammond Properties manage in Mallacoota?",
-                answer: "We manage 14 premium waterfront properties in Mallacoota, ranging from intimate 2-bedroom cottages to spacious 6-bedroom estates. Each property offers unique features like water access, ocean views, or pet-friendly accommodations."
-              },
-              {
-                question: "Are your Mallacoota rentals pet-friendly?",
-                answer: "Yes! Many of our properties welcome well-behaved pets. Each property listing clearly indicates pet policies, and we're happy to help you find the perfect pet-friendly accommodation for your family vacation in East Gippsland."
-              },
-              {
-                question: "What amenities are included in your luxury rentals?",
-                answer: "All Hammond Properties include premium amenities: fully equipped kitchens, quality linens and towels, WiFi, heating/cooling, and modern appliances. Many feature water views, boat parking, BBQ areas, and private outdoor spaces perfect for coastal living."
-              },
-              {
-                question: "How far is Mallacoota from Melbourne?",
-                answer: "Mallacoota is approximately 525km (6-7 hours drive) from Melbourne via the Princes Highway through East Gippsland. The scenic drive takes you through beautiful coastal towns, making it an enjoyable road trip to your luxury holiday rental."
-              },
-              {
-                question: "What activities are available in Mallacoota?",
-                answer: "Mallacoota offers fishing (beach, inlet, and offshore), kayaking, bushwalking, wildlife spotting, beach activities, Gabo Island lighthouse tours, and bird watching. Our insider guides provide detailed information about seasonal activities and local favorites."
-              },
-              {
-                question: "When is the best time to visit Mallacoota?",
-                answer: "Mallacoota is beautiful year-round! Summer (December-February) is perfect for beach activities and water sports. Autumn offers mild weather and fewer crowds. Winter is ideal for fishing and cozy coastal escapes. Spring brings wildflowers and whale watching opportunities."
-              },
-              {
-                question: "Do you provide local recommendations and concierge services?",
-                answer: "Yes! We offer personal concierge services and 32 insider guides covering restaurants, activities, fishing spots, and hidden gems. As Mallacoota locals with 40+ years experience, we share authentic knowledge to make your East Gippsland holiday unforgettable."
-              }
-            ]}
+            faqs={HOMEPAGE_FAQS}
           />
 
           <CTASection />

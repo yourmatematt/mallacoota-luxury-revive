@@ -1,3 +1,4 @@
+// TODO(matt): unrouted — delete vs wire to Supabase. Currently uses mock data and is not registered in App.tsx routes.
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

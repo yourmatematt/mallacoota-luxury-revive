@@ -8,7 +8,7 @@ import { Star, Users, MapPin, Calendar, ChevronRight, Award, Heart, Shield, Chev
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
-import SEOHead from "@/components/SEOHead";
+import SEOMetaTags from "@/components/SEOMetaTags";
 import BlogCard from "@/components/BlogCard";
 import TestimonialsHorizontalTicker from "@/components/TestimonialsHorizontalTicker";
 import { supabase } from "@/integrations/supabase/client";
@@ -37,141 +37,50 @@ const MallacootaHolidayRentals = () => {
 
   useEffect(() => {
     setIsLoaded(true);
-    
-    // SEO Meta Tags
-    const title = "Mallacoota Holiday Rentals | Hammond Properties";
-    document.title = title;
-
-    const description = "Mallacoota's finest holiday rentals. 14 luxury waterfront homes, pet-friendly cottages & family estates. Book your perfect getaway.";
-    
-    // Update meta description
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      metaDescription.setAttribute('content', description);
-      document.head.appendChild(metaDescription);
-    }
-
-    // Canonical URL
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (canonicalLink) {
-      canonicalLink.setAttribute('href', 'https://hammondproperties.com.au/mallacoota-holiday-rentals');
-    } else {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      canonicalLink.setAttribute('href', 'https://hammondproperties.com.au/mallacoota-holiday-rentals');
-      document.head.appendChild(canonicalLink);
-    }
-
-    // Open Graph tags
-    const updateOrCreateOGMeta = (property: string, content: string) => {
-      let ogMeta = document.querySelector(`meta[property="${property}"]`);
-      if (ogMeta) {
-        ogMeta.setAttribute('content', content);
-      } else {
-        ogMeta = document.createElement('meta');
-        ogMeta.setAttribute('property', property);
-        ogMeta.setAttribute('content', content);
-        document.head.appendChild(ogMeta);
-      }
-    };
-
-    updateOrCreateOGMeta('og:title', title);
-    updateOrCreateOGMeta('og:description', description);
-    updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/mallacoota-holiday-rentals');
-    updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/mallacoota-holiday-rentals-hero.jpg');
-    updateOrCreateOGMeta('og:type', 'website');
-    updateOrCreateOGMeta('og:image:width', '1200');
-    updateOrCreateOGMeta('og:image:height', '630');
-    updateOrCreateOGMeta('og:image:alt', 'Luxury waterfront holiday rental in Mallacoota with stunning ocean views');
-
-    // Add geo tags for local SEO
-    const updateOrCreateMeta = (name: string, content: string) => {
-      let meta = document.querySelector(`meta[name="${name}"]`);
-      if (meta) {
-        meta.setAttribute('content', content);
-      } else {
-        meta = document.createElement('meta');
-        meta.setAttribute('name', name);
-        meta.setAttribute('content', content);
-        document.head.appendChild(meta);
-      }
-    };
-
-    updateOrCreateMeta('geo.region', 'AU-VIC');
-    updateOrCreateMeta('geo.placename', 'Mallacoota');
-    updateOrCreateMeta('geo.position', '-37.5642;149.7544');
-    updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
-    updateOrCreateMeta('twitter:image:alt', 'Mallacoota luxury holiday rentals');
-
-    // Structured data - CollectionPage with BreadcrumbList
-    const structuredData = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "CollectionPage",
-          "@id": "https://hammondproperties.com.au/mallacoota-holiday-rentals#collectionpage",
-          "name": "Mallacoota Holiday Rentals Guide",
-          "description": description,
-          "url": "https://hammondproperties.com.au/mallacoota-holiday-rentals",
-          "inLanguage": "en-AU",
-          "mainEntity": {
-            "@type": "ItemList",
-            "name": "Hammond Properties Holiday Rentals Collection",
-            "description": "Curated collection of luxury holiday rentals in Mallacoota",
-            "numberOfItems": featuredProperties.length || 14,
-            "itemListElement": featuredProperties.slice(0, 6).map((property: any, index: number) => ({
-              "@type": "ListItem",
-              "position": index + 1,
-              "item": {
-                "@type": "LodgingBusiness",
-                "name": property.title,
-                "url": `https://hammondproperties.com.au/properties/${property.slug}`
-              }
-            }))
-          },
-          "provider": {
-            "@type": "LocalBusiness",
-            "@id": "https://hammondproperties.com.au/#localbusiness",
-            "name": "Hammond Properties"
-          }
-        },
-        {
-          "@type": "BreadcrumbList",
-          "@id": "https://hammondproperties.com.au/mallacoota-holiday-rentals#breadcrumb",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": {
-                "@id": "https://hammondproperties.com.au/"
-              }
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Holiday Rentals Guide"
-            }
-          ]
-        }
-      ]
-    };
-
-    let structuredDataScript = document.querySelector('#luxury-rentals-structured-data');
-    if (structuredDataScript) {
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-    } else {
-      structuredDataScript = document.createElement('script');
-      structuredDataScript.id = 'luxury-rentals-structured-data';
-      structuredDataScript.type = 'application/ld+json';
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-      document.head.appendChild(structuredDataScript);
-    }
   }, []);
+
+  // SEO schema (CollectionPage + BreadcrumbList + LodgingBusiness). Built from
+  // current featuredProperties so numberOfItems stays accurate.
+  const description =
+    "Explore 14 luxury Mallacoota rentals: waterfront homes, pet-friendly cottages, family estates. Personal concierge service. 500+ 5-star reviews. Book now.";
+  const holidayRentalsSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://hammondproperties.com.au/mallacoota-holiday-rentals#collectionpage",
+        "name": "Mallacoota Holiday Rentals Guide",
+        "description": description,
+        "url": "https://hammondproperties.com.au/mallacoota-holiday-rentals",
+        "inLanguage": "en-AU",
+        "isPartOf": { "@id": "https://hammondproperties.com.au/#website" },
+        "about": { "@id": "https://hammondproperties.com.au/#lodgingbusiness" },
+        "mainEntity": {
+          "@type": "ItemList",
+          "name": "Hammond Properties Holiday Rentals Collection",
+          "description": "Curated collection of luxury holiday rentals in Mallacoota",
+          "numberOfItems": featuredProperties.length || 14,
+          "itemListElement": featuredProperties.slice(0, 6).map((property: any, index: number) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "item": {
+              "@type": "LodgingBusiness",
+              "name": property.title,
+              "url": `https://hammondproperties.com.au/properties/${property.slug}`,
+            },
+          })),
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://hammondproperties.com.au/mallacoota-holiday-rentals#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://hammondproperties.com.au/" },
+          { "@type": "ListItem", "position": 2, "name": "Holiday Rentals Guide", "item": "https://hammondproperties.com.au/mallacoota-holiday-rentals" },
+        ],
+      },
+    ],
+  };
 
   const hammondDifference = [
     {
@@ -226,12 +135,15 @@ const MallacootaHolidayRentals = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead
-        title="Mallacoota Holiday Rentals | Hammond Properties"
-        description="Mallacoota's finest holiday rentals. 14 luxury waterfront homes, pet-friendly cottages & family estates. Book your perfect getaway."
+      <SEOMetaTags
+        title="Luxury Mallacoota Holiday Rentals | Hammond Properties"
+        description={description}
         canonical="https://hammondproperties.com.au/mallacoota-holiday-rentals"
+        ogImage="https://hammondproperties.com.au/images/mallacoota-holiday-rentals-hero.jpg"
+        imageAlt="Luxury waterfront holiday rental in Mallacoota with stunning ocean views"
+        schema={holidayRentalsSchema}
       />
-      
+
       <Header />
       
       <main>

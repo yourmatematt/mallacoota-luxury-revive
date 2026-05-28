@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,11 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, Calendar, Star, Waves, TreePine, Users, ChefHat, Snowflake } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import SEOHead from "@/components/SEOHead";
+import SEOMetaTags from "@/components/SEOMetaTags";
 import FAQSection from "@/components/FAQSection";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import BlogCard from "@/components/BlogCard";
-import ExperienceMap from "@/components/ExperienceMap";
+const ExperienceMap = lazy(() => import("@/components/ExperienceMap"));
 
 interface SeasonalHighlight {
   month: string;
@@ -38,65 +38,6 @@ const ThingsToDoMallacoota = () => {
 
   useEffect(() => {
     setIsLoaded(true);
-
-    // Preload hero image for faster loading
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.href = '/images/things-to-do-mallacoota-hero.jpeg';
-    document.head.appendChild(link);
-
-    // SEO Meta Tags
-    const title = "Things to Do in Mallacoota 2025 | Curated Experiences Guide | Hammond Properties";
-    document.title = title;
-    
-    const description = "Discover Mallacoota's hidden gems through our insider's guide. Waterfront adventures, natural wonders, family experiences & exclusive local insights from luxury accommodation experts.";
-    
-    // Update meta description
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      metaDescription.setAttribute('content', description);
-      document.head.appendChild(metaDescription);
-    }
-
-    // Canonical URL
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (canonicalLink) {
-      canonicalLink.setAttribute('href', 'https://hammondproperties.com.au/things-to-do-mallacoota');
-    } else {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      canonicalLink.setAttribute('href', 'https://hammondproperties.com.au/things-to-do-mallacoota');
-      document.head.appendChild(canonicalLink);
-    }
-
-    // Open Graph tags
-    const updateOrCreateOGMeta = (property: string, content: string) => {
-      let ogMeta = document.querySelector(`meta[property="${property}"]`);
-      if (ogMeta) {
-        ogMeta.setAttribute('content', content);
-      } else {
-        ogMeta = document.createElement('meta');
-        ogMeta.setAttribute('property', property);
-        ogMeta.setAttribute('content', content);
-        document.head.appendChild(ogMeta);
-      }
-    };
-
-    updateOrCreateOGMeta('og:title', title);
-    updateOrCreateOGMeta('og:description', description);
-    updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/things-to-do-mallacoota');
-    updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/mallacoota-experiences-og.jpg');
-
-    return () => {
-      if (document.head.contains(link)) {
-        document.head.removeChild(link);
-      }
-    };
   }, []);
 
   // Filter blogs by experience categories
@@ -220,13 +161,62 @@ const ThingsToDoMallacoota = () => {
     }
   ];
 
+  // BreadcrumbList + LodgingBusiness + ItemList of relevant properties — mirrors MallacootaFishing pattern.
+  const thingsToDoSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://hammondproperties.com.au/things-to-do-mallacoota#collectionpage",
+        "url": "https://hammondproperties.com.au/things-to-do-mallacoota",
+        "name": "Things to Do in Mallacoota",
+        "description": "Curated experiences in Mallacoota: waterfront adventures, natural wonders, family activities, dining, and local insights.",
+        "isPartOf": { "@id": "https://hammondproperties.com.au/#website" },
+        "about": { "@id": "https://hammondproperties.com.au/#lodgingbusiness" },
+      },
+      {
+        "@type": "LodgingBusiness",
+        "@id": "https://hammondproperties.com.au/#lodgingbusiness",
+        "name": "Hammond Properties",
+        "url": "https://hammondproperties.com.au",
+        "telephone": "+61 401 825 547",
+        "email": "amelia@hammondproperties.com.au",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Mallacoota",
+          "addressRegion": "Victoria",
+          "addressCountry": "AU",
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "-37.5642",
+          "longitude": "149.7544",
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://hammondproperties.com.au/things-to-do-mallacoota#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://hammondproperties.com.au/" },
+          { "@type": "ListItem", "position": 2, "name": "Things to Do in Mallacoota", "item": "https://hammondproperties.com.au/things-to-do-mallacoota" },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead 
-        title="Things to Do in Mallacoota 2025 | Curated Experiences Guide | Hammond Properties"
-        description="Discover Mallacoota's hidden gems through our insider's guide. Waterfront adventures, natural wonders, family experiences & exclusive local insights from luxury accommodation experts."
+      <SEOMetaTags
+        title="Things to Do in Mallacoota 2025 | Curated Experiences Guide"
+        description="Discover Mallacoota's hidden gems — waterfront adventures, natural wonders, family experiences, exclusive local insights. Insider's guide from local experts."
+        canonical="https://hammondproperties.com.au/things-to-do-mallacoota"
+        ogImage="https://hammondproperties.com.au/images/mallacoota-experiences-og.jpg"
+        imageAlt="Things to do in Mallacoota — beaches, kayaking, wildlife"
+        schema={thingsToDoSchema}
       />
-      
+      {/* Hero image preload (above-the-fold LCP). */}
+      <link rel="preload" as="image" href="/images/things-to-do-mallacoota-hero.jpeg" />
+
       <Header />
       
       <main>
@@ -470,7 +460,9 @@ const ThingsToDoMallacoota = () => {
             </div>
 
             <div className="bg-white rounded-2xl p-8 shadow-soft">
-              <ExperienceMap />
+              <Suspense fallback={<div className="h-[500px] rounded-xl bg-muted animate-pulse" aria-label="Loading map" />}>
+                <ExperienceMap />
+              </Suspense>
 
               <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-5 gap-4">
                 <Link

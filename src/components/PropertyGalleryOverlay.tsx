@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
@@ -59,22 +60,29 @@ const PropertyGalleryOverlay = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[95vw] max-h-[95vh] w-full h-full p-0 bg-black/95 border-0">
+        <VisuallyHidden.Root>
+          <DialogTitle>{propertyTitle} — photo gallery</DialogTitle>
+          <DialogDescription>
+            Image {currentIndex + 1} of {images.length}. Use the previous and next buttons or arrow keys to navigate.
+          </DialogDescription>
+        </VisuallyHidden.Root>
         <div className="relative w-full h-full flex flex-col">
           {/* Header */}
           <div className="absolute top-0 left-0 right-0 z-10 flex justify-between items-center p-4 bg-gradient-to-b from-black/50 to-transparent">
             <div className="text-white">
-              <h3 className="text-lg font-semibold">{propertyTitle}</h3>
-              <p className="text-sm text-white/80">
+              <h3 className="text-lg font-semibold" aria-hidden="true">{propertyTitle}</h3>
+              <p className="text-sm text-white/80" aria-live="polite">
                 {currentIndex + 1} of {images.length}
               </p>
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-white/20 min-h-[44px] min-w-[44px]"
               onClick={onClose}
+              aria-label="Close photo gallery"
             >
-              <X className="h-6 w-6" />
+              <X className="h-6 w-6" aria-hidden="true" />
             </Button>
           </div>
 
@@ -108,28 +116,32 @@ const PropertyGalleryOverlay = ({
                       variant="secondary"
                       size="icon"
                       className={`
-                        absolute left-4 top-1/2 transform -translate-y-1/2 
+                        absolute left-4 top-1/2 transform -translate-y-1/2
                         bg-white/90 hover:bg-white shadow-lg transition-all duration-200
+                        min-h-[44px] min-w-[44px]
                         ${isTransitioning ? 'opacity-50 cursor-not-allowed' : 'opacity-100'}
                       `}
                       onClick={prevImage}
                       disabled={isTransitioning}
+                      aria-label="Previous photo"
                     >
-                      <ChevronLeft className="h-5 w-5" />
+                      <ChevronLeft className="h-5 w-5" aria-hidden="true" />
                     </Button>
-                    
+
                     <Button
                       variant="secondary"
                       size="icon"
                       className={`
-                        absolute right-4 top-1/2 transform -translate-y-1/2 
+                        absolute right-4 top-1/2 transform -translate-y-1/2
                         bg-white/90 hover:bg-white shadow-lg transition-all duration-200
+                        min-h-[44px] min-w-[44px]
                         ${isTransitioning ? 'opacity-50 cursor-not-allowed' : 'opacity-100'}
                       `}
                       onClick={nextImage}
                       disabled={isTransitioning}
+                      aria-label="Next photo"
                     >
-                      <ChevronRight className="h-5 w-5" />
+                      <ChevronRight className="h-5 w-5" aria-hidden="true" />
                     </Button>
                   </>
                 )}
@@ -144,11 +156,14 @@ const PropertyGalleryOverlay = ({
                 {images.map((image, index) => (
                   <button
                     key={index}
+                    type="button"
+                    aria-label={`View photo ${index + 1} of ${images.length}`}
+                    aria-current={index === currentIndex ? "true" : undefined}
                     className={`
-                      flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 
+                      flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2
                       transition-all duration-300 transform
-                      ${index === currentIndex 
-                        ? 'border-white shadow-lg scale-110' 
+                      ${index === currentIndex
+                        ? 'border-white shadow-lg scale-110'
                         : 'border-white/30 hover:border-white/60 hover:scale-105'
                       }
                       ${isTransitioning ? 'pointer-events-none opacity-75' : ''}

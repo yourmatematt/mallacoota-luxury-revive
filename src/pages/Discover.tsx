@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogCard from "@/components/BlogCard";
+import SEOMetaTags from "@/components/SEOMetaTags";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -535,99 +536,53 @@ const Discover = () => {
     }
   }, [filters, updateFilters]);
 
-  // SEO Meta Tags for Discover Mallacoota page
-  useEffect(() => {
-    // Set page title
-    const title = "Mallacoota Travel Guide 2025 | Beaches, Restaurants & Activities";
-    document.title = title;
-    
-    // Set meta description
-    const description = "Your guide to Mallacoota. Best beaches, restaurants, activities & hidden gems. Local insider tips for Australia's coastal paradise.";
-    
-    // Update existing meta tags or create new ones
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      metaDescription.setAttribute('content', description);
-      document.head.appendChild(metaDescription);
-    }
-
-    // Open Graph meta tags for social sharing
-    const updateOrCreateOGMeta = (property: string, content: string) => {
-      let ogMeta = document.querySelector(`meta[property="${property}"]`);
-      if (ogMeta) {
-        ogMeta.setAttribute('content', content);
-      } else {
-        ogMeta = document.createElement('meta');
-        ogMeta.setAttribute('property', property);
-        ogMeta.setAttribute('content', content);
-        document.head.appendChild(ogMeta);
-      }
-    };
-
-    updateOrCreateOGMeta('og:title', title);
-    updateOrCreateOGMeta('og:description', description);
-    updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/discover-mallacoota');
-    updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/discover-mallacoota-hero-background.jpg');
-    updateOrCreateOGMeta('og:type', 'website');
-
-    // Twitter Card meta tags
-    const updateOrCreateTwitterMeta = (name: string, content: string) => {
-      let twitterMeta = document.querySelector(`meta[name="${name}"]`);
-      if (twitterMeta) {
-        twitterMeta.setAttribute('content', content);
-      } else {
-        twitterMeta = document.createElement('meta');
-        twitterMeta.setAttribute('name', name);
-        twitterMeta.setAttribute('content', content);
-        document.head.appendChild(twitterMeta);
-      }
-    };
-
-    updateOrCreateTwitterMeta('twitter:card', 'summary_large_image');
-    updateOrCreateTwitterMeta('twitter:title', title);
-    updateOrCreateTwitterMeta('twitter:description', description);
-    updateOrCreateTwitterMeta('twitter:image', 'https://hammondproperties.com.au/images/discover-mallacoota-hero-background.jpg');
-    updateOrCreateTwitterMeta('twitter:image:alt', 'Discover Mallacoota - travel guide and local tips');
-
-    // Add og:image attributes
-    updateOrCreateOGMeta('og:image:width', '1200');
-    updateOrCreateOGMeta('og:image:height', '630');
-    updateOrCreateOGMeta('og:image:alt', 'Discover Mallacoota - beaches, restaurants, activities and hidden gems');
-
-    // Add geo tags for local SEO
-    const updateOrCreateMeta = (name: string, content: string) => {
-      let meta = document.querySelector(`meta[name="${name}"]`);
-      if (meta) {
-        meta.setAttribute('content', content);
-      } else {
-        meta = document.createElement('meta');
-        meta.setAttribute('name', name);
-        meta.setAttribute('content', content);
-        document.head.appendChild(meta);
-      }
-    };
-
-    updateOrCreateMeta('geo.region', 'AU-VIC');
-    updateOrCreateMeta('geo.placename', 'Mallacoota');
-    updateOrCreateMeta('geo.position', '-37.5642;149.7544');
-    updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
-
-    // Cleanup function
-    return () => {
-      // Reset title
-      document.title = 'Hammond Properties - Luxury Holiday Rentals';
-      
-      // Reset meta description
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury holiday rentals with Hammond Properties. Come as guests. Leave as family.');
-      }
-    };
-  }, []);
+  // SEO schema (CollectionPage + BreadcrumbList) — built from current blog list so
+  // numberOfItems stays accurate. Replaces the 90-line imperative meta-injection.
+  const discoverSchema = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://hammondproperties.com.au/discover-mallacoota#collectionpage",
+        "url": "https://hammondproperties.com.au/discover-mallacoota",
+        "name": "Discover Mallacoota",
+        "description":
+          "Complete guide to Mallacoota with insider tips and recommendations on beaches, restaurants, activities and hidden gems.",
+        "isPartOf": { "@id": "https://hammondproperties.com.au/#website" },
+        "about": { "@id": "https://hammondproperties.com.au/#lodgingbusiness" },
+        "mainEntity": {
+          "@type": "ItemList",
+          "name": "Mallacoota Guides",
+          "numberOfItems": blogs?.length ?? 0,
+          "itemListElement":
+            blogs?.map((blog, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "name": blog.title,
+              "url": `https://hammondproperties.com.au/discover-mallacoota/${blog.slug}`,
+            })) ?? [],
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://hammondproperties.com.au/discover-mallacoota#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://hammondproperties.com.au/",
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Discover Mallacoota",
+            "item": "https://hammondproperties.com.au/discover-mallacoota",
+          },
+        ],
+      },
+    ],
+  }), [blogs]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
@@ -671,9 +626,17 @@ const Discover = () => {
 
   return (
     <PageTransition>
+      <SEOMetaTags
+        title="Mallacoota Travel Guide 2025 - Beaches, Dining & Activities"
+        description="Complete Mallacoota guide: best beaches, restaurants, activities, hidden gems. Local insider tips & recommendations. Updated 2025."
+        canonical="https://hammondproperties.com.au/discover-mallacoota"
+        ogImage="https://hammondproperties.com.au/images/discover-mallacoota-hero-background.jpg"
+        imageAlt="Discover Mallacoota — beaches, restaurants, activities and hidden gems"
+        schema={discoverSchema}
+      />
       <div className="min-h-screen bg-background">
         <Header />
-        
+
         <main>
         {/* Hero Section with Animations - Mobile Optimized */}
 <section className="relative min-h-[60vh] sm:min-h-[70vh] lg:h-[calc(100vh-5rem)] overflow-hidden">

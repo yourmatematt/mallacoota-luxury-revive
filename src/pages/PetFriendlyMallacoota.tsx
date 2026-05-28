@@ -7,7 +7,7 @@ import { PawPrint, Heart, Shield, MapPin, Phone, Star, ChevronRight, Hospital, U
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
-import SEOHead from "@/components/SEOHead";
+import SEOMetaTags from "@/components/SEOMetaTags";
 import { useProperties } from "@/hooks/useProperties";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import BlogCard from "@/components/BlogCard";
@@ -46,122 +46,59 @@ const PetFriendlyMallacoota = () => {
 
   useEffect(() => {
     setIsLoaded(true);
-
-    // Preload hero image for faster loading
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.href = '/images/pet-friendly-hero.jpg';
-    document.head.appendChild(link);
-
-    // SEO Meta Tags
-    const title = "Pet-Friendly Accommodation Mallacoota | Luxury Holiday Rentals | Hammond Properties";
-    document.title = title;
-    
-    const description = "Bring your furry family to Mallacoota's finest pet-friendly holiday rentals. Luxury properties with dog beaches, fenced yards & premium pet amenities. Local pet services included.";
-    
-    // Update meta description
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      metaDescription.setAttribute('content', description);
-      document.head.appendChild(metaDescription);
-    }
-
-    // Canonical URL
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (canonicalLink) {
-      canonicalLink.setAttribute('href', 'https://hammondproperties.com.au/pet-friendly-mallacoota');
-    } else {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      canonicalLink.setAttribute('href', 'https://hammondproperties.com.au/pet-friendly-mallacoota');
-      document.head.appendChild(canonicalLink);
-    }
-
-    // Open Graph tags
-    const updateOrCreateOGMeta = (property: string, content: string) => {
-      let ogMeta = document.querySelector(`meta[property="${property}"]`);
-      if (ogMeta) {
-        ogMeta.setAttribute('content', content);
-      } else {
-        ogMeta = document.createElement('meta');
-        ogMeta.setAttribute('property', property);
-        ogMeta.setAttribute('content', content);
-        document.head.appendChild(ogMeta);
-      }
-    };
-
-    updateOrCreateOGMeta('og:title', title);
-    updateOrCreateOGMeta('og:description', description);
-    updateOrCreateOGMeta('og:url', 'https://hammondproperties.com.au/pet-friendly-mallacoota');
-    updateOrCreateOGMeta('og:image', 'https://hammondproperties.com.au/images/pet-friendly-og.jpg');
-
-    return () => {
-      if (document.head.contains(link)) {
-        document.head.removeChild(link);
-      }
-    };
   }, []);
 
-  // Update structured data when pet-friendly properties load
-  useEffect(() => {
-    if (!petFriendlyProperties) return;
-
-    const description = "Bring your furry family to Mallacoota's finest pet-friendly holiday rentals. Luxury properties with dog beaches, fenced yards & premium pet amenities. Local pet services included.";
-
-    // Structured data with dynamic property count
-    const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "LodgingBusiness",
-      "name": "Pet-Friendly Holiday Rentals Mallacoota - Hammond Properties",
-      "description": description,
-      "url": "https://hammondproperties.com.au/pet-friendly-mallacoota",
-      "petsAllowed": true,
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Mallacoota",
-        "addressRegion": "Victoria",
-        "addressCountry": "AU"
+  // SEO schema rebuilt from pet-friendly property list. Replaces the previous
+  // two imperative useEffects + the per-property mutations that ran on each render.
+  const petFriendlyDescription =
+    "Bring your furry family to Mallacoota's finest pet-friendly holiday rentals. Luxury properties with dog beaches, fenced yards & premium pet amenities. Local pet services included.";
+  const petFriendlySchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "LodgingBusiness",
+        "@id": "https://hammondproperties.com.au/pet-friendly-mallacoota#lodgingbusiness",
+        "name": "Pet-Friendly Holiday Rentals Mallacoota - Hammond Properties",
+        "description": petFriendlyDescription,
+        "url": "https://hammondproperties.com.au/pet-friendly-mallacoota",
+        "petsAllowed": true,
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Mallacoota",
+          "addressRegion": "Victoria",
+          "addressCountry": "AU",
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "-37.5642",
+          "longitude": "149.7544",
+        },
+        "amenityFeature": [
+          { "@type": "LocationFeatureSpecification", "name": "Pet Friendly" },
+          { "@type": "LocationFeatureSpecification", "name": "Fenced Yards" },
+          { "@type": "LocationFeatureSpecification", "name": "Dog Beaches Nearby" },
+          { "@type": "LocationFeatureSpecification", "name": "Pet Amenities Provided" },
+        ],
+        "numberOfRooms": petFriendlyProperties?.length ?? 0,
+        "makesOffer": (petFriendlyProperties ?? []).map((property) => ({
+          "@type": "Offer",
+          "name": property.title,
+          "description": property.excerpt || property.subtitle,
+          "url": `https://hammondproperties.com.au/properties/${property.slug}`,
+          "priceCurrency": "AUD",
+          "availability": "https://schema.org/InStock",
+        })),
       },
-      "amenityFeature": [
-        { "@type": "LocationFeatureSpecification", "name": "Pet Friendly" },
-        { "@type": "LocationFeatureSpecification", "name": "Fenced Yards" },
-        { "@type": "LocationFeatureSpecification", "name": "Dog Beaches Nearby" },
-        { "@type": "LocationFeatureSpecification", "name": "Pet Amenities Provided" }
-      ],
-      "numberOfRooms": petFriendlyProperties.length,
-      "makesOffer": petFriendlyProperties.map(property => ({
-        "@type": "Offer",
-        "name": property.title,
-        "description": property.excerpt || property.subtitle,
-        "url": `https://hammondproperties.com.au/properties/${property.slug}`,
-        "priceCurrency": "AUD",
-        "availability": "https://schema.org/InStock"
-      }))
-    };
-
-    let structuredDataScript = document.querySelector('#pet-friendly-structured-data');
-    if (structuredDataScript) {
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-    } else {
-      structuredDataScript = document.createElement('script');
-      structuredDataScript.id = 'pet-friendly-structured-data';
-      structuredDataScript.type = 'application/ld+json';
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-      document.head.appendChild(structuredDataScript);
-    }
-
-    return () => {
-      const script = document.querySelector('#pet-friendly-structured-data');
-      if (script) {
-        script.remove();
-      }
-    };
-  }, [petFriendlyProperties]);
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://hammondproperties.com.au/pet-friendly-mallacoota#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://hammondproperties.com.au/" },
+          { "@type": "ListItem", "position": 2, "name": "Pet-Friendly Mallacoota", "item": "https://hammondproperties.com.au/pet-friendly-mallacoota" },
+        ],
+      },
+    ],
+  };
 
   const petAmenities: PetAmenity[] = [
     {
@@ -223,10 +160,16 @@ const PetFriendlyMallacoota = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead 
-        title="Pet-Friendly Accommodation Mallacoota | Luxury Holiday Rentals | Hammond Properties"
-        description="Bring your furry family to Mallacoota's finest pet-friendly holiday rentals. Luxury properties with dog beaches, fenced yards & premium pet amenities. Local pet services included."
+      <SEOMetaTags
+        title="Pet-Friendly Accommodation Mallacoota | Luxury Holiday Rentals"
+        description={petFriendlyDescription}
+        canonical="https://hammondproperties.com.au/pet-friendly-mallacoota"
+        ogImage="https://hammondproperties.com.au/images/pet-friendly-og.jpg"
+        imageAlt="Pet-friendly luxury holiday rental in Mallacoota with fenced yards and dog beaches nearby"
+        schema={petFriendlySchema}
       />
+      {/* Hero image preload (above-the-fold LCP). */}
+      <link rel="preload" as="image" href="/images/pet-friendly-hero.jpg" />
       
       <Header />
       

@@ -1,11 +1,40 @@
-import { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Users, Camera, Binoculars, Anchor, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import SEOHead from "@/components/SEOHead";
+import SEOMetaTags from "@/components/SEOMetaTags";
+
+// Fabricated `aggregateRating` (4.8/500) removed — same per-property invention
+// flagged elsewhere by the brief; Gabo tours aren't a Hammond product, no rating
+// data exists. Real geo: Gabo Island ≈ -37.5660, 149.9163 (corrected from
+// the previous -37.56 / 149.85 placeholder).
+const GABO_ISLAND_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "TouristDestination",
+  "name": "Gabo Island Tours from Mallacoota",
+  "description":
+    "Book your Gabo Island lighthouse and penguin tour from Mallacoota. Historic 1862 lighthouse, little penguin colony, guided wildlife tours.",
+  "url": "https://hammondproperties.com.au/discover-mallacoota/gabo-island",
+  "touristType": "https://schema.org/NatureTourism",
+  "provider": {
+    "@type": "Organization",
+    "@id": "https://hammondproperties.com.au/#organization",
+    "name": "Hammond Properties",
+    "url": "https://hammondproperties.com.au",
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "-37.5660",
+    "longitude": "149.9163",
+  },
+  "containsPlace": {
+    "@type": "LightHouse",
+    "name": "Gabo Island Lighthouse",
+    "description": "Historic 1862 lighthouse standing 47 metres tall",
+  },
+};
 
 const GaboIsland = () => {
   const tourHighlights = [
@@ -40,56 +69,14 @@ const GaboIsland = () => {
     { label: "Difficulty", value: "Moderate walking required" }
   ];
 
-  useEffect(() => {
-    // Add structured data for Gabo Island tours
-    const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "TouristDestination",
-      "name": "Gabo Island Tours from Mallacoota",
-      "description": "Book your Gabo Island lighthouse and penguin tour from Mallacoota. Historic 1862 lighthouse, little penguin colony, guided wildlife tours.",
-      "url": "https://hammondproperties.com.au/gabo-island",
-      "touristType": "https://schema.org/NatureTourism",
-      "provider": {
-        "@type": "Organization",
-        "name": "Hammond Properties",
-        "url": "https://hammondproperties.com.au",
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.8",
-          "reviewCount": "500",
-          "bestRating": "5",
-          "worstRating": "1"
-        }
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "-37.56",
-        "longitude": "149.85"
-      },
-      "containsPlace": {
-        "@type": "LightHouse",
-        "name": "Gabo Island Lighthouse",
-        "description": "Historic 1862 lighthouse standing 47 metres tall"
-      }
-    };
-
-    let structuredDataScript = document.querySelector('#gabo-island-structured-data');
-    if (structuredDataScript) {
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-    } else {
-      structuredDataScript = document.createElement('script');
-      structuredDataScript.id = 'gabo-island-structured-data';
-      structuredDataScript.type = 'application/ld+json';
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-      document.head.appendChild(structuredDataScript);
-    }
-  }, []);
-
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead 
-        title="Gabo Island Tours from Mallacoota | Lighthouse & Penguin Tours Guide"
-        description="Book your Gabo Island lighthouse and penguin tour from Mallacoota. Historic 1862 lighthouse, little penguin colony, guided wildlife tours. Full day adventure departing daily."
+      <SEOMetaTags
+        title="Gabo Island Tours from Mallacoota | Lighthouse & Penguin Tours"
+        description="Book your Gabo Island lighthouse and penguin tour from Mallacoota. Historic 1862 lighthouse, little penguin colony, guided wildlife tours."
+        canonical="https://hammondproperties.com.au/discover-mallacoota/gabo-island"
+        imageAlt="Gabo Island lighthouse with little penguin colony at sunset"
+        schema={GABO_ISLAND_SCHEMA}
       />
       
       <Header />

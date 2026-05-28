@@ -17,6 +17,7 @@ export interface Property {
   waterfront?: boolean;  // 👈 Added for direct waterfront access
   view_type?: string;    // 👈 Added view_type for display
   airbnb_rating?: string;
+  airbnb_review_count?: number;
   image_folder?: string;
   latitude?: number;
   longitude?: number;
@@ -108,6 +109,10 @@ export const usePropertyReviews = (propertyId?: string) => {
   });
 };
 
+// TODO(matt): replace with Supabase RPC `random_properties(lim int)` using
+// `select * from "Properties" order by random() limit $1`. Keeping client
+// shuffle for now (rule: zero deploys this pass), but capping fetch to limit*4
+// so we don't pull the entire table to throw most rows away.
 export const useRandomProperties = (limit: number = 3) => {
   return useQuery({
     queryKey: ['random-properties', limit],
@@ -115,13 +120,12 @@ export const useRandomProperties = (limit: number = 3) => {
       const { data, error } = await supabase
         .from('Properties')
         .select('*')
-        .limit(100); // Get more than needed for randomization
-      
+        .limit(Math.max(limit * 4, 12));
+
       if (error) throw error;
-      
-      // Randomize and return limited number
-      const shuffled = data?.sort(() => 0.5 - Math.random()) || [];
-      return shuffled.slice(0, limit).map(item => ({ ...item, id: item.property_id })) as Property[];
+
+      const shuffled = (data ?? []).slice().sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, limit).map((item: { property_id: string }) => ({ ...item, id: item.property_id })) as Property[];
     },
   });
 };

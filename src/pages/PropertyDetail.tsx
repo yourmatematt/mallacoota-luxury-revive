@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,9 +23,9 @@ import { PawPrint, Anchor, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { validatePhone, getPhoneValidationMessage } from "@/lib/validation";
 import { calculateDistance } from "@/lib/calculateDistance";
-import ExperienceMap from "@/components/ExperienceMap";
-import SEOHead from "@/components/SEOHead";
-import { getPropertyContent } from "@/data/propertyContent";
+const ExperienceMap = lazy(() => import("@/components/ExperienceMap"));
+import SEOMetaTags from "@/components/SEOMetaTags";
+import type { PropertyContent } from "@/data/propertyContent";
 import { getPropertyFallbackImage } from "@/lib/imageUtils";
 
 // Keep stock images as fallbacks
@@ -45,8 +45,19 @@ const PropertyDetail = () => {
   const { data: propertyAmenities } = usePropertyAmenities(property?.property_id);
   const { toast } = useToast();
 
-  // Get unique content for this property
-  const propertyContent = property?.slug ? getPropertyContent(property.slug) : null;
+  // Lazily fetch the per-property content (large data module — kept off the initial bundle).
+  const [propertyContent, setPropertyContent] = useState<PropertyContent | null>(null);
+  useEffect(() => {
+    if (!property?.slug) {
+      setPropertyContent(null);
+      return;
+    }
+    let cancelled = false;
+    import("@/data/propertyContent").then((m) => {
+      if (!cancelled) setPropertyContent(m.getPropertyContent(property.slug) ?? null);
+    });
+    return () => { cancelled = true; };
+  }, [property?.slug]);
   
   // Get real images from Supabase
   const { data: heroImage } = usePropertyHeroImage(property?.image_folder || '');
@@ -57,262 +68,156 @@ const PropertyDetail = () => {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [showAllReviews, setShowAllReviews] = useState(false);
 
-  // SEO META TAGS - Set when property loads
-  useEffect(() => {
-    if (property) {
-      // Set page title using meta_title or fallback
-      const title = property.meta_title || `${property.title} - ${property.bedrooms}BR Luxury Mallacoota Rental | Hammond Properties`;
-      document.title = title;
-      
-      // Set meta description using meta_description or fallback
-      const description = property.meta_description || 
-        `${property.excerpt || 'Luxury holiday rental in Mallacoota'} ${property.bedrooms}-bedroom property sleeps ${property.guests} guests. Book your perfect getaway with Hammond Properties.`;
-      
-      // Update existing meta tags or create new ones
-      let metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute('content', description);
-      } else {
-        metaDescription = document.createElement('meta');
-        metaDescription.setAttribute('name', 'description');
-        metaDescription.setAttribute('content', description);
-        document.head.appendChild(metaDescription);
-      }
+  // Get hero image - use real image if available, otherwise fallback to stock
+  const getHeroImage = (propertyId: string) => {
+    if (heroImage?.url) {
+      return heroImage.url;
+    }
+    // Use consistent fallback logic
+    return getPropertyFallbackImage(property?.image_folder || property?.slug || propertyId);
+  };
 
-      // Open Graph meta tags for social sharing
-      const updateOrCreateOGMeta = (property: string, content: string) => {
-        let ogMeta = document.querySelector(`meta[property="${property}"]`);
-        if (ogMeta) {
-          ogMeta.setAttribute('content', content);
-        } else {
-          ogMeta = document.createElement('meta');
-          ogMeta.setAttribute('property', property);
-          ogMeta.setAttribute('content', content);
-          document.head.appendChild(ogMeta);
-        }
-      };
+  // SEO derived values — all head management handled by <SEOMetaTags> in render below.
+  // og:type intentionally `product` per brief (was `website`).
+  const propertyImage = heroImage?.url || getHeroImage(property?.property_id || '');
+  const seoTitle = property
+    ? (property.meta_title || `${property.title} - ${property.bedrooms}BR Luxury Mallacoota Rental | Hammond Properties`)
+    : "Hammond Properties - Luxury Holiday Rentals Mallacoota";
+  const seoDescription = property
+    ? (property.meta_description || `${property.excerpt || 'Luxury holiday rental in Mallacoota'} ${property.bedrooms}-bedroom property sleeps ${property.guests} guests. Book your perfect getaway with Hammond Properties.`)
+    : "Premium Mallacoota holiday rentals.";
 
-      const propertyImage = heroImage?.url || getHeroImage(property.property_id);
-      
-      updateOrCreateOGMeta('og:title', title);
-      updateOrCreateOGMeta('og:description', description);
-      updateOrCreateOGMeta('og:url', `https://hammondproperties.com.au/properties/${property.slug}`);
-      updateOrCreateOGMeta('og:image', propertyImage);
-      updateOrCreateOGMeta('og:type', 'website');
-      updateOrCreateOGMeta('og:image:width', '1200');
-      updateOrCreateOGMeta('og:image:height', '630');
-      updateOrCreateOGMeta('og:image:alt', `${property.title} - Luxury holiday rental in Mallacoota`);
+  const propertySchema = useMemo(() => {
+    if (!property) return null;
 
-      // Twitter Card meta tags
-      const updateOrCreateTwitterMeta = (name: string, content: string) => {
-        let twitterMeta = document.querySelector(`meta[name="${name}"]`);
-        if (twitterMeta) {
-          twitterMeta.setAttribute('content', content);
-        } else {
-          twitterMeta = document.createElement('meta');
-          twitterMeta.setAttribute('name', name);
-          twitterMeta.setAttribute('content', content);
-          document.head.appendChild(twitterMeta);
-        }
-      };
-
-      updateOrCreateTwitterMeta('twitter:card', 'summary_large_image');
-      updateOrCreateTwitterMeta('twitter:title', title);
-      updateOrCreateTwitterMeta('twitter:description', description);
-      updateOrCreateTwitterMeta('twitter:image', propertyImage);
-      updateOrCreateTwitterMeta('twitter:image:alt', `${property.title} - Mallacoota holiday rental`);
-
-      // Add geo tags for local SEO
-      const updateOrCreateMeta = (name: string, content: string) => {
-        let meta = document.querySelector(`meta[name="${name}"]`);
-        if (meta) {
-          meta.setAttribute('content', content);
-        } else {
-          meta = document.createElement('meta');
-          meta.setAttribute('name', name);
-          meta.setAttribute('content', content);
-          document.head.appendChild(meta);
-        }
-      };
-
-      updateOrCreateMeta('geo.region', 'AU-VIC');
-      updateOrCreateMeta('geo.placename', 'Mallacoota');
-      if (property.latitude && property.longitude) {
-        updateOrCreateMeta('geo.position', `${property.latitude};${property.longitude}`);
-        updateOrCreateMeta('ICBM', `${property.latitude}, ${property.longitude}`);
-      } else {
-        updateOrCreateMeta('geo.position', '-37.5642;149.7544');
-        updateOrCreateMeta('ICBM', '-37.5642, 149.7544');
-      }
-
-      // Calculate distances to key attractions for SEO
-      const nearbyAttractions = property.latitude && property.longitude ? [
-        { name: "Origami Coffee", lat: -37.556263, lng: 149.756987, type: "Restaurant" },
-        { name: "Scallywags Restaurant", lat: -37.556441, lng: 149.757333, type: "Restaurant" },
-        { name: "Betka Beach", lat: -37.585766, lng: 149.738400, type: "Beach" },
-        { name: "Main Wharf", lat: -37.554442, lng: 149.757181, type: "TouristAttraction" },
-        { name: "Mallacoota Town Centre", lat: -37.557734, lng: 149.757351, type: "LocalBusiness" }
-      ].map(attraction => {
-        const distance = calculateDistance(property.latitude!, property.longitude!, attraction.lat, attraction.lng);
-        return {
-          "@type": "Place",
-          "name": attraction.name,
-          "description": `${distance.display} from property`,
-          "additionalType": `schema.org/${attraction.type}`,
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": attraction.lat,
-            "longitude": attraction.lng
-          }
-        };
-      }) : [];
-
-      // Structured data for better search results
-      const structuredData = {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "VacationRental",
-            "additionalType": "https://schema.org/EntirePlace",
-            "@id": `https://hammondproperties.com.au/properties/${property.slug}#vacationrental`,
-            "name": property.title,
-            "description": description,
-            "url": `https://hammondproperties.com.au/properties/${property.slug}`,
-            "identifier": property.property_id,
-            "image": galleryImages && galleryImages.length > 0
-              ? galleryImages.slice(0, 10).map(img => img.url)
-              : propertyImage ? [propertyImage] : undefined,
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": property.title,
-              "addressLocality": "Mallacoota",
-              "addressRegion": "Victoria",
-              "postalCode": "3892",
-              "addressCountry": "AU"
+    const nearbyAttractions = property.latitude && property.longitude
+      ? [
+          { name: "Origami Coffee", lat: -37.556263, lng: 149.756987, type: "Restaurant" },
+          { name: "Scallywags Restaurant", lat: -37.556441, lng: 149.757333, type: "Restaurant" },
+          { name: "Betka Beach", lat: -37.585766, lng: 149.738400, type: "Beach" },
+          { name: "Main Wharf", lat: -37.554442, lng: 149.757181, type: "TouristAttraction" },
+          { name: "Mallacoota Town Centre", lat: -37.557734, lng: 149.757351, type: "LocalBusiness" },
+        ].map((attraction) => {
+          const distance = calculateDistance(property.latitude!, property.longitude!, attraction.lat, attraction.lng);
+          return {
+            "@type": "Place",
+            "name": attraction.name,
+            "description": `${distance.display} from property`,
+            "additionalType": `schema.org/${attraction.type}`,
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": attraction.lat,
+              "longitude": attraction.lng,
             },
-            ...(property.latitude && property.longitude && {
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": property.latitude,
-                "longitude": property.longitude
-              }
-            }),
-            "containsPlace": {
-              "@type": "Accommodation",
-              "additionalType": "https://schema.org/EntirePlace",
-              "amenityFeature": propertyAmenities?.map(amenity => ({
-                "@type": "LocationFeatureSpecification",
-                "name": amenity.amenity.name,
-                "value": true
-              })),
-              "bed": {
-                "@type": "BedDetails",
-                "numberOfBeds": property.bedrooms,
-                "typeOfBed": "Other"
-              },
-              "numberOfBedrooms": property.bedrooms,
-              "numberOfBathroomsTotal": property.bathrooms,
-              "occupancy": {
-                "@type": "QuantitativeValue",
-                "value": property.guests
-              }
+          };
+        })
+      : [];
+
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "VacationRental",
+          "additionalType": "https://schema.org/EntirePlace",
+          "@id": `https://hammondproperties.com.au/properties/${property.slug}#vacationrental`,
+          "name": property.title,
+          "description": seoDescription,
+          "url": `https://hammondproperties.com.au/properties/${property.slug}`,
+          "identifier": property.property_id,
+          "image":
+            galleryImages && galleryImages.length > 0
+              ? galleryImages.slice(0, 10).map((img) => img.url)
+              : propertyImage ? [propertyImage] : undefined,
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": property.title,
+            "addressLocality": "Mallacoota",
+            "addressRegion": "Victoria",
+            "postalCode": "3892",
+            "addressCountry": "AU",
+          },
+          ...(property.latitude && property.longitude && {
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": property.latitude,
+              "longitude": property.longitude,
+            },
+          }),
+          "containsPlace": {
+            "@type": "Accommodation",
+            "additionalType": "https://schema.org/EntirePlace",
+            "amenityFeature": propertyAmenities?.map((amenity) => ({
+              "@type": "LocationFeatureSpecification",
+              "name": amenity.amenity.name,
+              "value": true,
+            })),
+            "bed": {
+              "@type": "BedDetails",
+              "numberOfBeds": property.bedrooms,
+              "typeOfBed": "Other",
             },
             "numberOfBedrooms": property.bedrooms,
             "numberOfBathroomsTotal": property.bathrooms,
             "occupancy": {
               "@type": "QuantitativeValue",
-              "value": property.guests
+              "value": property.guests,
             },
-            "aggregateRating": property.airbnb_rating ? {
-              "@type": "AggregateRating",
-              "ratingValue": property.airbnb_rating,
-              "bestRating": "5",
-              "reviewCount": reviews?.length || property.airbnb_review_count || 1
-            } : undefined,
-            "review": reviews && reviews.length > 0
+          },
+          "numberOfBedrooms": property.bedrooms,
+          "numberOfBathroomsTotal": property.bathrooms,
+          "occupancy": {
+            "@type": "QuantitativeValue",
+            "value": property.guests,
+          },
+          // Real per-property rating only — collection-level fabricated 4.8/500 removed elsewhere.
+          "aggregateRating": property.airbnb_rating
+            ? {
+                "@type": "AggregateRating",
+                "ratingValue": property.airbnb_rating,
+                "bestRating": "5",
+                "reviewCount": reviews?.length || property.airbnb_review_count || 1,
+              }
+            : undefined,
+          "review":
+            reviews && reviews.length > 0
               ? reviews.slice(0, 5).map((review: any) => ({
                   "@type": "Review",
                   "datePublished": review.review_date
-                    ? new Date(review.review_date).toISOString().split('T')[0]
+                    ? new Date(review.review_date).toISOString().split("T")[0]
                     : undefined,
                   "reviewRating": {
                     "@type": "Rating",
                     "ratingValue": review.rating || 5,
-                    "bestRating": 5
+                    "bestRating": 5,
                   },
                   "author": {
                     "@type": "Person",
-                    "name": review.reviewer || "Guest"
+                    "name": review.reviewer || "Guest",
                   },
-                  ...(review.review ? { "reviewBody": review.review } : {})
+                  ...(review.review ? { "reviewBody": review.review } : {}),
                 }))
               : undefined,
-            "amenityFeature": propertyAmenities?.map(amenity => ({
-              "@type": "LocationFeatureSpecification",
-              "name": amenity.amenity.name,
-              "value": true
-            })),
-            ...(nearbyAttractions.length > 0 && {
-              "nearbyAttraction": nearbyAttractions
-            })
-          },
-          {
-            "@type": "BreadcrumbList",
-            "@id": `https://hammondproperties.com.au/properties/${property.slug}#breadcrumb`,
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": { "@id": "https://hammondproperties.com.au/" }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Properties",
-                "item": { "@id": "https://hammondproperties.com.au/properties" }
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": property.title
-              }
-            ]
-          }
-        ]
-      };
-
-      // Add structured data script
-      let structuredDataScript = document.querySelector('#property-structured-data');
-      if (structuredDataScript) {
-        structuredDataScript.textContent = JSON.stringify(structuredData);
-      } else {
-        structuredDataScript = document.createElement('script');
-        structuredDataScript.id = 'property-structured-data';
-        structuredDataScript.type = 'application/ld+json';
-        structuredDataScript.textContent = JSON.stringify(structuredData);
-        document.head.appendChild(structuredDataScript);
-      }
-    }
-  }, [property, propertyAmenities, heroImage, galleryImages, reviews]);
-
-
-  // Reset to default meta tags when component unmounts
-  useEffect(() => {
-    return () => {
-      document.title = 'Hammond Properties - Luxury Holiday Rentals';
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute('content', 'Experience Mallacoota\'s luxury holiday rentals with Hammond Properties. Come as guests. Leave as family.');
-      }
-      
-      // Remove property structured data
-      const structuredDataScript = document.querySelector('#property-structured-data');
-      if (structuredDataScript) {
-        structuredDataScript.remove();
-      }
+          "amenityFeature": propertyAmenities?.map((amenity) => ({
+            "@type": "LocationFeatureSpecification",
+            "name": amenity.amenity.name,
+            "value": true,
+          })),
+          ...(nearbyAttractions.length > 0 && {
+            "nearbyAttraction": nearbyAttractions,
+          }),
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": `https://hammondproperties.com.au/properties/${property.slug}#breadcrumb`,
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://hammondproperties.com.au/" },
+            { "@type": "ListItem", "position": 2, "name": "Properties", "item": "https://hammondproperties.com.au/properties" },
+            { "@type": "ListItem", "position": 3, "name": property.title },
+          ],
+        },
+      ],
     };
-  }, []);
+  }, [property, propertyAmenities, galleryImages, reviews, propertyImage, seoDescription]);
 
   // Stock images for fallbacks
   const heroImages = [propertyHero1, propertyHero2, propertyHero3];
@@ -352,17 +257,9 @@ const PropertyDetail = () => {
     }))
   ];
 
-  // Get hero image - use real image if available, otherwise fallback to stock
-  const getHeroImage = (propertyId: string) => {
-    if (heroImage?.url) {
-      return heroImage.url;
-    }
-    // Use consistent fallback logic
-    return getPropertyFallbackImage(property?.image_folder || property?.slug || propertyId);
-  };
-
   // Get gallery images - use real images if available, otherwise fallback to stock
-  const allImages = galleryImages && galleryImages.length > 0 
+  const hasRealGallery = !!(galleryImages && galleryImages.length > 0);
+  const allImages = hasRealGallery
     ? galleryImages.map(img => img.url)
     : stockGalleryImages;
   
@@ -538,12 +435,20 @@ const PropertyDetail = () => {
     );
   }
 
+  const renderTitle = propertyContent?.metaTitle || `${property.title} - ${property.bedrooms}BR Luxury Mallacoota Rental | Hammond Properties`;
+  const renderDescription = propertyContent?.metaDescription || property.description || property.excerpt || seoDescription;
+
   return (
     <PageTransition>
-      <SEOHead
-        title={propertyContent?.metaTitle || `${property.title} - ${property.bedrooms}BR ${property.bedrooms > 1 ? 'Bedrooms' : 'Bedroom'} Luxury Mallacoota Holiday Rental | Hammond Properties`}
-        description={propertyContent?.metaDescription || property.description || property.excerpt}
-        ogImage={getHeroImage(property.property_id)}
+      <SEOMetaTags
+        title={renderTitle}
+        description={renderDescription}
+        canonical={`https://hammondproperties.com.au/properties/${property.slug}`}
+        ogImage={propertyImage}
+        ogType="product"
+        imageAlt={`${property.title} - Luxury holiday rental in Mallacoota`}
+        geoPosition={property.latitude && property.longitude ? `${property.latitude};${property.longitude}` : undefined}
+        schema={propertySchema}
       />
       <div className="min-h-screen bg-background">
         <Header />
@@ -612,16 +517,23 @@ const PropertyDetail = () => {
                   ))}
                 </div>
                 
-                <Button 
-                  onClick={() => {
-                    setGalleryIndex(0);
-                    setShowGallery(true);
-                  }}
-                  className="bg-white/95 text-primary hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg w-full sm:w-auto"
-                  size="sm"
-                >
-                  View All {allImages.length} Photos
-                </Button>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                  <Button
+                    onClick={() => {
+                      setGalleryIndex(0);
+                      setShowGallery(true);
+                    }}
+                    className="bg-white/95 text-primary hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg w-full sm:w-auto"
+                    size="sm"
+                  >
+                    View All {allImages.length} Photos
+                  </Button>
+                  {!hasRealGallery && (
+                    <Badge variant="secondary" className="bg-white/90 text-primary text-xs">
+                      Sample photos — full gallery coming soon
+                    </Badge>
+                  )}
+                </div>
               </div>
             </div>
           </section>
@@ -881,13 +793,15 @@ const PropertyDetail = () => {
                       </div>
 
                       {/* Interactive Map with Distance Calculations */}
-                      <ExperienceMap
-                        propertyCoordinates={{
-                          lat: property.latitude,
-                          lng: property.longitude
-                        }}
-                        propertyName={property.title || property.name}
-                      />
+                      <Suspense fallback={<div className="h-[500px] rounded-2xl bg-muted animate-pulse" aria-label="Loading map" />}>
+                        <ExperienceMap
+                          propertyCoordinates={{
+                            lat: property.latitude,
+                            lng: property.longitude
+                          }}
+                          propertyName={property.title || property.name}
+                        />
+                      </Suspense>
                     </div>
                   </section>
                 )}

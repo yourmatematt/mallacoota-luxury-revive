@@ -14,10 +14,16 @@ export const useRelatedBlogPosts = ({
   minScore = 1
 }: UseRelatedBlogPostsOptions) => {
   const [relatedPosts, setRelatedPosts] = useState<RelatedBlogPost[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // Start in non-loading state so a falsy id doesn't strand the UI on a permanent spinner.
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!currentPostId) {
+      setIsLoading(false);
+      setRelatedPosts([]);
+      return;
+    }
     const fetchRelatedPosts = async () => {
       try {
         setIsLoading(true);
@@ -145,9 +151,7 @@ export const useRelatedBlogPosts = ({
       }
     };
 
-    if (currentPostId) {
-      fetchRelatedPosts();
-    }
+    fetchRelatedPosts();
   }, [currentPostId, maxResults, minScore]);
 
   return {

@@ -8,8 +8,11 @@ export type SignatureProperty = {
   heroImageUrl: string;
   bedrooms: number;
   bathrooms: number;
+  guests: number;
+  excerpt: string;
   petFriendly: boolean;
   boatParking: boolean;
+  waterViews: boolean;
 };
 
 /**
@@ -27,7 +30,7 @@ export const useSignatureProperties = () => {
         // Try the IN query first
         const { data: properties, error } = await supabase
           .from('properties')
-          .select('slug, title, image_folder, bedrooms, bathrooms, pet_friendly, boat_parking')
+          .select('slug, title, image_folder, bedrooms, bathrooms, guests, excerpt, pet_friendly, boat_parking, water_views')
           .in('slug', signaturePropertySlugs);
 
         console.log('📊 Supabase query result:', { properties, error });
@@ -41,7 +44,7 @@ export const useSignatureProperties = () => {
               console.log(`🔍 Fetching individual property: ${slug}`);
               const { data, error } = await supabase
                 .from('properties')
-                .select('slug, title, image_folder, bedrooms, bathrooms, pet_friendly, boat_parking')
+                .select('slug, title, image_folder, bedrooms, bathrooms, guests, excerpt, pet_friendly, boat_parking, water_views')
                 .eq('slug', slug)
                 .single();
 
@@ -115,8 +118,11 @@ function transformProperties(properties: any[]): SignatureProperty[] {
       heroImageUrl,
       bedrooms: property.bedrooms || 0,
       bathrooms: property.bathrooms || 0,
+      guests: property.guests || 0,
+      excerpt: property.excerpt || '',
       petFriendly: property.pet_friendly || false,
       boatParking: property.boat_parking || false,
+      waterViews: property.water_views || false,
     };
   });
 
@@ -143,8 +149,11 @@ function getFallbackSignatureProperties(): SignatureProperty[] {
       heroImageUrl: '',
       bedrooms: 3,
       bathrooms: 2,
+      guests: 6,
+      excerpt: 'Luxury Mallacoota waterfront rental.',
       petFriendly: false,
       boatParking: true,
+      waterViews: true,
     },
     {
       slug: 'four-on-stingray-point',
@@ -153,8 +162,11 @@ function getFallbackSignatureProperties(): SignatureProperty[] {
       heroImageUrl: '',
       bedrooms: 3,
       bathrooms: 4,
+      guests: 8,
+      excerpt: 'Luxury Mallacoota waterfront rental.',
       petFriendly: true,
       boatParking: true,
+      waterViews: true,
     },
     {
       slug: 'bella-views',
@@ -163,8 +175,11 @@ function getFallbackSignatureProperties(): SignatureProperty[] {
       heroImageUrl: '',
       bedrooms: 3,
       bathrooms: 2,
+      guests: 6,
+      excerpt: 'Luxury Mallacoota rental with panoramic views.',
       petFriendly: false,
       boatParking: false,
+      waterViews: true,
     }
   ];
 

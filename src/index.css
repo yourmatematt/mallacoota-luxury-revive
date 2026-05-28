@@ -13,7 +13,7 @@
     /* Brand Identity */
     --primary: 215 25% 15%;  /* Deep navy for premium feel */
     --primary-foreground: 0 0% 98%;
-    --accent-red: 0 65% 55%;  /* Hammond Properties red accent */
+    --accent-red: 0 70% 42%;  /* Hammond Properties red accent (darkened for WCAG AA contrast on white) */
     --accent-red-foreground: 0 0% 98%;
     
     /* Sophisticated Neutrals */
@@ -25,7 +25,7 @@
     /* Boutique Hospitality Colors */
     --luxury-gold: 35 65% 75%;           /* Muted terracotta */
     --luxury-cream: 45 30% 95%;          /* Soft warm beige */
-    --ocean-blue: 150 25% 65%;           /* Soft sage green */
+    --ocean-blue: 150 25% 32%;           /* Soft sage green (darkened for WCAG AA contrast on white — Footer links) */
     --warm-neutral: 35 15% 90%;          /* Warm off-white base */
     --boutique-accent: 25 45% 65%;       /* Warm terracotta accent */
     
@@ -119,9 +119,45 @@
     font-size: 16px;
     line-height: 1.6;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
+  }
+
+  /* Accessible skip-to-content link — visible only when focused */
+  .skip-to-content {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-radius: 0 0 0.5rem 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .skip-to-content:focus {
+    left: 0;
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Honour user preference: kill nearly all motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .ticker-track,
+    .ticker-slow {
+      animation: none !important;
+      transform: none !important;
+    }
   }
 }
 
@@ -297,8 +333,9 @@
     }
   }
 
-  /* Pause animation on hover */
-  .ticker-container:hover .ticker-track {
+  /* Pause animation on hover or when ticker section is focused (keyboard a11y) */
+  .ticker-container:hover .ticker-track,
+  .ticker-section:focus-within .ticker-track {
     animation-play-state: paused;
   }
 
