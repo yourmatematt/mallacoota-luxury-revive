@@ -180,22 +180,28 @@ const PropertyDetail = () => {
             : undefined,
           "review":
             reviews && reviews.length > 0
-              ? reviews.slice(0, 5).map((review: any) => ({
-                  "@type": "Review",
-                  "datePublished": review.review_date
-                    ? new Date(review.review_date).toISOString().split("T")[0]
-                    : undefined,
-                  "reviewRating": {
-                    "@type": "Rating",
-                    "ratingValue": review.rating || 5,
-                    "bestRating": 5,
-                  },
-                  "author": {
-                    "@type": "Person",
-                    "name": review.reviewer || "Guest",
-                  },
-                  ...(review.review ? { "reviewBody": review.review } : {}),
-                }))
+              ? reviews.slice(0, 5).map((review: any) => {
+                  // Guard: Safari throws RangeError on invalid date strings; Chrome silently
+                  // returns Invalid Date. Some review_date values from Supabase are malformed.
+                  const d = review.review_date ? new Date(review.review_date) : null;
+                  const datePublished = d && !isNaN(d.getTime())
+                    ? d.toISOString().split("T")[0]
+                    : undefined;
+                  return {
+                    "@type": "Review",
+                    ...(datePublished ? { "datePublished": datePublished } : {}),
+                    "reviewRating": {
+                      "@type": "Rating",
+                      "ratingValue": review.rating || 5,
+                      "bestRating": 5,
+                    },
+                    "author": {
+                      "@type": "Person",
+                      "name": review.reviewer || "Guest",
+                    },
+                    ...(review.review ? { "reviewBody": review.review } : {}),
+                  };
+                })
               : undefined,
           "amenityFeature": propertyAmenities?.map((amenity) => ({
             "@type": "LocationFeatureSpecification",
