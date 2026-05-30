@@ -206,8 +206,14 @@ const Properties = () => {
                 </Link>
               </div>
               
-              {/* Filter Controls with Animation - Mobile Optimized */}
-              <div className={`max-w-6xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 transition-all duration-800 delay-800 ${
+              {/* Filter Controls with Animation - Mobile Optimized.
+                  Dark glass (bg-black/40) instead of bg-white/10 — Phase 1b tap-target
+                  bumps grew the card by ~70px on mobile, extending it into the redder
+                  lower region of the hero photo (terracotta + hibiscus). At 10% white,
+                  the photo dominated the appearance and produced a visible red/pink wash.
+                  bg-black/40 matches the existing hero-darkening overlay above, keeps
+                  the border visible, and improves white-text contrast. */}
+              <div className={`max-w-6xl mx-auto bg-black/40 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 transition-all duration-800 delay-800 ${
                 isLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
               }`}>
                 <div className="flex flex-col space-y-4 sm:space-y-6">
