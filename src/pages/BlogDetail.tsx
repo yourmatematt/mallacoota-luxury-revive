@@ -20,6 +20,7 @@ import {
 import { useBlogPostBySlug, useBlogPostsBySlugs } from "@/hooks/useBlogPosts";
 import { useCategories } from "@/hooks/useBlogFilters";
 import { getBlogImageFallbacks, getBlogImageWithFallback } from '@/lib/blogImages';
+import { supabaseImage, supabaseImageSrcSet } from '@/lib/supabaseImage';
 import { generateBlogContent } from "@/lib/blogContentMapper";
 import { SafeHtmlContent } from "@/components/SafeHtmlContent";
 import { BlogHighlights } from "@/components/BlogHighlights";
@@ -439,9 +440,14 @@ const BlogDetail = () => {
           {/* Hero Section */}
           <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden">
             <img
-              src={heroImageUrl}
+              src={supabaseImage(heroImageUrl, { width: 1200, quality: 80, resize: "cover" }) || heroImageUrl}
+              srcSet={supabaseImageSrcSet(heroImageUrl, [400, 800, 1200, 1600], { quality: 80, resize: "cover" }) || undefined}
+              sizes="100vw"
               alt={blogPost.title}
               className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
               onError={handleImageError}
             />
             <div className="absolute inset-0 bg-black/40" />
