@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useSwipeable } from "@/hooks/useSwipeable";
 
 interface PropertyGalleryOverlayProps {
   images: string[];
@@ -49,13 +50,36 @@ const PropertyGalleryOverlay = ({
 
   const goToImage = (index: number) => {
     if (isTransitioning || index === currentIndex) return;
-    
+
     setIsTransitioning(true);
     setTimeout(() => {
       setCurrentIndex(index);
       setTimeout(() => setIsTransitioning(false), 150);
     }, 150);
   };
+
+  // The DialogDescription advertises arrow-key navigation; wire it up here
+  // so the a11y promise matches behaviour. Active only while the overlay is
+  // open, and only when there are multiple images.
+  useEffect(() => {
+    if (!isOpen || images.length < 2) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        nextImage();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        prevImage();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isOpen, images.length, isTransitioning]);
+
+  const swipe = useSwipeable({
+    onSwipeLeft: nextImage,
+    onSwipeRight: prevImage,
+  });
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -88,7 +112,11 @@ const PropertyGalleryOverlay = ({
 
           {/* Main Image */}
           <div className="flex-1 flex items-center justify-center p-4 pt-20 pb-24">
-            <div className="relative w-full h-full flex items-center justify-center">
+            <div
+              className="relative w-full h-full flex items-center justify-center"
+              onTouchStart={swipe.onTouchStart}
+              onTouchEnd={swipe.onTouchEnd}
+            >
               <div className="relative max-w-full max-h-full overflow-hidden">
                 <img
                   key={currentIndex} // Force re-render for transition

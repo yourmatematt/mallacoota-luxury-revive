@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSwipeable } from "@/hooks/useSwipeable";
 
 interface PropertyImageCarouselProps {
   images: string[];
@@ -43,9 +44,18 @@ const PropertyImageCarousel = ({ images, propertyId, propertyTitle }: PropertyIm
     return () => clearTimeout(timer);
   }, [currentIndex, isTransitioning, images.length, extendedImages.length]);
 
+  const swipe = useSwipeable({
+    onSwipeLeft: nextImage,
+    onSwipeRight: prevImage,
+  });
+
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-xl group hover:scale-105 transition-transform duration-700">
-      <div 
+    <div
+      className="relative aspect-[4/3] overflow-hidden rounded-xl group hover:scale-105 transition-transform duration-700"
+      onTouchStart={swipe.onTouchStart}
+      onTouchEnd={swipe.onTouchEnd}
+    >
+      <div
         className={`flex h-full ${isTransitioning ? 'transition-transform duration-500 ease-in-out' : ''}`}
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
