@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import { useState, useEffect, useMemo, useRef, lazy, Suspense } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -67,6 +67,26 @@ const PropertyDetail = () => {
   const [showGallery, setShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [showAllReviews, setShowAllReviews] = useState(false);
+
+  // Sticky mobile Enquire CTA visibility — gated by IntersectionObserver on the
+  // form wrapper. Hidden when the form is in/below the viewport; revealed only
+  // once the user has scrolled past it (rect.bottom < 0). Default false so the
+  // CTA doesn't flash on page load before the observer attaches.
+  const formWrapperRef = useRef<HTMLDivElement>(null);
+  const [showStickyCTA, setShowStickyCTA] = useState(false);
+
+  useEffect(() => {
+    const el = formWrapperRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyCTA(entry.boundingClientRect.bottom < 0);
+      },
+      { threshold: 0 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [property]);
 
   // Get hero image - use real image if available, otherwise fallback to stock
   const getHeroImage = (propertyId: string) => {
@@ -901,7 +921,7 @@ const PropertyDetail = () => {
               {/* Sidebar — mobile order 1 (form appears right after Hero +
                   Property Gallery so it's reachable in 2 swipes), desktop
                   order 2 (renders on the right of the grid as before). */}
-              <div className="lg:col-span-1 order-1 lg:order-2">
+              <div ref={formWrapperRef} className="lg:col-span-1 order-1 lg:order-2">
                 <Card id="enquiry-form" className="sticky top-24 scroll-mt-24">
                   <CardContent className="p-6">
                     <div className="text-center mb-6">
@@ -1036,31 +1056,36 @@ const PropertyDetail = () => {
           </section>
 
           {/* Mobile-only sticky Enquire CTA. Hidden on lg+ where the sidebar
-              form is visible. Smooth-scrolls to #enquiry-form unless the user
-              prefers reduced motion. Below Radix Dialog's z-50 so the gallery
-              overlay covers it. */}
-          <Button
-            asChild
-            variant="accent"
-            size="lg"
-            rounded="full"
-            className="lg:hidden fixed bottom-4 right-4 z-40 shadow-xl min-h-[56px] px-6 text-base font-semibold"
-          >
-            <a
-              href="#enquiry-form"
-              aria-label="Jump to property enquiry form"
-              onClick={(e) => {
-                e.preventDefault();
-                const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-                document.getElementById("enquiry-form")?.scrollIntoView({
-                  behavior: reduceMotion ? "auto" : "smooth",
-                  block: "start",
-                });
-              }}
+              form is always visible. Also gated by showStickyCTA so it only
+              appears once the form has been scrolled past on mobile (no point
+              nudging when the form is in or below the current viewport).
+              Smooth-scrolls to #enquiry-form unless prefers-reduced-motion.
+              z-40 sits below Radix Dialog's z-50 so the gallery overlay covers
+              it. */}
+          {showStickyCTA && (
+            <Button
+              asChild
+              variant="accent"
+              size="lg"
+              rounded="full"
+              className="lg:hidden fixed bottom-4 right-4 z-40 shadow-xl min-h-[56px] px-6 text-base font-semibold"
             >
-              Enquire
-            </a>
-          </Button>
+              <a
+                href="#enquiry-form"
+                aria-label="Jump to property enquiry form"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                  document.getElementById("enquiry-form")?.scrollIntoView({
+                    behavior: reduceMotion ? "auto" : "smooth",
+                    block: "start",
+                  });
+                }}
+              >
+                Enquire
+              </a>
+            </Button>
+          )}
 
         </main>
 
