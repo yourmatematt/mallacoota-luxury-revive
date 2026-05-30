@@ -305,12 +305,16 @@
       inset 0 1px 0 hsl(0 0% 100% / 0.2);
   }
 
-  .testimonial-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 
-      0 20px 40px -12px hsl(215 25% 15% / 0.25),
-      0 0 0 1px hsl(0 0% 100% / 0.15),
-      inset 0 1px 0 hsl(0 0% 100% / 0.3);
+  /* Layout-changing hover effect — gate to true-hover devices so touch taps
+     don't get consumed as hover-entry. */
+  @media (hover: hover) and (pointer: fine) {
+    .testimonial-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow:
+        0 20px 40px -12px hsl(215 25% 15% / 0.25),
+        0 0 0 1px hsl(0 0% 100% / 0.15),
+        inset 0 1px 0 hsl(0 0% 100% / 0.3);
+    }
   }
 
   /* Testimonial text overflow handling */
@@ -334,7 +338,11 @@
   }
 
   /* Pause animation on hover or when ticker section is focused (keyboard a11y) */
-  .ticker-container:hover .ticker-track,
+  @media (hover: hover) and (pointer: fine) {
+    .ticker-container:hover .ticker-track {
+      animation-play-state: paused;
+    }
+  }
   .ticker-section:focus-within .ticker-track {
     animation-play-state: paused;
   }

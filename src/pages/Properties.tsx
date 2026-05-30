@@ -220,11 +220,11 @@ const Properties = () => {
                       </h3>
                       <div className="flex justify-center sm:justify-end sm:flex-1">
                         {(filters.guests !== 2 || filters.petFriendly || filters.boatParking || filters.waterViews) && (
-                          <Button 
+                          <Button
                             onClick={resetFilters}
                             variant="outline"
                             size="sm"
-                            className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 text-xs sm:text-sm px-3 py-2 transition-all duration-200"
+                            className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 text-sm px-4 py-2 min-h-[44px] transition-all duration-200"
                           >
                             Reset Filters
                           </Button>
@@ -245,16 +245,18 @@ const Properties = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => setFilters(prev => ({ ...prev, guests: Math.max(1, prev.guests - 1) }))}
-                            className="h-8 w-8 sm:h-10 sm:w-10 p-0 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 text-sm transition-all duration-200"
+                            aria-label="Decrease guests"
+                            className="h-11 w-11 sm:h-12 sm:w-12 p-0 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 text-base transition-all duration-200"
                           >
                             -
                           </Button>
-                          <span className="text-white font-medium w-6 sm:w-8 text-center text-sm sm:text-base">{filters.guests}</span>
+                          <span className="text-white font-medium w-8 text-center text-base sm:text-lg">{filters.guests}</span>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => setFilters(prev => ({ ...prev, guests: prev.guests + 1 }))}
-                            className="h-8 w-8 sm:h-10 sm:w-10 p-0 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 text-sm transition-all duration-200"
+                            aria-label="Increase guests"
+                            className="h-11 w-11 sm:h-12 sm:w-12 p-0 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 text-base transition-all duration-200"
                           >
                             +
                           </Button>
@@ -267,7 +269,7 @@ const Properties = () => {
                         <Button
                           variant={filters.petFriendly ? "default" : "outline"}
                           onClick={() => setFilters(prev => ({ ...prev, petFriendly: !prev.petFriendly }))}
-                          className={`w-full justify-center text-xs sm:text-sm py-2 sm:py-3 transition-colors duration-200 ${
+                          className={`w-full justify-center text-sm py-2 sm:py-3 min-h-[44px] transition-colors duration-200 ${
                             filters.petFriendly 
                               ? "bg-black/60 text-white border-black/70 sm:hover:bg-white/20 sm:hover:border-white/30" 
                               : "bg-white/20 border-white/30 text-white sm:hover:bg-black/60 sm:hover:text-white sm:hover:border-black/70"
@@ -284,7 +286,7 @@ const Properties = () => {
                         <Button
                           variant={filters.boatParking ? "default" : "outline"}
                           onClick={() => setFilters(prev => ({ ...prev, boatParking: !prev.boatParking }))}
-                          className={`w-full justify-center text-xs sm:text-sm py-2 sm:py-3 transition-colors duration-200 ${
+                          className={`w-full justify-center text-sm py-2 sm:py-3 min-h-[44px] transition-colors duration-200 ${
                             filters.boatParking 
                               ? "bg-black/60 text-white border-black/70 sm:hover:bg-white/20 sm:hover:border-white/30" 
                               : "bg-white/20 border-white/30 text-white sm:hover:bg-black/60 sm:hover:text-white sm:hover:border-black/70"
@@ -301,7 +303,7 @@ const Properties = () => {
                         <Button
                           variant={filters.waterViews ? "default" : "outline"}
                           onClick={() => setFilters(prev => ({ ...prev, waterViews: !prev.waterViews }))}
-                          className={`w-full justify-center text-xs sm:text-sm py-2 sm:py-3 transition-colors duration-200 ${
+                          className={`w-full justify-center text-sm py-2 sm:py-3 min-h-[44px] transition-colors duration-200 ${
                             filters.waterViews 
                               ? "bg-black/60 text-white border-black/70 sm:hover:bg-white/20 sm:hover:border-white/30" 
                               : "bg-white/20 border-white/30 text-white sm:hover:bg-black/60 sm:hover:text-white sm:hover:border-black/70"
@@ -317,12 +319,12 @@ const Properties = () => {
                   <div className="text-center">
                     <Button
                       onClick={() => {
-                        document.getElementById('properties-grid')?.scrollIntoView({ 
+                        document.getElementById('properties-grid')?.scrollIntoView({
                           behavior: 'smooth',
                           block: 'start'
                         });
                       }}
-                      className="w-full sm:w-auto bg-accent-red hover:bg-accent-red/90 active:bg-accent-red/80 text-white px-6 sm:px-8 py-3 rounded-full font-medium transition-all duration-200 hover:scale-105 active:scale-100 shadow-lg hover:shadow-xl text-sm sm:text-base"
+                      className="w-full sm:w-auto bg-accent-red hover:bg-accent-red/90 active:bg-accent-red/80 text-white px-6 sm:px-8 py-3 min-h-[48px] rounded-full font-medium transition-all duration-200 hover:scale-105 active:scale-100 shadow-lg hover:shadow-xl text-base"
                       disabled={isLoading}
                     >
                       {isLoading 
@@ -369,21 +371,20 @@ const Properties = () => {
                     <span>• {visibleProperties?.length || 0} properties found</span>
                   </div>
                 </div>
-                <div className="flex space-x-3">
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      // Scroll to filter controls in hero
                       const element = document.querySelector('.bg-white\\/10.backdrop-blur-sm');
                       if (element) {
-                        element.scrollIntoView({ 
+                        element.scrollIntoView({
                           behavior: 'smooth',
                           block: 'center'
                         });
                       }
                     }}
-                    className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
+                    className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 min-h-[44px] px-4 transition-all duration-200"
                   >
                     <Eye className="w-4 h-4 mr-2" />
                     Back to Filters
@@ -393,7 +394,7 @@ const Properties = () => {
                       variant="secondary"
                       size="sm"
                       onClick={resetFilters}
-                      className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 transition-all duration-200"
+                      className="bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 hover:border-white hover:shadow-lg active:bg-white/90 active:text-gray-900 active:scale-95 min-h-[44px] px-4 transition-all duration-200"
                     >
                       Clear Filters
                     </Button>

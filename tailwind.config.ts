@@ -8,6 +8,12 @@ export default {
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
 	],
+	// Apply `hover:` utilities only on devices that actually support hover.
+	// Without this, iOS Safari treats the first tap as hover-entry and a second
+	// tap is required to fire the click — visible as "double-tap" on cards.
+	future: {
+		hoverOnlyWhenSupported: true,
+	},
 	prefix: "",
 	theme: {
 		container: {
