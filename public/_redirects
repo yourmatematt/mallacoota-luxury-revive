@@ -1,0 +1,56 @@
+# Hammond Properties — Cloudflare Pages _redirects (Netlify-format).
+# UTF-8, LF line endings, no BOM. Most-specific rules first, SPA fallback last.
+# www -> apex domain redirect is handled by a Cloudflare Redirect Rule at the
+# DNS edge (set up in dashboard) so it is intentionally absent here.
+
+# ---- Topic landing pages killed in 2026-05-30 SEO remediation ----
+# Each origin route had ~0 clicks/90 days; redirect to the strongest
+# /discover-mallacoota/* equivalent. Source: GSC audit 2026-05-30.
+/mallacoota-fishing-accommodation  /discover-mallacoota/fishing-in-mallacoota-waters  301
+/mallacoota-kayaking-holidays      /discover-mallacoota/kayaking-paradise-in-mallacoota  301
+/mallacoota-family-holidays        /discover-mallacoota/multi-generational-family-fun  301
+/mallacoota-summer-holidays        /discover-mallacoota/swimming-water-sports-guide  301
+/mallacoota-winter-getaway         /discover-mallacoota/victoria-s-warmest-winter-escape  301
+
+# ---- Legacy WordPress archive paths -> homepage ----
+/category/*  /  301
+/2020/*      /  301
+/2021/*      /  301
+/2022/*      /  301
+/2023/*      /  301
+/2024/*      /  301
+/2025/*      /  301
+
+# ---- SEO-friendly short URLs -> canonical landing pages ----
+/holiday-rentals     /mallacoota-holiday-rentals  301
+/accommodation       /mallacoota-holiday-rentals  301
+/rentals             /mallacoota-holiday-rentals  301
+/things-to-do        /things-to-do-mallacoota     301
+/activities          /things-to-do-mallacoota     301
+/pet-friendly        /pet-friendly-mallacoota     301
+/pets                /pet-friendly-mallacoota     301
+/pet-accommodation   /pet-friendly-mallacoota     301
+
+# ---- Waterfront / luxury aliases -> holiday rentals hub ----
+# /luxury-waterfront-mallacoota is also a React <Redirect> route in
+# src/App.tsx (line 74); this 301 fires first at the CF Pages edge, which
+# is preferred for SEO. React route remains as a client-side safety belt.
+/luxury-waterfront-mallacoota  /mallacoota-holiday-rentals  301
+/luxury                        /mallacoota-holiday-rentals  301
+/waterfront                    /mallacoota-holiday-rentals  301
+/luxury-accommodation          /mallacoota-holiday-rentals  301
+
+# ---- Old blog / guide URL shapes -> /discover-mallacoota/* ----
+/blog/*          /discover-mallacoota/:splat  301
+/guides/*        /discover-mallacoota/:splat  301
+/local-guides/*  /discover-mallacoota/:splat  301
+
+# ---- Old property URL shapes -> /properties/* ----
+/property/*  /properties/:splat  301
+/listing/*   /properties/:splat  301
+
+# ---- SPA fallback (must remain LAST) ----
+# Vite emits a single dist/index.html; React Router handles the path
+# client-side. Deep links like /properties/foo need this wildcard 200 to
+# serve index.html instead of returning a CF Pages 404.
+/*  /index.html  200

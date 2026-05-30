@@ -29,12 +29,6 @@ const STATIC_ROUTES = [
   '/mallacoota-holiday-rentals',
   '/things-to-do-mallacoota',
   '/pet-friendly-mallacoota',
-  // 5 topic landing pages — previously missing from prerender output (FE audit flag).
-  '/mallacoota-fishing-accommodation',
-  '/mallacoota-kayaking-holidays',
-  '/mallacoota-family-holidays',
-  '/mallacoota-summer-holidays',
-  '/mallacoota-winter-getaway',
   // Redirect-target route (keeps the inbound link warm).
   '/luxury-waterfront-mallacoota',
   // Gabo Island is a dedicated route nested under /discover-mallacoota.

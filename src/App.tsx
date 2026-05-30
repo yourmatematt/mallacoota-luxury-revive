@@ -23,11 +23,6 @@ const MallacootaHolidayRentals = lazy(() => import("./pages/MallacootaHolidayRen
 const ThingsToDoMallacoota = lazy(() => import("./pages/ThingsToDoMallacoota"));
 const PetFriendlyMallacoota = lazy(() => import("./pages/PetFriendlyMallacoota"));
 const GaboIsland = lazy(() => import("./pages/GaboIsland"));
-const MallacootaFishing = lazy(() => import("./pages/MallacootaFishing"));
-const MallacootaKayaking = lazy(() => import("./pages/MallacootaKayaking"));
-const MallacootaFamily = lazy(() => import("./pages/MallacootaFamily"));
-const MallacootaSummer = lazy(() => import("./pages/MallacootaSummer"));
-const MallacootaWinter = lazy(() => import("./pages/MallacootaWinter"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -66,11 +61,6 @@ const App = () => (
                 <Route path="/mallacoota-holiday-rentals" element={<MallacootaHolidayRentals />} />
                 <Route path="/things-to-do-mallacoota" element={<ThingsToDoMallacoota />} />
                 <Route path="/pet-friendly-mallacoota" element={<PetFriendlyMallacoota />} />
-                <Route path="/mallacoota-fishing-accommodation" element={<MallacootaFishing />} />
-                <Route path="/mallacoota-kayaking-holidays" element={<MallacootaKayaking />} />
-                <Route path="/mallacoota-family-holidays" element={<MallacootaFamily />} />
-                <Route path="/mallacoota-summer-holidays" element={<MallacootaSummer />} />
-                <Route path="/mallacoota-winter-getaway" element={<MallacootaWinter />} />
                 <Route path="/luxury-waterfront-mallacoota" element={<Redirect to="/mallacoota-holiday-rentals" />} />
                 <Route path="/discover-mallacoota/gabo-island" element={<GaboIsland />} />
                 <Route path="*" element={<NotFound />} />
