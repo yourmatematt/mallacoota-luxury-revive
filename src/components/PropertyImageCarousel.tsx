@@ -50,8 +50,12 @@ const PropertyImageCarousel = ({ images, propertyId, propertyTitle }: PropertyIm
   });
 
   return (
+    // bg-muted gives the carousel a neutral gray underlay so that during the
+    // lazy-loaded Supabase fetch window, iOS Safari doesn't render its default
+    // "broken image" placeholder (blue square with question mark) in the empty
+    // img space. Once each img loads, it covers the gray with `object-cover`.
     <div
-      className="relative aspect-[4/3] overflow-hidden rounded-xl group hover:scale-105 transition-transform duration-700"
+      className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted group hover:scale-105 transition-transform duration-700"
       onTouchStart={swipe.onTouchStart}
       onTouchEnd={swipe.onTouchEnd}
     >
