@@ -95,7 +95,7 @@ const Index = () => {
   return (
     <PageTransition>
       <SEOMetaTags
-        title="Hammond Properties - Luxury Holiday Rentals Mallacoota"
+        title="Hammond Properties — Luxury Mallacoota Accommodation"
         description="Discover Mallacoota's finest luxury holiday homes — waterfront rentals, pet-friendly options, premium amenities. 500+ 5-star reviews. Book your coastal escape today."
         canonical="https://hammondproperties.com.au/"
         ogImage="https://hammondproperties.com.au/images/hammond-properties-og.jpg"
@@ -118,7 +118,7 @@ const Index = () => {
                   Signature Coastal Estates
                 </h2>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                  Discover our most exceptional waterfront properties in East Gippsland, each offering unique experiences and unmatched luxury in Mallacoota's most coveted oceanfront locations.
+                  Discover our most exceptional waterfront properties in East Gippsland, each offering unique experiences and unmatched luxury in Mallacoota's most coveted oceanfront locations. Or <Link to="/mallacoota-holiday-rentals" className="text-primary hover:underline font-medium">browse our full Mallacoota holiday rentals collection</Link>.
                 </p>
               </div>
 
@@ -267,10 +267,14 @@ const Index = () => {
           <TestimonialsHorizontalTicker />
 
           {/* FAQ Section for SEO and Featured Snippets — questions/answers live in
-              src/data/homeFaqs.ts and feed both this visible section AND the FAQPage JSON-LD. */}
+              src/data/homeFaqs.ts and feed both this visible section AND the FAQPage
+              JSON-LD inside HOMEPAGE_SCHEMA above. injectSchema={false} prevents
+              FAQSection from emitting a duplicate FAQPage entity (which was
+              causing GSC to mark homepage rich results FAIL). */}
           <FAQSection
             title="Your Mallacoota Questions Answered"
             faqs={HOMEPAGE_FAQS}
+            injectSchema={false}
           />
 
           <CTASection />

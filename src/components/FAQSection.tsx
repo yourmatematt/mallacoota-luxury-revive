@@ -16,14 +16,25 @@ interface FAQ {
 interface FAQSectionProps {
   faqs: FAQ[];
   title?: string;
+  /**
+   * Whether this component should inject its own FAQPage JSON-LD into <head>.
+   * Default true preserves existing behaviour for pages that have no other
+   * FAQ schema source. Pass false on pages whose SEOMetaTags `schema` prop
+   * already includes an FAQPage entity (e.g. the homepage) — passing two
+   * FAQPage entities on the same page causes Google's rich-result validator
+   * to mark items as unnamed and the overall result as failed.
+   */
+  injectSchema?: boolean;
 }
 
 const FAQSection: React.FC<FAQSectionProps> = ({
   faqs,
-  title = "Frequently Asked Questions"
+  title = "Frequently Asked Questions",
+  injectSchema = true
 }) => {
   // Inject FAQPage structured data for SEO
   useEffect(() => {
+    if (!injectSchema) return;
     if (!faqs || faqs.length === 0) return;
 
     const faqSchema = {
@@ -54,7 +65,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
       const script = document.querySelector('#faq-structured-data');
       if (script) script.remove();
     };
-  }, [faqs]);
+  }, [faqs, injectSchema]);
 
   if (!faqs || faqs.length === 0) {
     return null;

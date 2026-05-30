@@ -136,7 +136,7 @@ const MallacootaHolidayRentals = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOMetaTags
-        title="Luxury Mallacoota Holiday Rentals | Hammond Properties"
+        title="Mallacoota Holiday Rentals — Premium Lakeside & Beach Houses"
         description={description}
         canonical="https://hammondproperties.com.au/mallacoota-holiday-rentals"
         ogImage="https://hammondproperties.com.au/images/mallacoota-holiday-rentals-hero.jpg"

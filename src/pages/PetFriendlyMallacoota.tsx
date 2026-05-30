@@ -50,8 +50,13 @@ const PetFriendlyMallacoota = () => {
 
   // SEO schema rebuilt from pet-friendly property list. Replaces the previous
   // two imperative useEffects + the per-property mutations that ran on each render.
-  const petFriendlyDescription =
-    "Bring your furry family to Mallacoota's finest pet-friendly holiday rentals. Luxury properties with dog beaches, fenced yards & premium pet amenities. Local pet services included.";
+  // Head-term-first description; count injected dynamically once the property
+  // query resolves so prerender captures the real number (currently {{PET_FRIENDLY_COUNT}}
+  // is a placeholder while data is loading — review once first prerender confirms).
+  const petFriendlyCount = petFriendlyProperties?.length;
+  const petFriendlyDescription = petFriendlyCount
+    ? `Pet-friendly Mallacoota holiday rentals: ${petFriendlyCount} luxury properties with fenced yards, dog-friendly beaches and premium pet amenities. Book your Mallacoota stay.`
+    : `Pet-friendly Mallacoota holiday rentals: luxury properties with fenced yards, dog-friendly beaches and premium pet amenities. Book your Mallacoota stay.`;
   const petFriendlySchema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -161,7 +166,7 @@ const PetFriendlyMallacoota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOMetaTags
-        title="Pet-Friendly Accommodation Mallacoota | Luxury Holiday Rentals"
+        title="Pet-Friendly Mallacoota Holiday Rentals | Hammond Properties"
         description={petFriendlyDescription}
         canonical="https://hammondproperties.com.au/pet-friendly-mallacoota"
         ogImage="https://hammondproperties.com.au/images/pet-friendly-og.jpg"
