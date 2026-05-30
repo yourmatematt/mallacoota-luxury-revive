@@ -585,8 +585,9 @@ const PropertyDetail = () => {
 
           <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
-              {/* Main Content */}
-              <div className="lg:col-span-2 space-y-8">
+              {/* Main Content — mobile order 2 (reads after the sidebar form),
+                  desktop order 1 (renders on the left of the grid). */}
+              <div className="lg:col-span-2 order-2 lg:order-1 space-y-8">
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold mb-4">About This Property</h2>
@@ -897,9 +898,11 @@ const PropertyDetail = () => {
               </div>
               </div>
 
-              {/* Sidebar */}
-              <div className="lg:col-span-1">
-                <Card className="sticky top-24">
+              {/* Sidebar — mobile order 1 (form appears right after Hero +
+                  Property Gallery so it's reachable in 2 swipes), desktop
+                  order 2 (renders on the right of the grid as before). */}
+              <div className="lg:col-span-1 order-1 lg:order-2">
+                <Card id="enquiry-form" className="sticky top-24 scroll-mt-24">
                   <CardContent className="p-6">
                     <div className="text-center mb-6">
                       <h3 className="text-lg font-semibold mb-4">Make an Enquiry</h3>
@@ -1031,6 +1034,33 @@ const PropertyDetail = () => {
               </div>
             </div>
           </section>
+
+          {/* Mobile-only sticky Enquire CTA. Hidden on lg+ where the sidebar
+              form is visible. Smooth-scrolls to #enquiry-form unless the user
+              prefers reduced motion. Below Radix Dialog's z-50 so the gallery
+              overlay covers it. */}
+          <Button
+            asChild
+            variant="accent"
+            size="lg"
+            rounded="full"
+            className="lg:hidden fixed bottom-4 right-4 z-40 shadow-xl min-h-[56px] px-6 text-base font-semibold"
+          >
+            <a
+              href="#enquiry-form"
+              aria-label="Jump to property enquiry form"
+              onClick={(e) => {
+                e.preventDefault();
+                const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                document.getElementById("enquiry-form")?.scrollIntoView({
+                  behavior: reduceMotion ? "auto" : "smooth",
+                  block: "start",
+                });
+              }}
+            >
+              Enquire
+            </a>
+          </Button>
 
         </main>
 
