@@ -238,10 +238,12 @@ const Properties = () => {
                       </div>
                     </div>
                     
-                    {/* Property Filters Component - Mobile Grid */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    {/* Property Filters Component — 2x2 grid from mobile through
+                        laptop (Guests | Pet / Boat | Water Views), 4-across only
+                        from xl (1280px) up where there's room for a single row. */}
+                    <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
                       {/* Guest Count */}
-                      <div className="space-y-2 sm:space-y-3 col-span-2 lg:col-span-1">
+                      <div className="space-y-2 sm:space-y-3">
                         <label className="text-xs sm:text-sm font-medium text-white flex items-center justify-center">
                           <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                           Guests
