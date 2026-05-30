@@ -221,7 +221,7 @@ const Properties = () => {
                     {/* Mobile-friendly header */}
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-3 sm:space-y-0">
                       <div className="hidden sm:block flex-1"></div>
-                      <h3 className="text-sm sm:text-base lg:text-lg font-medium text-white text-center leading-relaxed px-2">
+                      <h3 className="hidden xl:block text-sm sm:text-base lg:text-lg font-medium text-white text-center leading-relaxed px-2">
                         Whether you're chasing ocean views, a family-friendly yard, or a quiet hideaway, find your perfect Mallacoota stay.
                       </h3>
                       <div className="flex justify-center sm:justify-end sm:flex-1">
